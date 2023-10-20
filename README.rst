@@ -1,39 +1,33 @@
-template_mvc
+tolino cloud client
 ============
 
-this is a template for a python projects with a structure for mvc architecture (although one can use any architecture)
+work in progress..
 
-Look how easy it is to use:
+a client to interact (login, upload, delete ebooks, etc..) with the tolino cloud with python. Most of the code is forked from https://github.com/darkphoenix/tolino-calibre-sync
 
-    import project
-    # Get your stuff done
-    project.do_stuff()
+one difference is that I aim to create a python package from it and to put it on pypi, so that one can use this python module in other projects.
+
+example:
+from tolino_client import TolinoCloud
+tolino = TolinoCloud()
+tolino.login(username, password)
+tolino.register_device()
+tolino.upload('/path_to_my_epub_gile')
+tolino.logout()
 
 Features
 --------
 
-- Be awesome
-- Make things faster
+connect to tolino cloud (work only with buecher.de partner)
+login, register, upload epubs, delete, list, download...
+
 
 Installation
 ------------
 
-Install $project by running:
-
-    install project
-
-Contribute
-----------
-
-- Source Code: github.com/$project/$project
-
-Support
--------
-
-If you are having issues, please let us know.
-contact: email 
+pip install tolino_cloud_client
 
 License
 -------
 
-The project is licensed under ...
+The project is licensed under GNU GENERAL PUBLIC LICENSE v3.0
