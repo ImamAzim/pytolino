@@ -5,7 +5,8 @@ import os
 import configparser
 
 
-class PytolinoException(Exception)
+class PytolinoException(Exception): pass
+
 
 SERVERS_SETTINGS_FN = 'servers_settings.ini'
 SERVERS_SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), SERVERS_SETTINGS_FN)
@@ -21,4 +22,4 @@ class Client(object):
         try:
             server_settings = servers_settings[server_name]
         except KeyError:
-            raise PytolinoException
+            raise PytolinoException(f'no partner {server_name} found')
