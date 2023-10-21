@@ -1,1 +1,1 @@
-include pytolino/partner_settings/*
+include pytolino/server_settings.ini
