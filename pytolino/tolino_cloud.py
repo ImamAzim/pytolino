@@ -26,7 +26,7 @@ class Client(object):
 
     def __init__(self, server_name='www.buecher.de'):
         try:
-            server_settings = servers_settings[server_name]
+            self.server_settings = servers_settings[server_name]
         except KeyError:
             raise PytolinoException(f'no partner {server_name} found')
 
