@@ -20,5 +20,6 @@ class TestClient(unittest.TestCase):
 
     def test_init_partner_config(self):
         client = Client()
+        self.assertIn('server_settings', dir(client))
         n_settings = len(client.server_settings)
         self.assertGreater(n_settings, 0) 
