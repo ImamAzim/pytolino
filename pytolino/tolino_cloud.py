@@ -6,6 +6,10 @@ import configparser
 import platform
 
 
+import requests
+import mechanize
+
+
 class PytolinoException(Exception):
     pass
 
@@ -85,6 +89,8 @@ class Client(object):
             raise PytolinoException(f'no partner {server_name} found')
 
         self.server_settings = servers_settings[server_name]
+        self.session = requests.session()
+        self.browser = mechanize.Browser()
 
 
 if __name__ == '__main__':
