@@ -36,7 +36,7 @@ class TestClient(unittest.TestCase):
         self.assertIsInstance(self.client.hardware_id, str)
 
 
-def run_login():
+def get_credentials():
     CREDENTIAL_FILEPATH = os.path.join(os.path.expanduser('~'), 'credentials.ini')
     if os.path.exists(CREDENTIAL_FILEPATH):
         credentials = configparser.ConfigParser()
@@ -47,9 +47,13 @@ def run_login():
         import getpass
         username = input('username')
         password = getpass.getpass()
+    return username, password
 
+def run_login():
 
+    username, password = get_credentials()
     client = Client()
+    client.login(username, password)
 
 
 if __name__ == '__main__':
