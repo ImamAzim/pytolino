@@ -5,8 +5,9 @@
 test all the tools in tolino cloud
 """
 
-
+import os
 import unittest
+import configparser
 
 
 from pytolino.tolino_cloud import Client, PytolinoException
@@ -29,6 +30,12 @@ class TestClient(unittest.TestCase):
 
 
 def run_login():
+    CREDENTIAL_FILEPATH = os.path.join(os.path.expanduser('~'), 'credentials.ini')
+    credentials = configparser.ConfigParser()
+    credentials.read(CREDENTIAL_FILEPATH)
+    username = credentials['DEFAULT']['username']
+    password = credentials['DEFAULT']['password']
+
     client = Client()
 
 
