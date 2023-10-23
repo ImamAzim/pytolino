@@ -31,10 +31,16 @@ class TestClient(unittest.TestCase):
 
 def run_login():
     CREDENTIAL_FILEPATH = os.path.join(os.path.expanduser('~'), 'credentials.ini')
-    credentials = configparser.ConfigParser()
-    credentials.read(CREDENTIAL_FILEPATH)
-    username = credentials['DEFAULT']['username']
-    password = credentials['DEFAULT']['password']
+    if os.path.exists(CREDENTIAL_FILEPATH):
+        credentials = configparser.ConfigParser()
+        credentials.read(CREDENTIAL_FILEPATH)
+        username = credentials['DEFAULT']['username']
+        password = credentials['DEFAULT']['password']
+    else:
+        import getpass
+        username = input('username')
+        password = getpass.getpass()
+
 
     client = Client()
 
