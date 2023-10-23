@@ -17,16 +17,23 @@ class TestClient(unittest.TestCase):
 
     """all test concerning the Client class. """
 
+    @classmethod
+    def setUpClass(cls):
+        cls.client = Client()
+
     def test_init_nopartner(self):
 
         with self.assertRaises(PytolinoException):
-            client = Client(server_name='this tolino partner does not exists')
+            Client(server_name='this tolino partner does not exists')
 
     def test_init_partner_config(self):
-        client = Client()
-        self.assertIn('server_settings', dir(client))
-        n_settings = len(client.server_settings)
+        self.assertIn('server_settings', dir(self.client))
+        n_settings = len(self.client.server_settings)
         self.assertGreater(n_settings, 0) 
+
+    def test_hardware_id(self):
+        pass
+        # 1233X-44XXX-XXXXX-XXXXX-XXXXh
 
 
 def run_login():
