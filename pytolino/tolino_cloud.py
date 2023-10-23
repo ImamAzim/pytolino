@@ -25,10 +25,11 @@ class Client(object):
     """create a client to communicate with a tolino partner (login, etc..)"""
 
     def __init__(self, server_name='www.buecher.de'):
-        try:
-            self.server_settings = servers_settings[server_name]
-        except KeyError:
+
+        if server_name not in servers_settings:
             raise PytolinoException(f'no partner {server_name} found')
+
+        self.server_settings = servers_settings[server_name]
 
 
 if __name__ == '__main__':
