@@ -93,7 +93,7 @@ class Client(object):
         self.browser = mechanize.Browser()
 
     def login(self, username, password):
-        """login to the partner
+        """login to the partner and get access token
 
         :username: str
         :password: str
