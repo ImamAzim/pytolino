@@ -1,1 +1,2 @@
 include pytolino/server_settings.ini
+exclude pytolino/tests/*
