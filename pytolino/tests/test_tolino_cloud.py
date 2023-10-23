@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 """
 test all the tools in tolino cloud
 """
@@ -23,3 +26,12 @@ class TestClient(unittest.TestCase):
         self.assertIn('server_settings', dir(client))
         n_settings = len(client.server_settings)
         self.assertGreater(n_settings, 0) 
+
+
+def test_login():
+    client = Client()
+
+
+if __name__ == '__main__':
+    test_login()
+
