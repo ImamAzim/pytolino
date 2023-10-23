@@ -28,10 +28,10 @@ class TestClient(unittest.TestCase):
         self.assertGreater(n_settings, 0) 
 
 
-def test_login():
+def run_login():
     client = Client()
 
 
 if __name__ == '__main__':
-    test_login()
+    run_login()
 
