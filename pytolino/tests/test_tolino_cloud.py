@@ -34,6 +34,8 @@ class TestClient(unittest.TestCase):
     def test_hardware_id(self):
         pass
         # 1233X-44XXX-XXXXX-XXXXX-XXXXh
+        self.assertIn('hardware_id', dir(self.client))
+        self.assertIsInstance(self.hardware_id, str)
 
 
 def run_login():
