@@ -92,6 +92,14 @@ class Client(object):
         self.session = requests.session()
         self.browser = mechanize.Browser()
 
+    def login(self, username, password):
+        """login to the partner
+
+        :username: str
+        :password: str
+        :returns: None, but raises pytolino exceptions if fail. will print ansers
+        """
+
 
 if __name__ == '__main__':
     main()
