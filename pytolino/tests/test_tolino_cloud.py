@@ -32,10 +32,8 @@ class TestClient(unittest.TestCase):
         self.assertGreater(n_settings, 0) 
 
     def test_hardware_id(self):
-        pass
-        # 1233X-44XXX-XXXXX-XXXXX-XXXXh
         self.assertIn('hardware_id', dir(self.client))
-        self.assertIsInstance(self.hardware_id, str)
+        self.assertIsInstance(self.client.hardware_id, str)
 
 
 def run_login():
