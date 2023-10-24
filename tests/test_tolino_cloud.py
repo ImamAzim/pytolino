@@ -60,6 +60,10 @@ def run_login():
     client = Client()
     client.login(username, password)
 
+    print(client.access_token)
+    print(client.refresh_token)
+    print(client.token_expires)
+
 
 if __name__ == '__main__':
     run_login()
