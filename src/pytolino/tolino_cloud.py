@@ -108,6 +108,7 @@ class Client(object):
         self.server_settings = servers_settings[server_name]
         self.session = requests.session()
         self.browser = mechanize.Browser()
+        self.server_name = server_name
 
     def login(self, username, password):
         """login to the partner and get access token
@@ -116,8 +117,66 @@ class Client(object):
         :password: str
         :returns: None, but raises pytolino exceptions if fail. will print ansers
         """
-        logging.info('login...')
+        logging.info(f'login to {self.server_name}...')
 
+        self.browser.open(self.server_settings['login_url'])
+        self.browser.select_form(id=self.server_settings['form_id'])
+        self.browser[self.server_settings['username_field'] = username
+        self.browser[self.server_settings['password_field'] = password
+        host_response = self.browser.submit()
+
+        for cookie in self.browser.cookiejar:
+            self.session.cookies.set(cookie.name, cookie.value)
+
+        logging.info(self.server_settings['login_cookie'])
+        self._log_host_response(host_response)
+        if not self.server_settings['login_cookie'] in s.cookies:
+            raise PytolinoException(f'login to {self.server_name} failed.')
+
+        # auth_code = ""
+        # if 'tat_url' in c:
+            # try:
+                # r = s.get(c['tat_url'], verify=True)
+                # self._debug(r)
+                # b64 = re.search(r'\&tat=(.*?)%3D', r.text).group(1)
+                # self.access_token = base64.b64decode(b64+'==').decode('utf-8')
+            # except:
+                # raise TolinoException('oauth access token request failed.')
+        # else:
+            # # Request OAUTH code
+            # params = {
+                # 'client_id'     : c['client_id'],
+                # 'response_type' : 'code',
+                # 'scope'         : c['scope'],
+                # 'redirect_uri'  : c['reader_url']
+            # }
+            # if 'login_form_url' in c:
+                # params['x_buchde.skin_id'] = c['x_buchde.skin_id']
+                # params['x_buchde.mandant_id'] = c['x_buchde.mandant_id']
+            # r = s.get(c['auth_url'], params=params, verify=True, allow_redirects=False)
+            # self._debug(r)
+            # try:
+                # params = parse_qs(urlparse(r.headers['Location']).query)
+                # auth_code = params['code'][0]
+            # except:
+                # raise TolinoException('oauth code request failed.')
+
+            # # Fetch OAUTH access token
+            # r = s.post(c['token_url'], data = {
+                # 'client_id'    : c['client_id'],
+                # 'grant_type'   : 'authorization_code',
+                # 'code'         : auth_code,
+                # 'scope'        : c['scope'],
+                # 'redirect_uri' : c['reader_url']
+            # }, verify=True, allow_redirects=False)
+            # self._debug(r)
+            # try:
+                # j = r.json()
+                # self.access_token = j['access_token']
+                # self.refresh_token = j['refresh_token']
+                # self.token_expires = int(j['expires_in'])
+            # except:
+                # raise TolinoException('oauth access token request failed.')
 
 if __name__ == '__main__':
     main()
