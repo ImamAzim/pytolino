@@ -116,6 +116,7 @@ class Client(object):
         :password: str
         :returns: None, but raises pytolino exceptions if fail. will print ansers
         """
+        logging.info('login...')
 
 
 if __name__ == '__main__':

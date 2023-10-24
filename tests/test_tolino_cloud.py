@@ -8,9 +8,13 @@ test all the tools in tolino cloud
 import os
 import unittest
 import configparser
+import logging
 
 
 from pytolino.tolino_cloud import Client, PytolinoException
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 class TestClient(unittest.TestCase):
