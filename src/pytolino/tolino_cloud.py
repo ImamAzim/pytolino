@@ -121,8 +121,8 @@ class Client(object):
 
         self.browser.open(self.server_settings['login_url'])
         self.browser.select_form(id=self.server_settings['form_id'])
-        self.browser[self.server_settings['username_field'] = username
-        self.browser[self.server_settings['password_field'] = password
+        self.browser[self.server_settings['username_field']] = username
+        self.browser[self.server_settings['password_field']] = password
         host_response = self.browser.submit()
 
         for cookie in self.browser.cookiejar:
