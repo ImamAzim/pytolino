@@ -88,6 +88,10 @@ class Client(object):
         if server_name not in servers_settings:
             raise PytolinoException(f'no partner {server_name} found')
 
+        self.access_token = None
+        self.refresh_token = None
+        self.token_expires = None
+
         self.server_settings = servers_settings[server_name]
         self.session = requests.session()
         self.browser = mechanize.Browser()

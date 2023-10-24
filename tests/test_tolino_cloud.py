@@ -36,7 +36,7 @@ class TestClient(unittest.TestCase):
         self.assertIsInstance(self.client.hardware_id, str)
 
     def test_token_vars(self):
-        self.assertTrue(hasattr(self.client, 'acces_token'))
+        self.assertTrue(hasattr(self.client, 'access_token'))
         self.assertTrue(hasattr(self.client, 'refresh_token'))
         self.assertTrue(hasattr(self.client, 'token_expires'))
 
