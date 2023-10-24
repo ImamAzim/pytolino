@@ -1,3 +1,21 @@
 [build-system]
 requires = ['setuptools>=61.0', 'wheel']
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytolino""
+version = "0.1""
+author = [
+	{name="Imam Usmani"},
+]
+readme = "README.rst""
+require-python = ">=3.7"
+classifier = [
+    "Intended Audience :: Developers",
+    "License :: GNU",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Operating System :: Debian Linux",
+
+]
+description= "client for tolino cloud""
