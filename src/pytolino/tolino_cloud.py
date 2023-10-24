@@ -4,6 +4,7 @@
 import os
 import configparser
 import platform
+import logging
 
 
 import requests
@@ -28,6 +29,18 @@ def main():
 class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
+
+    def _log_host_response(self, host_response):
+        logging.info('-------------------- HTTP response --------------------')
+        logging.info('status code: {}'.format(host_response.status_code))
+        logging.info('cookies: {}'.format(pformat(host_response.cookies)))
+        logging.info('headers: {}'.format(pformat(host_response.headers)))
+        try:
+            j = host_response.json()
+            logging.debug('json: {}'.format(pformat(j)))
+        except:
+            logging.debug('text: {}'.format(host_response.text))
+        logging.info('-------------------------------------------------------')
 
     def _hardware_id():
 
