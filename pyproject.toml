@@ -16,7 +16,6 @@ classifier = [
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
     "Operating System :: Debian Linux",
-
 ]
 description = "client for tolino cloud""
 dependencies = [
