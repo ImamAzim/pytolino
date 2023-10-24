@@ -35,6 +35,11 @@ class TestClient(unittest.TestCase):
         self.assertIn('hardware_id', dir(self.client))
         self.assertIsInstance(self.client.hardware_id, str)
 
+    def test_token_vars(self):
+        self.assertin('access_token', self.client)
+        self.assertin('refresh_token', self.client)
+        self.assertin('token_expires', self.client)
+
 
 def get_credentials():
     CREDENTIAL_FILEPATH = os.path.join(os.path.expanduser('~'), 'credentials.ini')
