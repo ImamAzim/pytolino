@@ -1,1 +1,1 @@
-include src/pytolino/server_settings.ini
+include src/pytolino/servers_settings.ini
