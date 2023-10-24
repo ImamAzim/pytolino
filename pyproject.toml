@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pytolino"
 version = "0.1"
-author = [
+authors = [
     {name="Imam Usmani"},
 ]
 readme = "README.rst"
-require-python = ">=3.7"
-classifier = [
+requires-python = ">=3.7"
+classifiers = [
     "Intended Audience :: Developers",
     "License :: GNU",
     "Natural Language :: English",
