@@ -201,6 +201,25 @@ class Client(object):
         """logout from tolino partner host
 
         """
+        if 'revoke_url' in self.server_settings:
+            host_response = self.session.post(
+                    self.server_settings['revoke_url'],
+                    data={
+                        'client_id': self.server_settings['client_id'],
+                        'token_type': 'refresh_token',
+                        'token': self.refresh_token,
+                        }
+                    )
+            self._log_requests(host_response)
+            if host_response.status_code != 200:
+                raise PytolinoException('logout failed.')
+        else:
+            host_response = self.session.post(
+                    self.server_settings['logout_url'],
+                    )
+            self._log_requests(host_response)
+            if host_response.status_code != 200:
+                raise PytolinoException('logout failed.')
         pass
 
 
