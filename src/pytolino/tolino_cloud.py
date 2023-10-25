@@ -30,16 +30,23 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
-    def _log_host_response(self, host_response):
+    def _log_requests(self, host_response):
         logging.info('-------------------- HTTP response --------------------')
-        logging.info('status code: {}'.format(host_response.status_code))
-        logging.info('cookies: {}'.format(pformat(host_response.cookies)))
-        logging.info('headers: {}'.format(pformat(host_response.headers)))
+        logging.info(f'status code: {host_response.status_code}')
+        logging.info(f'cookies: {host_response.cookies}')
+        logging.info(f'headers: {host_response.headers}')
         try:
             j = host_response.json()
-            logging.debug('json: {}'.format(pformat(j)))
+            logging.debug(f'json: {j}')
         except:
-            logging.debug('text: {}'.format(host_response.text))
+            logging.debug(f'text: {host_response.text}')
+        logging.info('-------------------------------------------------------')
+
+    def _log_mechanize(self, host_response):
+        logging.info('-------------------- HTTP response --------------------')
+        logging.info(f'status code: {host_response.code}')
+        logging.info(f'cookies: {host_response.cookiejar}')
+        logging.info(f'headers: {host_response.info()}')
         logging.info('-------------------------------------------------------')
 
     def _hardware_id():
@@ -129,7 +136,7 @@ class Client(object):
             self.session.cookies.set(cookie.name, cookie.value)
 
         logging.info(self.server_settings['login_cookie'])
-        self._log_host_response(host_response)
+        self._log_mechanize(host_response)
         if not self.server_settings['login_cookie'] in s.cookies:
             raise PytolinoException(f'login to {self.server_name} failed.')
 
