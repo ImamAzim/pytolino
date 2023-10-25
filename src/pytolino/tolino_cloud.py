@@ -5,6 +5,7 @@ import os
 import configparser
 import platform
 import logging
+from urllib.parse import urlparse, parse_qs
 
 
 import requests
@@ -62,15 +63,15 @@ class Client(object):
         # X  = the result of a fingerprinting image
 
         os_id = {
-            'Windows' : '1',
-            'Darwin'  : '2',
-            'Linux'   : '3'
+            'Windows': '1',
+            'Darwin' : '2',
+            'Linux'  : '3'
             }.get(platform.system(), 'x')
 
         # The hardware id contains some info about the browser
         #
         # Hey, tolino developers: Let me know which id values to use here
-        engine_id  = 'x'
+        engine_id = 'x'
         browser_id = 'xx'
         version_id = '00'
 
@@ -85,20 +86,22 @@ class Client(object):
 
         fingerprint = 'ABCDEFGHIJKLMNOPQR'
 
-        return (os_id +
-            engine_id +
-            browser_id +
-            fingerprint[0:1] +
-            '-' +
-            version_id +
-            fingerprint[1:4] +
-            '-' +
-            fingerprint[4:9] +
-            '-' +
-            fingerprint[9:14] +
-            '-' +
-            fingerprint[14:18] +
-            'h')
+        return (
+                os_id +
+                engine_id +
+                browser_id +
+                fingerprint[0:1] +
+                '-' +
+                version_id +
+                fingerprint[1:4] +
+                '-' +
+                fingerprint[4:9] +
+                '-' +
+                fingerprint[9:14] +
+                '-' +
+                fingerprint[14:18] +
+                'h'
+                )
 
     hardware_id = _hardware_id()
 
@@ -139,50 +142,43 @@ class Client(object):
         if not self.server_settings['login_cookie'] in self.session.cookies:
             raise PytolinoException(f'login to {self.server_name} failed.')
 
-        # auth_code = ""
-        # if 'tat_url' in c:
-            # try:
-                # r = s.get(c['tat_url'], verify=True)
-                # self._debug(r)
-                # b64 = re.search(r'\&tat=(.*?)%3D', r.text).group(1)
-                # self.access_token = base64.b64decode(b64+'==').decode('utf-8')
-            # except:
-                # raise TolinoException('oauth access token request failed.')
-        # else:
-            # # Request OAUTH code
-            # params = {
-                # 'client_id'     : c['client_id'],
-                # 'response_type' : 'code',
-                # 'scope'         : c['scope'],
-                # 'redirect_uri'  : c['reader_url']
-            # }
-            # if 'login_form_url' in c:
-                # params['x_buchde.skin_id'] = c['x_buchde.skin_id']
-                # params['x_buchde.mandant_id'] = c['x_buchde.mandant_id']
-            # r = s.get(c['auth_url'], params=params, verify=True, allow_redirects=False)
-            # self._debug(r)
-            # try:
-                # params = parse_qs(urlparse(r.headers['Location']).query)
-                # auth_code = params['code'][0]
-            # except:
-                # raise TolinoException('oauth code request failed.')
+        auth_code = ""
 
-            # # Fetch OAUTH access token
-            # r = s.post(c['token_url'], data = {
-                # 'client_id'    : c['client_id'],
-                # 'grant_type'   : 'authorization_code',
-                # 'code'         : auth_code,
-                # 'scope'        : c['scope'],
-                # 'redirect_uri' : c['reader_url']
-            # }, verify=True, allow_redirects=False)
-            # self._debug(r)
-            # try:
-                # j = r.json()
-                # self.access_token = j['access_token']
-                # self.refresh_token = j['refresh_token']
-                # self.token_expires = int(j['expires_in'])
-            # except:
-                # raise TolinoException('oauth access token request failed.')
+        params = {
+            'client_id'     : self.server_settings['client_id'],
+            'response_type' : 'code',
+            'scope'         : self.server_settings['scope'],
+            'redirect_uri'  : self.server_settings['reader_url']
+        }
+        if 'login_form_url' in self.server_settings:
+            params['x_buchde.skin_id'] = self.server_settings['x_buchde.skin_id']
+            params['x_buchde.mandant_id'] = self.server_settings['x_buchde.mandant_id']
+        host_response = self.session.get(self.server_settings['auth_url'], params=params, verify=True, allow_redirects=False)
+
+        self._log_requests(host_response)
+
+        try:
+            params = parse_qs(urlparse(host_response.headers['Location']).query)
+            auth_code = params['code'][0]
+        except:
+            raise PytolinoException('oauth code request failed.')
+
+        # Fetch OAUTH access token
+        # r = s.post(c['token_url'], data = {
+            # 'client_id'    : c['client_id'],
+            # 'grant_type'   : 'authorization_code',
+            # 'code'         : auth_code,
+            # 'scope'        : c['scope'],
+            # 'redirect_uri' : c['reader_url']
+        # }, verify=True, allow_redirects=False)
+        # self._debug(r)
+        # try:
+            # j = r.json()
+            # self.access_token = j['access_token']
+            # self.refresh_token = j['refresh_token']
+            # self.token_expires = int(j['expires_in'])
+        # except:
+            # raise TolinoException('oauth access token request failed.')
 
 if __name__ == '__main__':
     main()
