@@ -164,21 +164,21 @@ class Client(object):
             raise PytolinoException('oauth code request failed.')
 
         # Fetch OAUTH access token
-        # r = s.post(c['token_url'], data = {
-            # 'client_id'    : c['client_id'],
-            # 'grant_type'   : 'authorization_code',
-            # 'code'         : auth_code,
-            # 'scope'        : c['scope'],
-            # 'redirect_uri' : c['reader_url']
-        # }, verify=True, allow_redirects=False)
-        # self._debug(r)
-        # try:
-            # j = r.json()
-            # self.access_token = j['access_token']
-            # self.refresh_token = j['refresh_token']
-            # self.token_expires = int(j['expires_in'])
-        # except:
-            # raise TolinoException('oauth access token request failed.')
+        host_response = self.session.post(self.server_settings['token_url'], data = {
+            'client_id'    : self.server_settings['client_id'],
+            'grant_type'   : 'authorization_code',
+            'code'         : auth_code,
+            'scope'        : self.server_settings['scope'],
+            'redirect_uri' : self.server_settings['reader_url']
+        }, verify=True, allow_redirects=False)
+        self._log_requests(host_response)
+        try:
+            j = host_response.json()
+            self.access_token = j['access_token']
+            self.refresh_token = j['refresh_token']
+            self.token_expires = int(j['expires_in'])
+        except:
+            raise TolinoException('oauth access token request failed.')
 
 if __name__ == '__main__':
     main()
