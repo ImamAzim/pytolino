@@ -220,6 +220,12 @@ class Client(object):
             self._log_requests(host_response)
             if host_response.status_code != 200:
                 raise PytolinoException('logout failed.')
+
+    def register(self):
+        """register your device. Needs to done only once! necessary to
+        upload files. you need to login first.
+
+        """
         pass
 
 
