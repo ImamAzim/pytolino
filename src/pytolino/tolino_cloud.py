@@ -17,7 +17,10 @@ class PytolinoException(Exception):
 
 
 SERVERS_SETTINGS_FN = 'servers_settings.ini'
-SERVERS_SETTINGS_FILE_PATH = os.path.join(os.path.dirname(__file__), SERVERS_SETTINGS_FN)
+SERVERS_SETTINGS_FILE_PATH = os.path.join(
+        os.path.dirname(__file__),
+        SERVERS_SETTINGS_FN,
+        )
 servers_settings = configparser.ConfigParser()
 servers_settings.read(SERVERS_SETTINGS_FILE_PATH)
 
@@ -39,7 +42,7 @@ class Client(object):
         try:
             j = host_response.json()
             logging.debug(f'json: {j}')
-        except:
+        except requests.JSONDecodeError:
             logging.debug(f'text: {host_response.text}')
         logging.info('-------------------------------------------------------')
 
@@ -64,8 +67,8 @@ class Client(object):
 
         os_id = {
             'Windows': '1',
-            'Darwin' : '2',
-            'Linux'  : '3'
+            'Darwin': '2',
+            'Linux': '3'
             }.get(platform.system(), 'x')
 
         # The hardware id contains some info about the browser
@@ -120,11 +123,11 @@ class Client(object):
         self.server_name = server_name
 
     def login(self, username, password):
-        """login to the partner and get access token
+        """login to the partner and get access token.
 
         :username: str
         :password: str
-        :returns: None, but raises pytolino exceptions if fail. will print ansers
+        :returns: None, but raises pytolino exceptions if fail
         """
         logging.info(f'login to {self.server_name}...')
 
@@ -145,40 +148,55 @@ class Client(object):
         auth_code = ""
 
         params = {
-            'client_id'     : self.server_settings['client_id'],
-            'response_type' : 'code',
-            'scope'         : self.server_settings['scope'],
-            'redirect_uri'  : self.server_settings['reader_url']
+            'client_id': self.server_settings['client_id'],
+            'response_type': 'code',
+            'scope': self.server_settings['scope'],
+            'redirect_uri': self.server_settings['reader_url']
         }
         if 'login_form_url' in self.server_settings:
-            params['x_buchde.skin_id'] = self.server_settings['x_buchde.skin_id']
-            params['x_buchde.mandant_id'] = self.server_settings['x_buchde.mandant_id']
-        host_response = self.session.get(self.server_settings['auth_url'], params=params, verify=True, allow_redirects=False)
+            params['x_buchde.skin_id'] = self.server_settings[
+                    'x_buchde.skin_id']
+            params['x_buchde.mandant_id'] = self.server_settings[
+                    'x_buchde.mandant_id']
+        host_response = self.session.get(
+                self.server_settings['auth_url'],
+                params=params,
+                verify=True,
+                allow_redirects=False,
+                )
 
         self._log_requests(host_response)
 
         try:
-            params = parse_qs(urlparse(host_response.headers['Location']).query)
+            params = parse_qs(urlparse(
+                host_response.headers['Location']
+                ).query)
             auth_code = params['code'][0]
-        except:
+        except ValueError:
             raise PytolinoException('oauth code request failed.')
 
         # Fetch OAUTH access token
-        host_response = self.session.post(self.server_settings['token_url'], data = {
-            'client_id'    : self.server_settings['client_id'],
-            'grant_type'   : 'authorization_code',
-            'code'         : auth_code,
-            'scope'        : self.server_settings['scope'],
-            'redirect_uri' : self.server_settings['reader_url']
-        }, verify=True, allow_redirects=False)
+        host_response = self.session.post(
+                self.server_settings['token_url'],
+                data={
+                    'client_id': self.server_settings['client_id'],
+                    'grant_type': 'authorization_code',
+                    'code': auth_code,
+                    'scope': self.server_settings['scope'],
+                    'redirect_uri': self.server_settings['reader_url']
+                    },
+                verify=True,
+                allow_redirects=False,
+                )
         self._log_requests(host_response)
         try:
             j = host_response.json()
             self.access_token = j['access_token']
             self.refresh_token = j['refresh_token']
             self.token_expires = int(j['expires_in'])
-        except:
-            raise TolinoException('oauth access token request failed.')
+        except requests.JSONDecodeError:
+            raise PytolinoException('oauth access token request failed.')
+
 
 if __name__ == '__main__':
     main()
