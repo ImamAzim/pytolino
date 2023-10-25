@@ -233,7 +233,7 @@ class Client(object):
                 headers={
                     'content-type': 'application/json',
                     't_auth_token': self.access_token,
-                    'hardware_id': self._hardware_id,
+                    'hardware_id': self.hardware_id,
                     'reseller_id': self.server_settings['partner_id'],
                     'client_type': 'TOLINO_WEBREADER',
                     'client_version': '4.4.1',
@@ -242,7 +242,7 @@ class Client(object):
                 )
         self._log_requests(host_response)
         if host_response.status_code != 200:
-            raise PytolinoException(f'register {self._hardware_id} failed.')
+            raise PytolinoException(f'register {self.hardware_id} failed.')
 
 
 if __name__ == '__main__':
