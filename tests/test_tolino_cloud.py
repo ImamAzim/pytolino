@@ -33,7 +33,7 @@ class TestClient(unittest.TestCase):
     def test_init_partner_config(self):
         self.assertTrue(hasattr(self.client, 'server_settings'))
         n_settings = len(self.client.server_settings)
-        self.assertGreater(n_settings, 0) 
+        self.assertGreater(n_settings, 0)
 
     def test_hardware_id(self):
         self.assertTrue(hasattr(self.client, 'hardware_id'))
@@ -46,7 +46,10 @@ class TestClient(unittest.TestCase):
 
 
 def get_credentials():
-    CREDENTIAL_FILEPATH = os.path.join(os.path.expanduser('~'), 'credentials.ini')
+    CREDENTIAL_FILEPATH = os.path.join(
+            os.path.expanduser('~'),
+            'credentials.ini',
+            )
     if os.path.exists(CREDENTIAL_FILEPATH):
         credentials = configparser.ConfigParser()
         credentials.read(CREDENTIAL_FILEPATH)
@@ -57,6 +60,7 @@ def get_credentials():
         username = input('username')
         password = getpass.getpass()
     return username, password
+
 
 def run_login():
 
@@ -73,4 +77,3 @@ def run_login():
 
 if __name__ == '__main__':
     run_login()
-
