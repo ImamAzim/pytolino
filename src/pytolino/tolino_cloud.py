@@ -45,7 +45,6 @@ class Client(object):
     def _log_mechanize(self, host_response):
         logging.info('-------------------- HTTP response --------------------')
         logging.info(f'status code: {host_response.code}')
-        logging.info(f'cookies: {host_response.cookiejar}')
         logging.info(f'headers: {host_response.info()}')
         logging.info('-------------------------------------------------------')
 
