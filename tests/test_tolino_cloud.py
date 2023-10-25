@@ -68,6 +68,8 @@ def run_login():
     print(client.refresh_token)
     print(client.token_expires)
 
+    client.logout()
+
 
 if __name__ == '__main__':
     run_login()

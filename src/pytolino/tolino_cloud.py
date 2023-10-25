@@ -197,6 +197,12 @@ class Client(object):
         except requests.JSONDecodeError:
             raise PytolinoException('oauth access token request failed.')
 
+    def logout(self):
+        """logout from tolino partner host
+
+        """
+        pass
+
 
 if __name__ == '__main__':
     main()
