@@ -6,6 +6,7 @@ import configparser
 import platform
 import logging
 from urllib.parse import urlparse, parse_qs
+import json
 
 
 import requests
@@ -226,7 +227,22 @@ class Client(object):
         upload files. you need to login first.
 
         """
-        pass
+        host_response = self.session.post(
+                self.server_settings['register_url'],
+                data=json.dumps({'hardware_name': 'tolino sync reader'}),
+                headers={
+                    'content-type': 'application/json',
+                    't_auth_token': self.access_token,
+                    'hardware_id': self._hardware_id,
+                    'reseller_id': self.server_settings['partner_id'],
+                    'client_type': 'TOLINO_WEBREADER',
+                    'client_version': '4.4.1',
+                    'hardware_type': 'HTML5',
+                    }
+                )
+        self._log_requests(host_response)
+        if host_response.status_code != 200:
+            raise PytolinoException(f'register {self._hardware_id} failed.')
 
 
 if __name__ == '__main__':
