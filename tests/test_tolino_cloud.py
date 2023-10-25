@@ -62,7 +62,7 @@ def get_credentials():
     return username, password
 
 
-def run_login():
+def client_method_tests():
 
     username, password = get_credentials()
     client = Client()
@@ -75,5 +75,25 @@ def run_login():
     client.logout()
 
 
+def register_test():
+
+    REGISTER_CHECK_PATH = os.path.join(
+            os.path.expanduser('~'),
+            'device_is_registered',
+            )
+    if not os.path.exists(REGISTER_CHECK_PATH):
+        username, password = get_credentials()
+        client = Client()
+        client.login(username, password)
+        client.register()
+        client.logout()
+        open(REGISTER_CHECK_PATH, 'w').close()
+    else:
+        print(
+                'I think this device is already registered. If you want to do it again',
+                f', delete the file {REGISTER_CHECK_PATH} and re-run this function',
+                )
+
+
 if __name__ == '__main__':
-    run_login()
+    register_test()
