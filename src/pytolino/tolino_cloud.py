@@ -136,7 +136,7 @@ class Client(object):
 
         logging.info(self.server_settings['login_cookie'])
         self._log_mechanize(host_response)
-        if not self.server_settings['login_cookie'] in s.cookies:
+        if not self.server_settings['login_cookie'] in self.session.cookies:
             raise PytolinoException(f'login to {self.server_name} failed.')
 
         # auth_code = ""
