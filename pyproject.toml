@@ -22,3 +22,10 @@ dependencies = [
     'requests',
     'mechanize',
 ]
+
+[project.optional-dependencies]
+dev = [
+	'pytest',
+	'flake8',
+	'ipython',
+]
