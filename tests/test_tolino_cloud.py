@@ -114,6 +114,19 @@ def unregister_test():
     client.logout()
 
 
+def upload_test():
+    EPUB_PATH = os.path.join(
+            os.path.expanduser('~'),
+            'news.epub',
+            )
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+    client.upload(EPUB_PATH)
+
+    client.logout()
+
 
 if __name__ == '__main__':
-    register_test()
+    upload_test()

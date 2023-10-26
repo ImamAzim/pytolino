@@ -287,14 +287,14 @@ class Client(object):
                 raise PytolinoException(
                         f'unregister {device_id} failed: reason unknown.')
 
-        def upload(self, file_path):
-            """upload an ebook to your cloud
+    def upload(self, file_path):
+        """upload an ebook to your cloud
 
-            :file_path: str path to the ebook to upload
-            :returns: epub_id on the server
+        :file_path: str path to the ebook to upload
+        :returns: epub_id on the server
 
-            """
-            pass
+        """
+        pass
 
 
 if __name__ == '__main__':
