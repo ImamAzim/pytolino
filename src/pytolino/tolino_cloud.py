@@ -260,7 +260,7 @@ class Client(object):
                 data=json.dumps({
                     'deleteDevicesRequest': {
                         'accounts': [{
-                            'auth_token' : self.access_token,
+                            'auth_token': self.access_token,
                             'reseller_id': self.server_settings['partner_id'],
                             }],
                         'devices': [{
@@ -279,9 +279,13 @@ class Client(object):
         if host_response.status_code != 200:
             try:
                 j = host_response.json()
-                raise PytolinoException(f'unregister {device_id} failed: {j['ResponseInfo']['message']}')
+                raise PytolinoException(
+                        f"unregister {device_id} failed: ",
+                        f"{j['ResponseInfo']['message']}"
+                        )
             except KeyError:
-                raise PytolinoException(f'unregister {device_id} failed: reason unknown.')
+                raise PytolinoException(
+                        f'unregister {device_id} failed: reason unknown.')
 
 
 if __name__ == '__main__':
