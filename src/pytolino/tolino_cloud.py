@@ -244,15 +244,44 @@ class Client(object):
         if host_response.status_code != 200:
             raise PytolinoException(f'register {self.hardware_id} failed.')
 
-    def unregister(self, device=None):
+    def unregister(self, device_id=None):
         """unregister a device from the host partner. If no device is given,
         it is assumed the device in use will be removed
 
-        :device: None or str if we want to unregister another device
+        :device_id: None or str if we want to unregister another device
         :returns: None
 
         """
-        pass
+        if device_id is None:
+            device_id = self.hardware_id
+
+        host_response = self.session.post(
+                self.server_settings['unregister_url'],
+                data=json.dumps({
+                    'deleteDevicesRequest': {
+                        'accounts': [{
+                            'auth_token' : self.access_token,
+                            'reseller_id': self.server_settings['partner_id'],
+                            }],
+                        'devices': [{
+                            'device_id': device_id,
+                            'reseller_id': self.server_settings['partner_id'],
+                            }]
+                        }
+                    }),
+                headers={
+                    'content-type': 'application/json',
+                    't_auth_token': self.access_token,
+                    'reseller_id': self.server_settings['partner_id'],
+                    }
+                )
+        self._log_requests(host_response)
+        if host_response.status_code != 200:
+            try:
+                j = host_response.json()
+                raise PytolinoException(f'unregister {device_id} failed: {j['ResponseInfo']['message']}')
+            except KeyError:
+                raise PytolinoException(f'unregister {device_id} failed: reason unknown.')
 
 
 if __name__ == '__main__':
