@@ -344,7 +344,7 @@ class Client(object):
         :returns: None
 
         """
-        pass
+        raise PytolinoException(f'delete {ebook_id} failed: reason unknown.')
 
 
 if __name__ == '__main__':

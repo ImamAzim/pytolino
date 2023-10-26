@@ -137,5 +137,17 @@ def upload_test():
     client.logout()
 
 
+def delete_test():
+
+    with open(EPUB_ID_PATH, 'r') as myfile:
+        epub_id = myfile.read()
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+    client.delete_ebook(epub_id)
+    client.logout()
+
+
 if __name__ == '__main__':
     upload_test()
