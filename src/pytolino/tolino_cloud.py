@@ -244,6 +244,16 @@ class Client(object):
         if host_response.status_code != 200:
             raise PytolinoException(f'register {self.hardware_id} failed.')
 
+    def unregister(self, device=None):
+        """unregister a device from the host partner. If no device is given,
+        it is assumed the device in use will be removed
+
+        :device: None or str if we want to unregister another device
+        :returns: None
+
+        """
+        pass
+
 
 if __name__ == '__main__':
     main()
