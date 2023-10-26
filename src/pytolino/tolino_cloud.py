@@ -336,6 +336,16 @@ class Client(object):
             except KeyError:
                 raise PytolinoException('file upload failed.')
 
+    def delete_ebook(self, ebook_id):
+        """delete an ebook present on your cloud
+
+        :ebook_id: id of the ebook to delete.
+        obtained after upload or with inventory method
+        :returns: None
+
+        """
+        pass
+
 
 if __name__ == '__main__':
     main()
