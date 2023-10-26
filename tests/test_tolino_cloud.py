@@ -95,5 +95,25 @@ def register_test():
                 )
 
 
+def unregister_test():
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+
+    client.unregister()
+
+    REGISTER_CHECK_PATH = os.path.join(
+            os.path.expanduser('~'),
+            'device_is_registered',
+            )
+    if os.path.exists(REGISTER_CHECK_PATH):
+        os.remove(REGISTER_CHECK_PATH)
+
+
+    client.logout()
+
+
+
 if __name__ == '__main__':
-    register_test()
+    unregister_test()
