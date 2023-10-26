@@ -150,4 +150,4 @@ def delete_test():
 
 
 if __name__ == '__main__':
-    upload_test()
+    delete_test()
