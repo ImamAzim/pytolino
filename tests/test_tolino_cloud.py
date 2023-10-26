@@ -114,6 +114,12 @@ def unregister_test():
     client.logout()
 
 
+EPUB_ID_PATH = os.path.join(
+        os.path.expanduser('~'),
+        'epub_id',
+        )
+
+
 def upload_test():
     EPUB_PATH = os.path.join(
             os.path.expanduser('~'),
@@ -125,6 +131,8 @@ def upload_test():
     client.login(username, password)
     ebook_id = client.upload(EPUB_PATH)
     print(ebook_id)
+    with open(EPUB_ID_PATH, 'w') as myfile:
+        myfile.write(ebook_id)
 
     client.logout()
 
