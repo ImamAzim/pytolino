@@ -90,8 +90,10 @@ def register_test():
         open(REGISTER_CHECK_PATH, 'w').close()
     else:
         print(
-                'I think this device is already registered. If you want to do it again',
-                f', delete the file {REGISTER_CHECK_PATH} and re-run this function',
+                'I think this device is already registered.',
+                'If you want to do it again',
+                f', delete the file {REGISTER_CHECK_PATH}',
+                ' and re-run this function',
                 )
 
 
@@ -109,7 +111,6 @@ def unregister_test():
             )
     if os.path.exists(REGISTER_CHECK_PATH):
         os.remove(REGISTER_CHECK_PATH)
-
 
     client.logout()
 
