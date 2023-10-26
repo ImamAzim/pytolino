@@ -345,7 +345,28 @@ class Client(object):
         :returns: None
 
         """
-        raise PytolinoException(f'delete {ebook_id} failed: reason unknown.')
+        host_response = self.session.get(
+                self.server_settings['delete_url'],
+                params={'deliverableId': ebook_id,},
+                headers={
+                    't_auth_token': self.access_token,
+                    'hardware_id': self.hardware_id,
+                    'reseller_id': self.server_settings['partner_id'],
+                    }
+                )
+        self._log_requests(host_response)
+
+
+        if host_response.status_code != 200:
+            try:
+                j = host_response.json()
+                raise PytolinoException(
+                        f"delete {ebook_id} failed: ",
+                        f"{j['ResponseInfo']['message']}"
+                        )
+            except KeyError:
+                raise PytolinoException(
+                        f'delete {ebook_id} failed: reason unknown.')
 
 
 if __name__ == '__main__':
