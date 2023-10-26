@@ -287,14 +287,54 @@ class Client(object):
                 raise PytolinoException(
                         f'unregister {device_id} failed: reason unknown.')
 
-    def upload(self, file_path):
+    def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
 
         :file_path: str path to the ebook to upload
+        :name: str name of book if different from filename
+        :extension: epub or pdf. only needed if it is not on the filename suffixe
         :returns: epub_id on the server
 
         """
-        pass
+
+        if name is None:
+            name = file_path.split('/')[-1]
+        if extension is None:
+            extension = file_path.split('.')[-1]
+
+        mime = {
+                'pdf': 'application/pdf',
+                'epub': 'application/epub+zip',
+                }.get(extension.lower(), 'application/pdf')
+
+        host_response = self.session.post(
+                self.server_settings['upload_url'],
+                files=[(
+                    'file',
+                    (
+                        name,
+                        open(file_path, 'rb'),
+                        mime,
+                        ),
+                    )],
+                headers={
+                    't_auth_token': self.access_token,
+                    'hardware_id': self.hardware_id,
+                    'reseller_id': self.server_settings['partner_id'],
+                    }
+                )
+        self._log_requests(host_response)
+        if host_response.status_code != 200:
+            raise PytolinoException('file upload failed.')
+        try:
+            j = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException('file upload failed.')
+        else:
+            try:
+                return j['metadata']['deliverableId']
+            except KeyError:
+                raise PytolinoException('file upload failed.')
 
 
 if __name__ == '__main__':

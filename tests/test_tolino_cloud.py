@@ -123,7 +123,8 @@ def upload_test():
     username, password = get_credentials()
     client = Client()
     client.login(username, password)
-    client.upload(EPUB_PATH)
+    ebook_id = client.upload(EPUB_PATH)
+    print(ebook_id)
 
     client.logout()
 
