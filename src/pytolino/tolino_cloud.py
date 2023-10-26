@@ -347,7 +347,7 @@ class Client(object):
         """
         host_response = self.session.get(
                 self.server_settings['delete_url'],
-                params={'deliverableId': ebook_id,},
+                params={'deliverableId': ebook_id},
                 headers={
                     't_auth_token': self.access_token,
                     'hardware_id': self.hardware_id,
@@ -355,7 +355,6 @@ class Client(object):
                     }
                 )
         self._log_requests(host_response)
-
 
         if host_response.status_code != 200:
             try:
