@@ -116,4 +116,4 @@ def unregister_test():
 
 
 if __name__ == '__main__':
-    unregister_test()
+    register_test()
