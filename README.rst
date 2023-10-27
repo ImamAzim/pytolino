@@ -13,9 +13,9 @@ pip install tolino_cloud_client
 Usage
 =====
 
-before being able to send requests, you need to register your computer on which you will run the code:
 
 .. code-block:: python
+    :caption: before being able to send requests, you need to register your computer on which you will run the code:
 
     from pytolino.tolino_cloud import Client, PytolinoException
     client = Client()
@@ -30,19 +30,6 @@ before being able to send requests, you need to register your computer on which 
 ..tolino.register_device()
 ..tolino.upload('/path_to_my_epub_gile')
 ..tolino.logout()
-
-
-Usage
------
-
-.. code-block:: python
-
-    import minibar
-    import time
-
-    for i in minibar.bar(range(100)):
-        time.sleep(0.05)
-
 
 Features
 ========
