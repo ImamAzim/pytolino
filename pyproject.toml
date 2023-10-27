@@ -29,4 +29,6 @@ dev = [
 	'flake8',
 	'ipython',
 	'sphinx',
+	'build',
+	'twine',
 ]
