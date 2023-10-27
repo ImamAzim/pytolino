@@ -12,10 +12,10 @@ readme = "README.rst"
 requires-python = ">=3.7"
 classifiers = [
     "Intended Audience :: Developers",
-    "License :: GNU",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
-    "Operating System :: Debian Linux",
+    "Operating System :: POSIX :: LINUX",
 ]
 description = "client for tolino cloud"
 dependencies = [
