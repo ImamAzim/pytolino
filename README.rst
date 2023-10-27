@@ -8,14 +8,16 @@ one difference is that I aim to create a python package from it and to put it on
 Installation
 ============
 
-pip install tolino_cloud_client
+.. code-block:: bash
+
+    pip install tolino_cloud_client
 
 Usage
 =====
 
 
+Before being able to send requests, you need to register your computer on which you will run the code:
 .. code-block:: python
-    :caption: before being able to send requests, you need to register your computer on which you will run the code:
 
     from pytolino.tolino_cloud import Client, PytolinoException
     client = Client()
