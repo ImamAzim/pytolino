@@ -1,9 +1,9 @@
-tolino cloud client
+pytolino
 ===================
 
-a client to interact (login, upload, delete ebooks, etc..) with the tolino cloud with python. Most of the code is forked from https://github.com/darkphoenix/tolino-calibre-sync
+A client to interact (login, upload, delete ebooks, etc..) with the tolino cloud with python. Most of the code is forked from https://github.com/darkphoenix/tolino-calibre-sync
 
-one difference is that I aim to create a python package from it and to put it on pypi, so that one can use this python module in other projects.
+One difference is that I aim to create a python package from it and to put it on pypi, so that one can use this python module in other projects.
 
 Installation
 ============
