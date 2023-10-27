@@ -30,6 +30,19 @@ Usage
 ..tolino.upload('/path_to_my_epub_gile')
 ..tolino.logout()
 
+
+Usage
+-----
+
+.. code-block:: python
+
+    import minibar
+    import time
+
+    for i in minibar.bar(range(100)):
+        time.sleep(0.05)
+
+
 Features
 ========
 
