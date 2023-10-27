@@ -28,4 +28,5 @@ dev = [
 	'pytest',
 	'flake8',
 	'ipython',
+	'sphinx',
 ]
