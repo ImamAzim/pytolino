@@ -15,8 +15,10 @@ Installation
 Usage
 =====
 
+
+Before being able to send requests, you need to register your computer on which you will run the code:
+
 .. code-block:: python
-    :caption: Before being able to send requests, you need to register your computer on which you will run the code:
 
     from pytolino.tolino_cloud import Client, PytolinoException
     client = Client()
@@ -24,13 +26,6 @@ Usage
     client.register() # do this only once!
     client.logout()
 
-..example:
-..from tolino_client import TolinoCloud
-..tolino = TolinoCloud()
-..tolino.login(username, password)
-..tolino.register_device()
-..tolino.upload('/path_to_my_epub_gile')
-..tolino.logout()
 
 Features
 ========
