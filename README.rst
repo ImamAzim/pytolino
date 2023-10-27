@@ -13,8 +13,8 @@ pip install tolino_cloud_client
 Usage
 =====
 
+before being able to send requests, you need to register your computer on which you will run the code.
 .. code-block:: python
-   :caption: before being able to send requests, you need to register your computer on which you will run the code.
 
    from pytolino.tolino_cloud import Client, PytolinoException
    client = Client()
