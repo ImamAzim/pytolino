@@ -16,13 +16,11 @@ Usage
 .. code-block:: python
    :caption: before being able to send requests, you need to register your computer on which you will run the code.
 
-        from pytolino.tolino_cloud import Client, PytolinoException
-
-
-        client = Client()
-        client.login(USERNAME, PASSWORD)
-        client.register() # do this only once!
-        client.logout()
+   from pytolino.tolino_cloud import Client, PytolinoException
+   client = Client()
+   client.login(USERNAME, PASSWORD)
+   client.register() # do this only once!
+   client.logout()
 
 ..example:
 ..from tolino_client import TolinoCloud
