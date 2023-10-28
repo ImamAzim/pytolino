@@ -33,5 +33,5 @@ dev = [
 	'twine',
 ]
 
-[projects.urls]
+[project.urls]
 "Source Code" = "https://github.com/ImamAzim/pytolino"
