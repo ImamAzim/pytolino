@@ -13,6 +13,7 @@ Welcome to pytolino's documentation!
    Installation
    Usage
    License
+   Links
 
 **Pytolino** is a client to interact (login, upload, delete ebooks, etc..) with the tolino cloud with python. Most of the code is forked from `tolino-calibre-sync project <https://github.com/darkphoenix/tolino-calibre-sync>`_
 
