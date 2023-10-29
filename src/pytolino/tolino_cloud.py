@@ -341,7 +341,6 @@ class Client(object):
         """delete an ebook present on your cloud
 
         :ebook_id: id of the ebook to delete.
-        obtained after upload or with inventory method
         :returns: None
 
         """
