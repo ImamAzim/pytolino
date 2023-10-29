@@ -12,6 +12,7 @@ Welcome to pytolino's documentation!
 
    Installation
    Usage
+   API
    License
    Links
 
