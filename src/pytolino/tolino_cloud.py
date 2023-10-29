@@ -292,8 +292,7 @@ class Client(object):
 
         :file_path: str path to the ebook to upload
         :name: str name of book if different from filename
-        :extension: epub or pdf. only needed if it is
-        not on the filename suffixe
+        :extension: epub or pdf, if not in filename
         :returns: epub_id on the server
 
         """
