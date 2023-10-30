@@ -36,4 +36,4 @@ dev = [
 
 [project.urls]
 "Source Code" = "https://github.com/ImamAzim/pytolino"
-"Documentation" = "https://imamazim.github.io/pytolino/"
+"Documentation" = "https://pytolino.readthedocs.io/en/latest/index.html"
