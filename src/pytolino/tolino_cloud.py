@@ -287,6 +287,15 @@ class Client(object):
                 raise PytolinoException(
                         f'unregister {device_id} failed: reason unknown.')
 
+    def add_to_collection(self, book_id, collection):
+        """add a book to a collection on the cloud
+
+        :book_id: identify the book on the cloud
+        :collection: str name
+
+        """
+        pass
+
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
 
