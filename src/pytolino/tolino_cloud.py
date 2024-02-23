@@ -309,6 +309,18 @@ class Client(object):
                     }]
                 }
 
+        host_response = self.session.patch(
+                self.server_settings['sync_data_url'],
+                data=json.dumps(payload),
+                headers={
+                    'content-type': 'application/json',
+                    't_auth_token': self.access_token,
+                    'hardware_id': self.hardware_id,
+                    'reseller_id': self.server_settings['partner_id'],
+                    'client_type': 'TOLINO_WEBREADER',
+                    }
+                )
+
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
 
