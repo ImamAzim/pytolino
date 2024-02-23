@@ -320,6 +320,9 @@ class Client(object):
                     'client_type': 'TOLINO_WEBREADER',
                     }
                 )
+        self._log_requests(host_response)
+        if host_response.status_code != 200:
+            raise PytolinoException('add to collection failed')
 
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
