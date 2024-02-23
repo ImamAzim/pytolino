@@ -137,6 +137,16 @@ def upload_test():
 
     client.logout()
 
+def collection_test():
+    with open(EPUB_ID_PATH, 'r') as myfile:
+        epub_id = myfile.read()
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+    client.add_to_collection(epub_id, 'test_coll')
+    client.logout()
+
 
 def delete_test():
 
@@ -151,4 +161,4 @@ def delete_test():
 
 
 if __name__ == '__main__':
-    delete_test()
+    collection_test()
