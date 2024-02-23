@@ -7,6 +7,7 @@ import platform
 import logging
 from urllib.parse import urlparse, parse_qs
 import json
+import time
 
 
 import requests
@@ -287,14 +288,26 @@ class Client(object):
                 raise PytolinoException(
                         f'unregister {device_id} failed: reason unknown.')
 
-    def add_to_collection(self, book_id, collection):
+    def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud
 
         :book_id: identify the book on the cloud
-        :collection: str name
+        :collection_name: str name
 
         """
-        pass
+
+        payload = {
+                "revision": None,
+                "patches": [{
+                    "op": "add",
+                    "value": {
+                        "modified": round(time.time() * 1000),
+                        "name": collection_name,
+                        "category": "collection",
+                    },
+                    "path": f"/publications/{book_id}/tags"
+                    }]
+                }
 
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
