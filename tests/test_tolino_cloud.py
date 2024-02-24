@@ -160,5 +160,24 @@ def delete_test():
     client.logout()
 
 
+def inventory_test():
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+    inventory = client.inventory()
+    client.logout()
+    print(inventory)
+
+def delete_test():
+
+    with open(EPUB_ID_PATH, 'r') as myfile:
+        epub_id = myfile.read()
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+    client.delete_ebook(epub_id)
+    client.logout()
 if __name__ == '__main__':
-    collection_test()
+    inventory_test()
