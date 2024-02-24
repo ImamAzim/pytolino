@@ -44,11 +44,11 @@ if you want to unregister your computer:
 
 .. code-block:: python
 
-from pytolino.tolino_cloud import Client, PytolinoException
-client = Client()
-client.login(USERNAME, PASSWORD)
-client.register() # now you will not be able to upload books from this computer
-client.logout()
+    from pytolino.tolino_cloud import Client, PytolinoException
+    client = Client()
+    client.login(USERNAME, PASSWORD)
+    client.register() # now you will not be able to upload books from this computer
+    client.logout()
 
 
 Features
