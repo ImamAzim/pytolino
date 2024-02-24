@@ -293,7 +293,16 @@ class Client(object):
         :returns: list of dict describing the book
 
         """
-        pass
+
+        host_resonse = self.session.get(
+                self.server_settings['inventory_url'],
+                params={'strip': 'true'},
+                headers={
+                    't_auth_token': self.access_token,
+                    'hardware_id': self.hardware_id,
+                    'reseller_id': self.server_settings['partner_id'],
+                    }
+                )
 
     def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud
