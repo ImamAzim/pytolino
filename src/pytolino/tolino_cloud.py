@@ -294,7 +294,7 @@ class Client(object):
 
         """
 
-        host_resonse = self.session.get(
+        host_response = self.session.get(
                 self.server_settings['inventory_url'],
                 params={'strip': 'true'},
                 headers={
@@ -309,17 +309,28 @@ class Client(object):
             raise PytolinoException('invetory request failed')
 
         try:
-            inv = []
-            j = r.json()
-            # edata = own documents uploaded to Tolino Cloud
-            for item in j['PublicationInventory']['edata']:
-                inv.append(self._parse_metadata(item))
-            # ebook = purchased ebooks in Tolino Cloud
-            for item in j['PublicationInventory']['ebook']:
-                inv.append(self._parse_metadata(item))
-            return inv
-        except:
-            raise TolinoException('inventory list request failed.')
+            j = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException(
+                    'inventory list request failed because of json error.'
+                    )
+        else:
+            try:
+                publication_inventory = j['PublicationInventory']
+                uploaded_ebooks = publication_inventory['edata']
+                purchased_ebook = publication_inventory['ebook']
+            except KeyError:
+                raise PytolinoException(
+                        'inventory list request failed because',
+                        'of key error in json.',
+                        )
+            else:
+                inventory = uploaded_ebooks + purchased_ebook
+                return inventory
+            # for item in j['PublicationInventory']['edata']:
+                # inv.append(self._parse_metadata(item))
+            # for item in j['PublicationInventory']['ebook']:
+                # inv.append(self._parse_metadata(item))
 
     def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud
