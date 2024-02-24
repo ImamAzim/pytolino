@@ -290,7 +290,7 @@ class Client(object):
 
     def get_inventory(self):
         """download a list of the books on the cloud and their information
-        :returns: list of dict describing the book
+        :returns: list of dict describing the book, with a epubMetaData dict
 
         """
 
@@ -327,10 +327,6 @@ class Client(object):
             else:
                 inventory = uploaded_ebooks + purchased_ebook
                 return inventory
-            # for item in j['PublicationInventory']['edata']:
-                # inv.append(self._parse_metadata(item))
-            # for item in j['PublicationInventory']['ebook']:
-                # inv.append(self._parse_metadata(item))
 
     def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud

@@ -167,7 +167,9 @@ def inventory_test():
     client.login(username, password)
     inventory = client.get_inventory()
     client.logout()
-    print(inventory)
+    print(inventory[0].keys())
+    metadata = inventory[0]['epubMetaData']
+    print(metadata.keys())
 
 def delete_test():
 
