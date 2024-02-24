@@ -165,7 +165,7 @@ def inventory_test():
     username, password = get_credentials()
     client = Client()
     client.login(username, password)
-    inventory = client.inventory()
+    inventory = client.get_inventory()
     client.logout()
     print(inventory)
 

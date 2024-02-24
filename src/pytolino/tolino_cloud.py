@@ -288,7 +288,7 @@ class Client(object):
                 raise PytolinoException(
                         f'unregister {device_id} failed: reason unknown.')
 
-    def inventory(self):
+    def get_inventory(self):
         """download a list of the books on the cloud and their information
         :returns: list of dict describing the book
 
@@ -303,6 +303,23 @@ class Client(object):
                     'reseller_id': self.server_settings['partner_id'],
                     }
                 )
+
+        self._log_requests(host_response)
+        if host_response.status_code != 200:
+            raise PytolinoException('invetory request failed')
+
+        try:
+            inv = []
+            j = r.json()
+            # edata = own documents uploaded to Tolino Cloud
+            for item in j['PublicationInventory']['edata']:
+                inv.append(self._parse_metadata(item))
+            # ebook = purchased ebooks in Tolino Cloud
+            for item in j['PublicationInventory']['ebook']:
+                inv.append(self._parse_metadata(item))
+            return inv
+        except:
+            raise TolinoException('inventory list request failed.')
 
     def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud
