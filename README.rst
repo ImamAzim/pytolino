@@ -36,6 +36,7 @@ You can then upload, add to a collection or delete ebook on your cloud:
     ebook_id = client.upload(EPUB_FILE_PATH) # return a unique id that can be used for reference
     client.add_collection(epub_id, 'science fiction') # add the previous book to the collection science-fiction
     client.delete_ebook(epub_id) # delete the previousely uploaded ebook
+    inventory = client.get_inventory() # get a list of all the books on the cloud and their metadata
     client.logout()
 
 
@@ -43,11 +44,11 @@ if you want to unregister your computer:
 
 .. code-block:: python
 
-    from pytolino.tolino_cloud import Client, PytolinoException
-    client = Client()
-    client.login(USERNAME, PASSWORD)
-    client.register() # now you will not be able to upload books from this computer
-    client.logout()
+from pytolino.tolino_cloud import Client, PytolinoException
+client = Client()
+client.login(USERNAME, PASSWORD)
+client.register() # now you will not be able to upload books from this computer
+client.logout()
 
 
 Features
@@ -59,6 +60,7 @@ Features
 * upload ebook
 * delete ebook from the cloud
 * add a book to a collection
+* download inventory
 * more to come...
 
 
