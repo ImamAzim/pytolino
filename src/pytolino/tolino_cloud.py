@@ -288,6 +288,13 @@ class Client(object):
                 raise PytolinoException(
                         f'unregister {device_id} failed: reason unknown.')
 
+    def inventory(self):
+        """download a list of the books on the cloud and their information
+        :returns: list of dict describing the book
+
+        """
+        pass
+
     def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud
 
