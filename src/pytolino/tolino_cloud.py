@@ -364,6 +364,15 @@ class Client(object):
         if host_response.status_code != 200:
             raise PytolinoException('add to collection failed')
 
+    def upload_metadata(self, book_id, **meta_data):
+        """upload some metadata to a specific book on the cloud
+
+        :book_id: ref on the cloud of the book
+        :**meta_data: dict of metadata than can be changed
+
+        """
+        pass
+
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
 
