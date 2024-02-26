@@ -168,8 +168,10 @@ def inventory_test():
     inventory = client.get_inventory()
     client.logout()
     print(inventory[0].keys())
-    metadata = inventory[0]['epubMetaData']
-    print(metadata.keys())
+    for item in inventory:
+        metadata = item['epubMetaData']
+        print(metadata.keys())
+
 
 def delete_test():
 
@@ -181,5 +183,26 @@ def delete_test():
     client.login(username, password)
     client.delete_ebook(epub_id)
     client.logout()
+
+
+def metadata_test():
+    new_metadata = dict(title='test_title')
+    with open(EPUB_ID_PATH, 'r') as myfile:
+        epub_id = myfile.read()
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+    client.upload_metadata(epub_id, **new_metadata)
+    inventory = client.get_inventory()
+    for item in inventory:
+        item_metadata = item['epubMetaData']
+        if item_metadata['identifier'] == epub_id:
+            for key, value in new_metadata.items():
+                print(item_metadata[key])
+    client.logout()
+
+
 if __name__ == '__main__':
-    inventory_test()
+    # upload_test()
+    metadata_test()
