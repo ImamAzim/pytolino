@@ -37,6 +37,7 @@ You can then upload, add to a collection or delete ebook on your cloud:
     client.add_collection(epub_id, 'science fiction') # add the previous book to the collection science-fiction
     client.delete_ebook(epub_id) # delete the previousely uploaded ebook
     inventory = client.get_inventory() # get a list of all the books on the cloud and their metadata
+    client.upload_metadata(epub_id, title='my title', author='someone') # you can upload various kind of metadata
     client.logout()
 
 
@@ -61,6 +62,7 @@ Features
 * delete ebook from the cloud
 * add a book to a collection
 * download inventory
+* upload metadata
 * more to come...
 
 
