@@ -388,7 +388,7 @@ class Client(object):
             raise PytolinoException('metadata upload failed')
 
         for key, value in new_metadata.items():
-            book['metadata'] = value
+            book[key] = value
 
         payload = {
                 'uploadMetaData': book['metadata']
