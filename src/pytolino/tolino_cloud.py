@@ -373,6 +373,16 @@ class Client(object):
         """
         pass
 
+        url = self.server_settings['meta_url'] + f'/?deliverableId={book_id}'
+        host_response = self.session.get(
+                url,
+                headers={
+                    't_auth_token': self.access_token,
+                    'hardware_id': self.hardware_id,
+                    'reseller_id': self.server_settings['partner_id'],
+                  }
+                )
+
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
 
