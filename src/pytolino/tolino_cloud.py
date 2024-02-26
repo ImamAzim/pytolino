@@ -371,7 +371,6 @@ class Client(object):
         :**meta_data: dict of metadata than can be changed
 
         """
-        pass
 
         url = self.server_settings['meta_url'] + f'/?deliverableId={book_id}'
         host_response = self.session.get(
@@ -404,6 +403,11 @@ class Client(object):
                     'hardware_id': self.hardware_id,
                     'reseller_id': self.server_settings['partner_id'],
                     }
+                )
+
+        self._log_requests(host_response)
+        if host_response.status_code != 200:
+            raise PytolinoException('metadata upload failed')
 
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
