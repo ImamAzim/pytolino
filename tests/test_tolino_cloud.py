@@ -186,7 +186,7 @@ def delete_test():
 
 
 def metadata_test():
-    new_metadata = dict(title='test_title')
+    new_metadata = dict(publisher='someone')
     with open(EPUB_ID_PATH, 'r') as myfile:
         epub_id = myfile.read()
 
@@ -206,3 +206,4 @@ def metadata_test():
 if __name__ == '__main__':
     # upload_test()
     metadata_test()
+    # inventory_test()
