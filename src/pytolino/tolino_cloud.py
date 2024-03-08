@@ -522,7 +522,7 @@ class Client(object):
 
         self._log_requests(host_response)
 
-        if r.status_code != 200:
+        if host_response.status_code != 200:
             raise PytolinoException('cover upload failed.')
 
 
