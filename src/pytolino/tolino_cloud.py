@@ -26,6 +26,8 @@ SERVERS_SETTINGS_FILE_PATH = os.path.join(
 servers_settings = configparser.ConfigParser()
 servers_settings.read(SERVERS_SETTINGS_FILE_PATH)
 
+PARTNERS = servers_settings.sections()
+
 
 def main():
     print(SERVERS_SETTINGS_FILE_PATH)
@@ -113,7 +115,9 @@ class Client(object):
     def __init__(self, server_name='www.buecher.de'):
 
         if server_name not in servers_settings:
-            raise PytolinoException(f'no partner {server_name} found')
+            raise PytolinoException(
+                    f'the partner {server_name} was not found.'
+                    f'please choose one of the list: {PARTNERS}')
 
         self.access_token = None
         self.refresh_token = None
