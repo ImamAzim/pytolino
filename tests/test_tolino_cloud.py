@@ -202,8 +202,25 @@ def metadata_test():
                 print(item_metadata[key])
     client.logout()
 
+def add_cover_test():
+
+    cover_path = os.path.join(
+            os.path.expanduser('~'),
+            'cover.jpg',
+            )
+
+    with open(EPUB_ID_PATH, 'r') as myfile:
+        epub_id = myfile.read()
+
+    username, password = get_credentials()
+    client = Client()
+    client.login(username, password)
+    client.add_cover(epub_id, cover_path)
+    client.logout()
+
 
 if __name__ == '__main__':
     # upload_test()
-    metadata_test()
+    add_cover_test()
+    # metadata_test()
     # inventory_test()

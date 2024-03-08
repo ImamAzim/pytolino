@@ -491,6 +491,15 @@ class Client(object):
                 raise PytolinoException(
                         f'delete {ebook_id} failed: reason unknown.')
 
+    def add_cover(self, book_id, filepath):
+        """upload a a cover to a book on the cloud
+
+        :book_id: id of the book on the serveer
+        :filepath: path to the cover file
+
+        """
+        pass
+
 
 if __name__ == '__main__':
     main()
