@@ -51,6 +51,22 @@ if you want to unregister your computer:
     client.register() # now you will not be able to upload books from this computer
     client.logout()
 
+By default, it will connect to 'www.buecher.de'. In principle you could change the partner with:
+
+.. code-block:: python
+
+   client = Client(server_name='www.orelfuessli') # for example if you have an account at orel fuessli.
+
+To get a list of the supported partners:
+
+.. code-block:: python
+
+   from pytolino.tolino_cloud import PARTNERS
+   print(PARTNERS)
+
+Unfortunately, the only supported partner now is 'www.buecher.de', because it has a different way of connection... So for now, the only solution is to create an account there and link it to your original account.
+
+
 
 Features
 ========
