@@ -491,14 +491,39 @@ class Client(object):
                 raise PytolinoException(
                         f'delete {ebook_id} failed: reason unknown.')
 
-    def add_cover(self, book_id, filepath):
+    def add_cover(self, book_id, filepath, file_ext=None):
         """upload a a cover to a book on the cloud
 
         :book_id: id of the book on the serveer
         :filepath: path to the cover file
+        :file_ext: png, jpg or jpeg. only necessary if the filepath has no extension
 
         """
-        pass
+
+        if file_ext is None:
+            ext = filepath.split('.')[-1]
+
+        mime = {
+                'png': 'image/png',
+                'jpeg': 'image/jpeg',
+                'jpg': 'image/jpeg'
+                }.get(ext.lower(), 'application/jpeg')
+
+        host_response = self.session.post(
+                self.server_settings['cover_url'],
+                files = [('file', ('1092560016', open(filepath, 'rb'), mime))],
+                data = {'deliverableId': book_id},
+                headers={
+                    't_auth_token': self.access_token,
+                    'hardware_id': self.hardware_id,
+                    'reseller_id': self.server_settings['partner_id'],
+                    },
+                )
+
+        self._log_requests(host_response)
+
+        if r.status_code != 200:
+            raise PytolinoException('cover upload failed.')
 
 
 if __name__ == '__main__':
