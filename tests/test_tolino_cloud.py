@@ -9,6 +9,7 @@ import os
 import unittest
 import configparser
 import logging
+import time
 
 
 from pytolino.tolino_cloud import Client, PytolinoException
@@ -196,7 +197,7 @@ def metadata_test():
             language='mylanguage',
             author='myauthor',
             publisher='mypublisher',
-            # issued='mydate',
+            issued=time.time(),
             )
     with open(EPUB_ID_PATH, 'r') as myfile:
         epub_id = myfile.read()
@@ -237,5 +238,5 @@ def add_cover_test():
 if __name__ == '__main__':
     # upload_test()
     # add_cover_test()
-    # metadata_test()
-    inventory_test()
+    metadata_test()
+    # inventory_test()
