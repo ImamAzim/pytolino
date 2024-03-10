@@ -166,7 +166,9 @@ def inventory_test():
     username, password = get_credentials()
     client = Client()
     client.login(username, password)
+    client.register()
     inventory = client.get_inventory()
+    client.unregister()
     client.logout()
     print(inventory[0].keys())
     for item in inventory:
@@ -194,7 +196,7 @@ def metadata_test():
             language='mylanguage',
             author='myauthor',
             publisher='mypublisher',
-            issued='mydate',
+            # issued='mydate',
             )
     with open(EPUB_ID_PATH, 'r') as myfile:
         epub_id = myfile.read()
@@ -235,5 +237,5 @@ def add_cover_test():
 if __name__ == '__main__':
     # upload_test()
     # add_cover_test()
-    metadata_test()
-    # inventory_test()
+    # metadata_test()
+    inventory_test()
