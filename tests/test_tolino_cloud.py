@@ -130,11 +130,12 @@ def upload_test():
     username, password = get_credentials()
     client = Client()
     client.login(username, password)
+    client.register()
     ebook_id = client.upload(EPUB_PATH)
     print(ebook_id)
     with open(EPUB_ID_PATH, 'w') as myfile:
         myfile.write(ebook_id)
-
+    client.unregister()
     client.logout()
 
 def collection_test():
