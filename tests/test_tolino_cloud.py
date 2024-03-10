@@ -189,8 +189,12 @@ def delete_test():
 def metadata_test():
 
     metadata = dict(
+            title='mytitle',
+            isbn='myisbn',
+            language='mylanguage',
             author='myauthor',
-            publisher='mypublisher'
+            publisher='mypublisher',
+            issued='mydate',
             )
     with open(EPUB_ID_PATH, 'r') as myfile:
         epub_id = myfile.read()
