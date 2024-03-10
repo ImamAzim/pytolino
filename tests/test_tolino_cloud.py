@@ -14,7 +14,7 @@ import logging
 from pytolino.tolino_cloud import Client, PytolinoException
 
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 
 class TestClient(unittest.TestCase):
@@ -187,20 +187,26 @@ def delete_test():
 
 
 def metadata_test():
-    new_metadata = dict(publisher='someone')
+
+    key_metadata = 'author'
+    value_metadata = 'someone'
     with open(EPUB_ID_PATH, 'r') as myfile:
         epub_id = myfile.read()
 
     username, password = get_credentials()
     client = Client()
     client.login(username, password)
-    client.upload_metadata(epub_id, **new_metadata)
+    client.register()
+
+    client.upload_metadata(epub_id, key_metadata=value_metadata)
+
     inventory = client.get_inventory()
     for item in inventory:
         item_metadata = item['epubMetaData']
         if item_metadata['identifier'] == epub_id:
-            for key, value in new_metadata.items():
-                print(item_metadata[key])
+            print(key_metadata, item_metadata[key_metadata])
+
+    client.unregister()
     client.logout()
 
 def add_cover_test():
@@ -222,6 +228,6 @@ def add_cover_test():
 
 if __name__ == '__main__':
     # upload_test()
-    add_cover_test()
-    # metadata_test()
+    # add_cover_test()
+    metadata_test()
     # inventory_test()
