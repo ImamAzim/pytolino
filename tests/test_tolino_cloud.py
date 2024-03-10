@@ -189,7 +189,7 @@ def delete_test():
 def metadata_test():
 
     key_metadata = 'author'
-    value_metadata = 'someone'
+    value_metadata = 'someone_else'
     with open(EPUB_ID_PATH, 'r') as myfile:
         epub_id = myfile.read()
 
@@ -198,7 +198,8 @@ def metadata_test():
     client.login(username, password)
     client.register()
 
-    client.upload_metadata(epub_id, key_metadata=value_metadata)
+    kwargs = {key_metadata: value_metadata}
+    client.upload_metadata(epub_id, **kwargs)
 
     inventory = client.get_inventory()
     for item in inventory:
