@@ -10,6 +10,7 @@ import unittest
 import configparser
 import logging
 import time
+import logging
 
 
 from pytolino.tolino_cloud import Client, PytolinoException
@@ -174,7 +175,8 @@ def inventory_test():
     print(inventory[0].keys())
     for item in inventory:
         metadata = item['epubMetaData']
-        print(metadata.keys())
+        print(metadata['title'])
+        # print(metadata.keys())
 
 
 def delete_test():
@@ -236,7 +238,12 @@ def add_cover_test():
 
 
 if __name__ == '__main__':
+    # logging.basicConfig(level=logging.INFO)
+    # register_test()
+    # unregister_test()
+    # client_method_tests()
     # upload_test()
+    # delete_test()
     # add_cover_test()
-    metadata_test()
-    # inventory_test()
+    # metadata_test()
+    inventory_test()

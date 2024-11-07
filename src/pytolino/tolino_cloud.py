@@ -126,6 +126,7 @@ class Client(object):
         self.server_settings = servers_settings[server_name]
         self.session = requests.session()
         self.browser = mechanize.Browser()
+        self.browser.set_handle_robots(False)
         self.server_name = server_name
 
     def login(self, username, password):
