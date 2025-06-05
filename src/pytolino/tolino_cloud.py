@@ -6,11 +6,13 @@ import configparser
 import platform
 import logging
 from urllib.parse import urlparse, parse_qs
+from urllib3.util import Retry
 import json
 import time
 
 
 import requests
+from requests.adapters import HTTPAdapter
 import mechanize
 
 
@@ -27,6 +29,8 @@ servers_settings = configparser.ConfigParser()
 servers_settings.read(SERVERS_SETTINGS_FILE_PATH)
 
 PARTNERS = servers_settings.sections()
+TOTAL_RETRY =5
+STATUS_FORCELIST = [404]
 
 
 def main():
@@ -124,7 +128,15 @@ class Client(object):
         self.token_expires = None
 
         self.server_settings = servers_settings[server_name]
-        self.session = requests.session()
+        self.session = requests.Session()
+        retry_strategy = Retry(
+                total=TOTAL_RETRY,
+                status_forcelist=STATUS_FORCELIST,
+                backoff_factor=2,
+                allowed_methods=frozenset(['GET', 'POST']))
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount('http://', adapter)
+        self.session.mount('https://', adapter)
         self.browser = mechanize.Browser()
         self.browser.set_handle_robots(False)
         self.server_name = server_name
@@ -196,6 +208,7 @@ class Client(object):
                 allow_redirects=False,
                 )
         self._log_requests(host_response)
+
         try:
             j = host_response.json()
             self.access_token = j['access_token']
