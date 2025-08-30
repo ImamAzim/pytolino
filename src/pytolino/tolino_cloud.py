@@ -29,7 +29,7 @@ servers_settings = configparser.ConfigParser()
 servers_settings.read(SERVERS_SETTINGS_FILE_PATH)
 
 PARTNERS = servers_settings.sections()
-TOTAL_RETRY =5
+TOTAL_RETRY = 5
 STATUS_FORCELIST = [404]
 
 
@@ -510,7 +510,8 @@ class Client(object):
 
         :book_id: id of the book on the serveer
         :filepath: path to the cover file
-        :file_ext: png, jpg or jpeg. only necessary if the filepath has no extension
+        :file_ext: png, jpg or jpeg. only necessary if the
+        filepath has no extension
 
         """
 
@@ -525,8 +526,8 @@ class Client(object):
 
         host_response = self.session.post(
                 self.server_settings['cover_url'],
-                files = [('file', ('1092560016', open(filepath, 'rb'), mime))],
-                data = {'deliverableId': book_id},
+                files=[('file', ('1092560016', open(filepath, 'rb'), mime))],
+                data={'deliverableId': book_id},
                 headers={
                     't_auth_token': self.access_token,
                     'hardware_id': self.hardware_id,
