@@ -54,11 +54,29 @@ class Client(object):
             logging.debug(f'text: {host_response.text}')
         logging.info('-------------------------------------------------------')
 
+        # try:
+            # host_response.raise_for_status()
+        # except requests.exceptions.HTTPError as e:
+            # print('HTTP error occured', e)
+            # raise PytolinoException
+        # except requests.exceptions.RequestException as e:
+            # print('a request error occured', e)
+            # raise PytolinoException
+
     def _log_mechanize(self, host_response):
         logging.info('-------------------- HTTP response --------------------')
         logging.info(f'status code: {host_response.code}')
         logging.info(f'headers: {host_response.info()}')
         logging.info('-------------------------------------------------------')
+
+        # try:
+            # host_response.raise_for_status()
+        # except requests.exceptions.HTTPError as e:
+            # print('HTTP error occured', e)
+            # raise PytolinoException
+        # except requests.exceptions.RequestException as e:
+            # print('a request error occured', e)
+            # raise PytolinoException
 
     def _hardware_id():
 
@@ -159,7 +177,7 @@ class Client(object):
         for cookie in self.browser.cookiejar:
             self.session.cookies.set(cookie.name, cookie.value)
 
-        logging.info(self.server_settings['login_cookie'])
+        logging.debug(self.server_settings['login_cookie'])
         self._log_mechanize(host_response)
         if not self.server_settings['login_cookie'] in self.session.cookies:
             raise PytolinoException(f'login to {self.server_name} failed.')

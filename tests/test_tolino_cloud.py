@@ -57,6 +57,7 @@ def get_credentials():
         credentials.read(CREDENTIAL_FILEPATH)
         username = credentials['DEFAULT']['username']
         password = credentials['DEFAULT']['password']
+        password = 'faf'
     else:
         import getpass
         username = input('username')
