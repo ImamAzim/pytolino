@@ -57,7 +57,6 @@ def get_credentials():
         credentials.read(CREDENTIAL_FILEPATH)
         username = credentials['DEFAULT']['username']
         password = credentials['DEFAULT']['password']
-        password = 'faf'
     else:
         import getpass
         username = input('username')
@@ -68,6 +67,7 @@ def get_credentials():
 def client_method_tests():
 
     username, password = get_credentials()
+    username = 'wrong user'
     client = Client()
     client.login(username, password)
 

@@ -43,16 +43,16 @@ class Client(object):
     """create a client to communicate with a tolino partner (login, etc..)"""
 
     def _log_requests(self, host_response):
-        logging.info('-------------------- HTTP response --------------------')
-        logging.info(f'status code: {host_response.status_code}')
-        logging.info(f'cookies: {host_response.cookies}')
-        logging.info(f'headers: {host_response.headers}')
+        logging.debug('-------------------- HTTP response --------------------')
+        logging.debug(f'status code: {host_response.status_code}')
+        logging.debug(f'cookies: {host_response.cookies}')
+        logging.debug(f'headers: {host_response.headers}')
         try:
             j = host_response.json()
             logging.debug(f'json: {j}')
         except requests.JSONDecodeError:
             logging.debug(f'text: {host_response.text}')
-        logging.info('-------------------------------------------------------')
+        logging.debug('-------------------------------------------------------')
 
         # try:
             # host_response.raise_for_status()
@@ -64,19 +64,16 @@ class Client(object):
             # raise PytolinoException
 
     def _log_mechanize(self, host_response):
-        logging.info('-------------------- HTTP response --------------------')
-        logging.info(f'status code: {host_response.code}')
-        logging.info(f'headers: {host_response.info()}')
-        logging.info('-------------------------------------------------------')
-
-        # try:
-            # host_response.raise_for_status()
-        # except requests.exceptions.HTTPError as e:
-            # print('HTTP error occured', e)
-            # raise PytolinoException
-        # except requests.exceptions.RequestException as e:
-            # print('a request error occured', e)
-            # raise PytolinoException
+        logging.debug('-------------------- HTTP response --------------------')
+        logging.debug(f'status code: {host_response.code}')
+        logging.debug(f'headers: {host_response.info()}')
+        logging.debug('-------------------------------------------------------')
+        if host_response.code >= 400:
+            logging.error('-------------------- HTTP response --------------------')
+            logging.error(f'status code: {host_response.code}')
+            logging.error(f'headers: {host_response.info()}')
+            logging.error('-------------------------------------------------------')
+            raise PytolinoException('http error')
 
     def _hardware_id():
 
