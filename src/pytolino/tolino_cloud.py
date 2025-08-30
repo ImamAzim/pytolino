@@ -42,21 +42,21 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
-    def _log_requests(self, host_response):
-        if host_response.status_code >= 400:
+    def _log_requests(self, host_response, error: True or None=None):
+        if host_response.status_code >= 400 or error is True:
             logger = logging.error
         else:
             logger = logging.debug
         logger('log request')
         logger('---------------- HTTP response (requests)----------')
         logger(f'status code: {host_response.status_code}')
-        # logger(f'cookies: {host_response.cookies}')
-        # logger(f'headers: {host_response.headers}')
-        # try:
-            # j = host_response.json()
-            # logger(f'json: {j}')
-        # except requests.JSONDecodeError:
-            # logger(f'text: {host_response.text}')
+        logger(f'cookies: {host_response.cookies}')
+        logger(f'headers: {host_response.headers}')
+        try:
+            j = host_response.json()
+            logger(f'json: {j}')
+        except requests.JSONDecodeError:
+            logger(f'text: {host_response.text}')
         logger('-------------------------------------------------------')
 
         try:
@@ -210,6 +210,7 @@ class Client(object):
                 ).query)
             auth_code = params['code'][0]
         except KeyError:
+            self._log_requests(host_response, error=True)
             raise PytolinoException('oauth code request failed.')
 
         # Fetch OAUTH access token

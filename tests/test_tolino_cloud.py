@@ -67,7 +67,6 @@ def get_credentials():
 def client_method_tests():
 
     username, password = get_credentials()
-    username = 'wrong user'
     client = Client()
     try:
         client.login(username, password)
