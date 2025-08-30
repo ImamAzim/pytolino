@@ -239,7 +239,7 @@ def add_cover_test():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     # register_test()
     # unregister_test()
     client_method_tests()

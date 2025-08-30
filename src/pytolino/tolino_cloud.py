@@ -43,7 +43,8 @@ class Client(object):
     """create a client to communicate with a tolino partner (login, etc..)"""
 
     def _log_requests(self, host_response):
-        logging.debug('-------------------- HTTP response --------------------')
+        logging.debug('log request')
+        logging.debug('---------------- HTTP response (requests)----------')
         logging.debug(f'status code: {host_response.status_code}')
         logging.debug(f'cookies: {host_response.cookies}')
         logging.debug(f'headers: {host_response.headers}')
@@ -64,15 +65,15 @@ class Client(object):
             # raise PytolinoException
 
     def _log_mechanize(self, host_response):
-        logging.debug('-------------------- HTTP response --------------------')
+        logging.debug('-------------- HTTP response (mechanize)--------------')
         logging.debug(f'status code: {host_response.code}')
         logging.debug(f'headers: {host_response.info()}')
         logging.debug('-------------------------------------------------------')
         if host_response.code >= 400:
-            logging.error('-------------------- HTTP response --------------------')
+            logging.error('-------------- HTTP response (mechanize)----------')
             logging.error(f'status code: {host_response.code}')
             logging.error(f'headers: {host_response.info()}')
-            logging.error('-------------------------------------------------------')
+            logging.error('--------------------------------------------------')
             raise PytolinoException('http error')
 
     def _hardware_id():
