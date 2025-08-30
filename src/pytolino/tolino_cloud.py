@@ -50,13 +50,13 @@ class Client(object):
         logger('log request')
         logger('---------------- HTTP response (requests)----------')
         logger(f'status code: {host_response.status_code}')
-        logger(f'cookies: {host_response.cookies}')
-        logger(f'headers: {host_response.headers}')
-        try:
-            j = host_response.json()
-            logger(f'json: {j}')
-        except requests.JSONDecodeError:
-            logger(f'text: {host_response.text}')
+        # logger(f'cookies: {host_response.cookies}')
+        # logger(f'headers: {host_response.headers}')
+        # try:
+            # j = host_response.json()
+            # logger(f'json: {j}')
+        # except requests.JSONDecodeError:
+            # logger(f'text: {host_response.text}')
         logger('-------------------------------------------------------')
 
         try:
@@ -209,7 +209,7 @@ class Client(object):
                 host_response.headers['Location']
                 ).query)
             auth_code = params['code'][0]
-        except ValueError:
+        except KeyError:
             raise PytolinoException('oauth code request failed.')
 
         # Fetch OAUTH access token

@@ -69,13 +69,16 @@ def client_method_tests():
     username, password = get_credentials()
     username = 'wrong user'
     client = Client()
-    client.login(username, password)
+    try:
+        client.login(username, password)
+    except PytolinoException as e:
+        print(e)
+    else:
+        print(client.access_token)
+        print(client.refresh_token)
+        print(client.token_expires)
 
-    print(client.access_token)
-    print(client.refresh_token)
-    print(client.token_expires)
-
-    client.logout()
+        client.logout()
 
 
 def register_test():
@@ -239,7 +242,7 @@ def add_cover_test():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(level=logging.DEBUG)
     # register_test()
     # unregister_test()
     client_method_tests()
