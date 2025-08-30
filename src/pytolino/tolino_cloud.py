@@ -43,26 +43,28 @@ class Client(object):
     """create a client to communicate with a tolino partner (login, etc..)"""
 
     def _log_requests(self, host_response):
-        logging.debug('log request')
-        logging.debug('---------------- HTTP response (requests)----------')
-        logging.debug(f'status code: {host_response.status_code}')
-        logging.debug(f'cookies: {host_response.cookies}')
-        logging.debug(f'headers: {host_response.headers}')
+        if host_response.status_code >= 400:
+            logger = logging.error
+        else:
+            logger = logging.debug
+        logger('log request')
+        logger('---------------- HTTP response (requests)----------')
+        logger(f'status code: {host_response.status_code}')
+        logger(f'cookies: {host_response.cookies}')
+        logger(f'headers: {host_response.headers}')
         try:
             j = host_response.json()
-            logging.debug(f'json: {j}')
+            logger(f'json: {j}')
         except requests.JSONDecodeError:
-            logging.debug(f'text: {host_response.text}')
-        logging.debug('-------------------------------------------------------')
+            logger(f'text: {host_response.text}')
+        logger('-------------------------------------------------------')
 
-        # try:
-            # host_response.raise_for_status()
-        # except requests.exceptions.HTTPError as e:
-            # print('HTTP error occured', e)
-            # raise PytolinoException
-        # except requests.exceptions.RequestException as e:
-            # print('a request error occured', e)
-            # raise PytolinoException
+        try:
+            host_response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            raise PytolinoException
+        except requests.exceptions.RequestException as e:
+            raise PytolinoException
 
     def _log_mechanize(self, host_response):
         logging.debug('-------------- HTTP response (mechanize)--------------')
