@@ -239,12 +239,19 @@ def add_cover_test():
     client.add_cover(epub_id, cover_path)
     client.logout()
 
+def get_test_credentials(server_name: str):
+    username = ''
+    password = ''
+    return username, password
+
 
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.DEBUG)
+    cred = get_test_credentials('www.buecher.de')
+    print(cred)
     # register_test()
     # unregister_test()
-    client_method_tests()
+    # client_method_tests()
     # upload_test()
     # delete_test()
     # add_cover_test()
