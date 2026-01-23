@@ -31,7 +31,8 @@ dev = [
 	'sphinx',
 	'build',
 	'twine',
-	'sphinx-rtd-theme'
+	'sphinx-rtd-theme',
+	'varboxes',
 ]
 
 [project.urls]
