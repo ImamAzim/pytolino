@@ -258,9 +258,18 @@ def get_test_credentials(server_name: str):
         vb.save()
     return username, password
 
+def del_test_credentials(server_name: str):
+    from varboxes import VarBox
+    vb = VarBox('pytolino')
+    if hasattr(vb, 'credentials'):
+        if server_name in vb.credentials:
+            del vb.credentials[server_name]
+            vb.save()
+
 
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.DEBUG)
+    # del_test_credentials('www.buecher.de')
     cred = get_test_credentials('www.buecher.de')
     print(cred)
     # register_test()
