@@ -66,8 +66,8 @@ def get_credentials():
 
 def client_method_tests():
 
-    username, password = get_credentials()
     client = Client()
+    username, password = get_test_credentials(client.server_name)
     try:
         client.login(username, password)
     except PytolinoException as e:
@@ -270,11 +270,11 @@ def del_test_credentials(server_name: str):
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.DEBUG)
     # del_test_credentials('www.buecher.de')
-    cred = get_test_credentials('www.buecher.de')
-    print(cred)
+    # cred = get_test_credentials('www.buecher.de')
+    # print(cred)
     # register_test()
     # unregister_test()
-    # client_method_tests()
+    client_method_tests()
     # upload_test()
     # delete_test()
     # add_cover_test()
