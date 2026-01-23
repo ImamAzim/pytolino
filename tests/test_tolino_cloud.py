@@ -11,6 +11,7 @@ import configparser
 import logging
 import time
 import logging
+import getpass
 
 
 from pytolino.tolino_cloud import Client, PytolinoException
@@ -58,7 +59,6 @@ def get_credentials():
         username = credentials['DEFAULT']['username']
         password = credentials['DEFAULT']['password']
     else:
-        import getpass
         username = input('username')
         password = getpass.getpass()
     return username, password
@@ -240,8 +240,22 @@ def add_cover_test():
     client.logout()
 
 def get_test_credentials(server_name: str):
-    username = ''
-    password = ''
+    from varboxes import VarBox
+    vb = VarBox('pytolino')
+    if not hasattr(vb, 'credentials'):
+        vb.credentials = dict()
+    if server_name in vb.credentials:
+        vb.credentials[server_name]: dict
+        username = vb.credentials[server_name].get('username')
+        password = vb.credentials[server_name].get('password')
+    else:
+        username = input('username: ')
+        password = getpass.getpass()
+        vb.credentials[server_name] = dict(
+                username=username,
+                password=password,
+                )
+        vb.save()
     return username, password
 
 
