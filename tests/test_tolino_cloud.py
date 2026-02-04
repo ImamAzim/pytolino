@@ -13,6 +13,7 @@ import time
 import logging
 import getpass
 from pathlib import Path
+import tomllib
 
 
 from pytolino.tolino_cloud import Client, PytolinoException
@@ -73,8 +74,9 @@ def client_method_tests():
     client = Client('www.orellfuessli.ch')
     username, password = get_test_credentials(client.server_name)
     try:
-        reuse_access_token(client)
-        client.login(username, password)
+        # reuse_access_token(client)
+        fp = Path(__file__).parent / 'token.toml'
+        client.login(username, password, fp=fp)
     except PytolinoException as e:
         print(e)
     else:
@@ -128,15 +130,12 @@ def unregister_test():
 EPUB_ID_PATH = Path(__file__).parent / 'epub_id'
 
 def reuse_access_token(client):
-    # fp = Path(__file__).parent / 'access_token'
-    # access_token = fp.read_text()
-    access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvVjZNMEZTbzd3V08yYVdPV2hOWElTYkVxQ3VScGQ5ak43SHRFTmNMSlBJIn0.eyJleHAiOjE3NzAyNDMwMjUsImlhdCI6MTc3MDIzOTQyNSwianRpIjoiNjVjNjI1OGItMzNhNy00Yjk2LWI4NjQtZGJmOGFmNmVlZTdlIiwiaXNzIjoiaHR0cHM6Ly93d3cub3JlbGxmdWVzc2xpLmNoL2tleWNsb2FrL3JlYWxtcy8zNyIsInN1YiI6IjUzOTExMzIyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoid2VicmVhZGVyIiwic2lkIjoiYzU1OGM3MjAtOWYxMi00MjBlLWFkMTgtMTU5NmRjMmEwNGMyIiwic2NvcGUiOiJTQ09QRV9CT1NIIiwiZXhwaXJlcyI6IjE3NzAyNDMwMjUwMDAiLCJ4X2J1Y2hkZS51c2VyX2lkIjoiNTM5MTEzMjIifQ.eth8KcC8p5YiDdwvLtQamZN8o_JSidD8ctXhlmg5mngA_hqarbtLGx41_gguZooWSWt93jeX0TT1z9M0CZHnmfuSuWxF3eUgK4A9thYxBXeA-n4eMQVxVS5EHJ_lyHC57P9MrKpS9tGB9DR2Dsrr-z5LbbMOQt3RGfTohpnWBAC9DvhZZD68s9yDhOoTQoYVQTUJkB1Vqt8UVWRuVLpHdxchwVTewzgHLaR5PLX-VKBIAJjguvxfug5RXclyg0gfJ_is17DNE6a5RXzxayt5nRx40J6Ie5ut7qbp-vOhPO3iAyT9g3MAk8XO9Eb3S3nI0HUbrJuyRHWQ8QXUuEbcQQ'
-    refresh_token = 'eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJkMmExN2EyNS01YmJkLTRiMTMtOTgzMi04ZGExMWFjNmU2ZTQifQ.eyJleHAiOjE3NzAyNDU5MjAsImlhdCI6MTc3MDI0MjMyMCwianRpIjoiOGU3MWYxMzItMzkwZS00NzY1LTgyMDMtYTA4NjJjNzA4N2IyIiwiaXNzIjoiaHR0cHM6Ly93d3cub3JlbGxmdWVzc2xpLmNoL2tleWNsb2FrL3JlYWxtcy8zNyIsImF1ZCI6Imh0dHBzOi8vd3d3Lm9yZWxsZnVlc3NsaS5jaC9rZXljbG9hay9yZWFsbXMvMzciLCJzdWIiOiI1MzkxMTMyMiIsInR5cCI6IlJlZnJlc2giLCJhenAiOiJ3ZWJyZWFkZXIiLCJzaWQiOiIzNmE1NDM4NS01ODkxLTQ3MjEtYmVlNS01NTRlYjAxN2QwYWIiLCJzY29wZSI6IlNDT1BFX0JPU0giLCJyZXVzZV9pZCI6IjhkZDUxNzZjLTIxNDktNDU3Ny1hYzNjLTU5ZmIzM2ZkMzNhYiJ9.EYFxmEzfcMPsSpw8tTkC7fY8i1WNXJHcWnP7XsxdTdjbiaUObsM1ifWpCZOfiGOtyXJAjPYjolZ-rK7AbuI2LQ'
-    # client.access_token = access_token
+    fp = Path(__file__).parent / 'token.toml'
+    with open(fp.as_posix(), 'rb') as f:
+        data = tomllib.load(f)
+    refresh_token = data['refresh_token']
+    hw_id = data['hardware_id']
     client.refresh_token = refresh_token
-    # fp = Path(__file__).parent / 'hw_id'
-    # hw_id = fp.open().read()
-    hw_id = '654b7d6f-f4ff-4714-9b79-154caaad0534'
     client.hardware_id = hw_id
 
 
@@ -145,11 +144,9 @@ def upload_test():
     epub_fp = Path(__file__).parent / TEST_EPUB
 
     client = Client('www.orellfuessli.ch')
-    reuse_access_token(client)
-    # return
-
-    # username, password = get_test_credentials(client.server_name)
-    # client.login(username, password)
+    username, password = get_test_credentials(client.server_name)
+    fp = Path(__file__).parent / 'token.toml'
+    client.login(username, password, fp=fp)
     # client.register()
     ebook_id = client.upload(epub_fp.as_posix())
     print(ebook_id)
@@ -175,7 +172,9 @@ def delete_test():
         epub_id = myfile.read()
 
     client = Client('www.orellfuessli.ch')
-    reuse_access_token(client)
+    username, password = get_test_credentials(client.server_name)
+    fp = Path(__file__).parent / 'token.toml'
+    client.login(username, password, fp=fp)
     # username, password = get_credentials()
     # client = Client()
     # client.login(username, password)
@@ -279,9 +278,9 @@ if __name__ == '__main__':
     # print(cred)
     # register_test()
     # unregister_test()
-    client_method_tests()
+    # client_method_tests()
     # upload_test()
-    # delete_test()
+    delete_test()
     # add_cover_test()
     # metadata_test()
     # inventory_test()

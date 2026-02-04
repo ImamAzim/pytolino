@@ -9,8 +9,10 @@ from urllib.parse import urlparse, parse_qs
 from urllib3.util import Retry
 import json
 import time
+import tomllib
 
 
+import tomli_w
 import requests
 from requests.adapters import HTTPAdapter
 import mechanize
@@ -148,8 +150,8 @@ class Client(object):
         self.token_expires = None
 
         self.server_settings = servers_settings[server_name]
-        # self.session = requests.Session()
-        self.session = curl_cffi.Session()
+        self.session = requests.Session()
+        self.session_cffi = curl_cffi.Session()
         # retry_strategy = Retry(
                 # total=TOTAL_RETRY,
                 # status_forcelist=STATUS_FORCELIST,
@@ -162,7 +164,7 @@ class Client(object):
         # self.browser.set_handle_robots(False)
         self.server_name = server_name
 
-    def login(self, username, password):
+    def login(self, username, password, fp=None):
         """login to the partner and get access token.
 
         :username: str
@@ -170,6 +172,11 @@ class Client(object):
         :returns: None, but raises pytolino exceptions if fail
         """
         logging.info(f'login to {self.server_name}...')
+        if fp is not None:
+            with open(fp.as_posix(), 'rb') as f:
+                data = tomllib.load(f)
+            self.refresh_token = data['refresh_token']
+            self.hardware_id = data['hardware_id']
 
         # self.browser.open(self.server_settings['login_url'])
         # self.browser.select_form(id=self.server_settings['form_id'])
@@ -216,7 +223,7 @@ class Client(object):
             'refresh_token': self.refresh_token,
             'scope': 'SCOPE_BOSH',
         }
-        host_response = self.session.post(
+        host_response = self.session_cffi.post(
                 self.server_settings['token_url'],
                 data=payload,
                 verify=True,
@@ -233,6 +240,14 @@ class Client(object):
         # except requests.JSONDecodeError:
         except json.decoder.JSONDecodeError:
             raise PytolinoException('oauth access token request failed.')
+        else:
+            data = dict(
+                    refresh_token = self.refresh_token,
+                    hardware_id = self.hardware_id,
+                    )
+            if fp is not None:
+                with open(fp.as_posix(), 'wb') as f:
+                    tomli_w.dump(data, f)
 
         # auth_code = ""
 
