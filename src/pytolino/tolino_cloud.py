@@ -14,6 +14,8 @@ import time
 import requests
 from requests.adapters import HTTPAdapter
 import mechanize
+import curl_cffi
+from bs4 import BeautifulSoup
 
 
 class PytolinoException(Exception):
@@ -148,14 +150,14 @@ class Client(object):
         self.server_settings = servers_settings[server_name]
         # self.session = requests.Session()
         self.session = curl_cffi.Session()
-        retry_strategy = Retry(
-                total=TOTAL_RETRY,
-                status_forcelist=STATUS_FORCELIST,
-                backoff_factor=2,
-                allowed_methods=frozenset(['GET', 'POST']))
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        self.session.mount('http://', adapter)
-        self.session.mount('https://', adapter)
+        # retry_strategy = Retry(
+                # total=TOTAL_RETRY,
+                # status_forcelist=STATUS_FORCELIST,
+                # backoff_factor=2,
+                # allowed_methods=frozenset(['GET', 'POST']))
+        # adapter = HTTPAdapter(max_retries=retry_strategy)
+        # self.session.mount('http://', adapter)
+        # self.session.mount('https://', adapter)
         # self.browser = mechanize.Browser()
         # self.browser.set_handle_robots(False)
         self.server_name = server_name

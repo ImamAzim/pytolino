@@ -14,10 +14,6 @@ import logging
 import getpass
 
 
-import curl_cffi
-from bs4 import BeautifulSoup
-
-
 from pytolino.tolino_cloud import Client, PytolinoException
 
 
