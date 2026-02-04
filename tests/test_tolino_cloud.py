@@ -128,8 +128,11 @@ EPUB_ID_PATH = Path(__file__).parent / 'epub_id'
 
 def reuse_access_token(client):
     fp = Path(__file__).parent / 'access_token'
-    access_token = fp.open().read().close()
-    print(access_token)
+    access_token = fp.open().read()
+    client.access_token = access_token
+    fp = Path(__file__).parent / 'hw_id'
+    hw_id = fp.open().read()
+    client.hardware_id = hw_id
 
 
 def upload_test():
@@ -138,12 +141,11 @@ def upload_test():
 
     client = Client('www.orellfuessli.ch')
     reuse_access_token(client)
-    return
 
     # username, password = get_test_credentials(client.server_name)
     # client.login(username, password)
     # client.register()
-    ebook_id = client.upload(epub_fp)
+    ebook_id = client.upload(epub_fp.as_posix())
     print(ebook_id)
     with open(EPUB_ID_PATH, 'w') as myfile:
         myfile.write(ebook_id)
