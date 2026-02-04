@@ -492,18 +492,18 @@ class Client(object):
                     'reseller_id': self.server_settings['partner_id'],
                     }
                 )
-        self._log_requests(host_response)
-        if host_response.status_code != 200:
-            raise PytolinoException('file upload failed.')
-        try:
-            j = host_response.json()
-        except requests.JSONDecodeError:
-            raise PytolinoException('file upload failed.')
-        else:
-            try:
-                return j['metadata']['deliverableId']
-            except KeyError:
-                raise PytolinoException('file upload failed.')
+        # self._log_requests(host_response)
+        # if host_response.status_code != 200:
+            # raise PytolinoException('file upload failed.')
+        # try:
+            # j = host_response.json()
+        # except requests.JSONDecodeError:
+            # raise PytolinoException('file upload failed.')
+        # else:
+            # try:
+                # return j['metadata']['deliverableId']
+            # except KeyError:
+                # raise PytolinoException('file upload failed.')
 
     def delete_ebook(self, ebook_id):
         """delete an ebook present on your cloud

@@ -12,9 +12,13 @@ import logging
 import time
 import logging
 import getpass
+from pathlib import Path
 
 
 from pytolino.tolino_cloud import Client, PytolinoException
+
+
+TEST_EPUB = 'basic-v3plus2.epub'
 
 
 # logging.basicConfig(level=logging.INFO)
@@ -120,28 +124,31 @@ def unregister_test():
     client.logout()
 
 
-EPUB_ID_PATH = os.path.join(
-        os.path.expanduser('~'),
-        'epub_id',
-        )
+EPUB_ID_PATH = Path(__file__).parent / 'epub_id'
+
+def reuse_access_token(client):
+    fp = Path(__file__).parent / 'access_token'
+    access_token = fp.open().read().close()
+    print(access_token)
 
 
 def upload_test():
-    EPUB_PATH = os.path.join(
-            os.path.expanduser('~'),
-            'news.epub',
-            )
 
-    username, password = get_credentials()
-    client = Client()
-    client.login(username, password)
-    client.register()
-    ebook_id = client.upload(EPUB_PATH)
+    epub_fp = Path(__file__).parent / TEST_EPUB
+
+    client = Client('www.orellfuessli.ch')
+    reuse_access_token(client)
+    return
+
+    # username, password = get_test_credentials(client.server_name)
+    # client.login(username, password)
+    # client.register()
+    ebook_id = client.upload(epub_fp)
     print(ebook_id)
     with open(EPUB_ID_PATH, 'w') as myfile:
         myfile.write(ebook_id)
-    client.unregister()
-    client.logout()
+    # client.unregister()
+    # client.logout()
 
 def collection_test():
     with open(EPUB_ID_PATH, 'r') as myfile:
@@ -274,8 +281,8 @@ if __name__ == '__main__':
     # print(cred)
     # register_test()
     # unregister_test()
-    client_method_tests()
-    # upload_test()
+    # client_method_tests()
+    upload_test()
     # delete_test()
     # add_cover_test()
     # metadata_test()
