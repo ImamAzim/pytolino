@@ -185,7 +185,10 @@ class Client(object):
         # if not self.server_settings['login_cookie'] in self.session.cookies:
             # raise PytolinoException(f'login to {self.server_name} failed.')
 
-        rsp = self.session.get(self.server_settings['login_url'])
+        rsp = self.session.get(
+                self.server_settings['login_url'],
+                impersonate='chrome',
+                )
         print(rsp)
 
         # auth_code = ""
