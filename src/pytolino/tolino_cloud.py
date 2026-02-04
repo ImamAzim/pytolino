@@ -185,11 +185,54 @@ class Client(object):
         # if not self.server_settings['login_cookie'] in self.session.cookies:
             # raise PytolinoException(f'login to {self.server_name} failed.')
 
-        rsp = self.session.get(
-                self.server_settings['login_url'],
+        # rsp = self.session.get(
+                # self.server_settings['login_url'],
+                # impersonate='chrome',
+                # )
+        # print(rsp)
+        # headers= {
+            # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0'
+        # }
+        headers = {
+                'Host': 'www.orellfuessli.ch',
+                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                'Accept': "*/*",
+                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': '742',
+                'Referer': 'https://webreader.mytolino.com/',
+                'Origin': 'https://webreader.mytolino.com',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'cross-site',
+                'Connection': 'keep-alive',
+                'Priority': 'u=4',
+                }
+        payload = {
+            # 'client_id': self.server_settings['client_id'],
+            'client_id': 'webreader',
+            'grant_type': 'refresh_token',
+            'refresh_token': self.refresh_token,
+            'scope': 'SCOPE_BOSH',
+        }
+        host_response = self.session.post(
+                self.server_settings['token_url'],
+                data=payload,
+                verify=True,
+                allow_redirects=True,
+                headers=headers,
                 impersonate='chrome',
                 )
-        print(rsp)
+        print(host_response)
+        try:
+            j = host_response.json()
+            self.access_token = j['access_token']
+            self.refresh_token = j['refresh_token']
+            self.token_expires = int(j['expires_in'])
+        # except requests.JSONDecodeError:
+        except json.decoder.JSONDecodeError:
+            raise PytolinoException('oauth access token request failed.')
 
         # auth_code = ""
 
@@ -237,13 +280,6 @@ class Client(object):
                 # )
         # self._log_requests(host_response)
 
-        # try:
-            # j = host_response.json()
-            # self.access_token = j['access_token']
-            # self.refresh_token = j['refresh_token']
-            # self.token_expires = int(j['expires_in'])
-        # except requests.JSONDecodeError:
-            # raise PytolinoException('oauth access token request failed.')
 
     def logout(self):
         """logout from tolino partner host
@@ -495,15 +531,15 @@ class Client(object):
         # self._log_requests(host_response)
         # if host_response.status_code != 200:
             # raise PytolinoException('file upload failed.')
-        # try:
-            # j = host_response.json()
-        # except requests.JSONDecodeError:
-            # raise PytolinoException('file upload failed.')
-        # else:
-            # try:
-                # return j['metadata']['deliverableId']
-            # except KeyError:
-                # raise PytolinoException('file upload failed.')
+        try:
+            j = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException('file upload failed.')
+        else:
+            try:
+                return j['metadata']['deliverableId']
+            except KeyError:
+                raise PytolinoException('file upload failed.')
 
     def delete_ebook(self, ebook_id):
         """delete an ebook present on your cloud
