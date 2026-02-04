@@ -14,6 +14,10 @@ import logging
 import getpass
 
 
+import curl_cffi
+from bs4 import BeautifulSoup
+
+
 from pytolino.tolino_cloud import Client, PytolinoException
 
 
@@ -66,7 +70,7 @@ def get_credentials():
 
 def client_method_tests():
 
-    client = Client()
+    client = Client('www.orellfuessli.ch')
     username, password = get_test_credentials(client.server_name)
     try:
         client.login(username, password)

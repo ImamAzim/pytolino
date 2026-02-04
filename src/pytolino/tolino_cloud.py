@@ -146,7 +146,8 @@ class Client(object):
         self.token_expires = None
 
         self.server_settings = servers_settings[server_name]
-        self.session = requests.Session()
+        # self.session = requests.Session()
+        self.session = curl_cffi.Session()
         retry_strategy = Retry(
                 total=TOTAL_RETRY,
                 status_forcelist=STATUS_FORCELIST,
@@ -155,8 +156,8 @@ class Client(object):
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.session.mount('http://', adapter)
         self.session.mount('https://', adapter)
-        self.browser = mechanize.Browser()
-        self.browser.set_handle_robots(False)
+        # self.browser = mechanize.Browser()
+        # self.browser.set_handle_robots(False)
         self.server_name = server_name
 
     def login(self, username, password):
@@ -168,78 +169,82 @@ class Client(object):
         """
         logging.info(f'login to {self.server_name}...')
 
-        self.browser.open(self.server_settings['login_url'])
-        self.browser.select_form(id=self.server_settings['form_id'])
-        self.browser[self.server_settings['username_field']] = username
-        self.browser[self.server_settings['password_field']] = password
-        host_response = self.browser.submit()
+        # self.browser.open(self.server_settings['login_url'])
+        # self.browser.select_form(id=self.server_settings['form_id'])
+        # self.browser[self.server_settings['username_field']] = username
+        # self.browser[self.server_settings['password_field']] = password
+        # host_response = self.browser.submit()
 
-        for cookie in self.browser.cookiejar:
-            self.session.cookies.set(cookie.name, cookie.value)
+        # for cookie in self.browser.cookiejar:
+            # self.session.cookies.set(cookie.name, cookie.value)
 
-        logging.debug(self.server_settings['login_cookie'])
-        self._log_mechanize(host_response)
-        if not self.server_settings['login_cookie'] in self.session.cookies:
-            raise PytolinoException(f'login to {self.server_name} failed.')
+        # logging.debug(self.server_settings['login_cookie'])
+        # self._log_mechanize(host_response)
+        # if not self.server_settings['login_cookie'] in self.session.cookies:
+            # raise PytolinoException(f'login to {self.server_name} failed.')
 
-        auth_code = ""
+        rsp = self.session.get(self.server_settings['login_url'])
+        print(rsp)
 
-        params = {
-            'client_id': self.server_settings['client_id'],
-            'response_type': 'code',
-            'scope': self.server_settings['scope'],
-            'redirect_uri': self.server_settings['reader_url']
-        }
-        if 'login_form_url' in self.server_settings:
-            params['x_buchde.skin_id'] = self.server_settings[
-                    'x_buchde.skin_id']
-            params['x_buchde.mandant_id'] = self.server_settings[
-                    'x_buchde.mandant_id']
-        host_response = self.session.get(
-                self.server_settings['auth_url'],
-                params=params,
-                verify=True,
-                allow_redirects=False,
-                )
+        # auth_code = ""
 
-        self._log_requests(host_response)
+        # params = {
+            # 'client_id': self.server_settings['client_id'],
+            # 'response_type': 'code',
+            # 'scope': self.server_settings['scope'],
+            # 'redirect_uri': self.server_settings['reader_url']
+        # }
+        # if 'login_form_url' in self.server_settings:
+            # params['x_buchde.skin_id'] = self.server_settings[
+                    # 'x_buchde.skin_id']
+            # params['x_buchde.mandant_id'] = self.server_settings[
+                    # 'x_buchde.mandant_id']
+        # host_response = self.session.get(
+                # self.server_settings['auth_url'],
+                # params=params,
+                # verify=True,
+                # allow_redirects=False,
+                # )
 
-        try:
-            params = parse_qs(urlparse(
-                host_response.headers['Location']
-                ).query)
-            auth_code = params['code'][0]
-        except KeyError:
-            self._log_requests(host_response, error=True)
-            raise PytolinoException('oauth code request failed.')
+        # self._log_requests(host_response)
 
-        # Fetch OAUTH access token
-        host_response = self.session.post(
-                self.server_settings['token_url'],
-                data={
-                    'client_id': self.server_settings['client_id'],
-                    'grant_type': 'authorization_code',
-                    'code': auth_code,
-                    'scope': self.server_settings['scope'],
-                    'redirect_uri': self.server_settings['reader_url']
-                    },
-                verify=True,
-                allow_redirects=False,
-                )
-        self._log_requests(host_response)
+        # try:
+            # params = parse_qs(urlparse(
+                # host_response.headers['Location']
+                # ).query)
+            # auth_code = params['code'][0]
+        # except KeyError:
+            # self._log_requests(host_response, error=True)
+            # raise PytolinoException('oauth code request failed.')
 
-        try:
-            j = host_response.json()
-            self.access_token = j['access_token']
-            self.refresh_token = j['refresh_token']
-            self.token_expires = int(j['expires_in'])
-        except requests.JSONDecodeError:
-            raise PytolinoException('oauth access token request failed.')
+        # # Fetch OAUTH access token
+        # host_response = self.session.post(
+                # self.server_settings['token_url'],
+                # data={
+                    # 'client_id': self.server_settings['client_id'],
+                    # 'grant_type': 'authorization_code',
+                    # 'code': auth_code,
+                    # 'scope': self.server_settings['scope'],
+                    # 'redirect_uri': self.server_settings['reader_url']
+                    # },
+                # verify=True,
+                # allow_redirects=False,
+                # )
+        # self._log_requests(host_response)
+
+        # try:
+            # j = host_response.json()
+            # self.access_token = j['access_token']
+            # self.refresh_token = j['refresh_token']
+            # self.token_expires = int(j['expires_in'])
+        # except requests.JSONDecodeError:
+            # raise PytolinoException('oauth access token request failed.')
 
     def logout(self):
         """logout from tolino partner host
 
         """
+        return
         if 'revoke_url' in self.server_settings:
             host_response = self.session.post(
                     self.server_settings['revoke_url'],
