@@ -159,7 +159,7 @@ class Client(object):
         else:
             j = host_response.json()
             self._access_token = j['access_token']
-            self.refresh_token = j['refresh_token']
+            self._refresh_token = j['refresh_token']
             self._token_expires = int(j['expires_in'])
             Client.store_token(
                     account_name,
