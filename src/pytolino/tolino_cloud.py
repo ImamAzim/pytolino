@@ -10,6 +10,7 @@ from urllib3.util import Retry
 import json
 import time
 import tomllib
+from pathlib import Path
 
 
 import requests
@@ -28,12 +29,9 @@ class ExpirationError(PytolinoException):
 
 
 SERVERS_SETTINGS_FN = 'servers_settings.ini'
-SERVERS_SETTINGS_FILE_PATH = os.path.join(
-        os.path.dirname(__file__),
-        SERVERS_SETTINGS_FN,
-        )
-servers_settings = configparser.ConfigParser()
-servers_settings.read(SERVERS_SETTINGS_FILE_PATH)
+SERVERS_SETTINGS_FP = Path(__file__).parent / SERVERS_SETTINGS_FN
+with open(SERVER_SETTINGS_FP.as_posix(), 'rb') as f:
+    server_settings = tomllib.load(f)
 
 PARTNERS = servers_settings.sections()
 TOTAL_RETRY = 5
