@@ -39,14 +39,17 @@ class TestClient(unittest.TestCase):
         test_account = 'test_account'
         Client.store_token(test_account, refresh_token, -1, hardware_id)
         with self.assertRaises(ExpirationError):
-            Client.retrieve_token(test_account)
+            Client().retrieve_token(test_account)
 
     def test_store_retrieve_token(self):
         refresh_token = 'test_token'
         hardware_id = 'test_hw_id'
         test_account = 'test_account'
         Client.store_token(test_account, refresh_token, 10, hardware_id)
-        retrieved_token, retrieved_hardware_id = Client.retrieve_token(test_account)
+        client = Client()
+        client.retrieve_token(test_account)
+        retrieved_token = client.refresh_token
+        retrieved_hardware_id = client.hardware_id
         self.assertEqual(refresh_token, retrieved_token)
         self.assertEqual(hardware_id, retrieved_hardware_id)
         Client.store_token(test_account, refresh_token, -1, hardware_id)

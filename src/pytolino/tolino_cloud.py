@@ -138,6 +138,7 @@ class Client(object):
         vb.timestamp = time.time()
 
     def retrieve_token(
+            self,
             account_name,
             )->tuple[str, str]:
         """get the token and data that were stored previousely. raise error if expired
@@ -154,7 +155,8 @@ class Client(object):
         if now > expiration_time:
             raise ExpirationError('the refresh token has expired')
         else:
-            return vb.refresh_token, vb.hardware_id
+            self.refresh_token = vb.refresh_token
+            self.hardware_id = vb.hardware_id
 
     def __init__(self, server_name='www.buecher.de'):
 
@@ -189,7 +191,55 @@ class Client(object):
         :returns: TODO
 
         """
-        pass
+        refresh_token, hardware_id = Client.retrieve_token(account_name)
+
+        headers = {
+                'Host': 'www.orellfuessli.ch',
+                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                'Accept': "*/*",
+                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': '742',
+                'Referer': 'https://webreader.mytolino.com/',
+                'Origin': 'https://webreader.mytolino.com',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'cross-site',
+                'Connection': 'keep-alive',
+                'Priority': 'u=4',
+                }
+        payload = {
+            'client_id': 'webreader',
+            'grant_type': 'refresh_token',
+            'refresh_token': self.refresh_token,
+            'scope': 'SCOPE_BOSH',
+        }
+        host_response = self.session_cffi.post(
+                self.server_settings['token_url'],
+                data=payload,
+                verify=True,
+                allow_redirects=True,
+                headers=headers,
+                impersonate='chrome',
+                )
+        print(host_response)
+        try:
+            j = host_response.json()
+            self.access_token = j['access_token']
+            self.refresh_token = j['refresh_token']
+            self.token_expires = int(j['expires_in'])
+        # except requests.JSONDecodeError:
+        except json.decoder.JSONDecodeError:
+            raise PytolinoException('oauth access token request failed.')
+        else:
+            data = dict(
+                    refresh_token = self.refresh_token,
+                    hardware_id = self.hardware_id,
+                    )
+            if fp is not None:
+                with open(fp.as_posix(), 'wb') as f:
+                    tomli_w.dump(data, f)
 
     def login(self, username, password, fp=None):
         """login to the partner and get access token.
