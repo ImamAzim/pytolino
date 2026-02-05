@@ -33,6 +33,9 @@ class TestClient(unittest.TestCase):
     def setUpClass(cls):
         cls.client = Client()
 
+    def test_store_retrieve_token_error(self):
+        Client.store_token()
+
     def test_init_nopartner(self):
 
         with self.assertRaises(PytolinoException):

@@ -82,41 +82,16 @@ class Client(object):
 
     def _hardware_id():
 
-        # tolino wants to know a few details about the HTTP client hardware
-        # when it connects.
-        #
-        # 1233X-44XXX-XXXXX-XXXXX-XXXXh
-        #
-        # 1  = os id
-        # 2  = browser engine id
-        # 33 = browser id
-        # 44 = browser version
-        # X  = the result of a fingerprinting image
-
         os_id = {
             'Windows': '1',
             'Darwin': '2',
             'Linux': '3'
             }.get(platform.system(), 'x')
 
-        # The hardware id contains some info about the browser
-        #
-        # Hey, tolino developers: Let me know which id values to use here
         engine_id = 'x'
         browser_id = 'xx'
         version_id = '00'
-
-        # For some odd reason, the tolino javascript draws the text
-        # "www.tolino.de" and a rectangle filled with the offical Telekom
-        # magenta #E20074 (http://de.wikipedia.org/wiki/Magenta_%28Farbe%29)
-        # into an image canvas and then fuddles around with the
-        # base64-encoded PNG. Probably to gain some sort of fingerprint,
-        # but it's not quite clear how this would help the tolino API.
-        #
-        # Hey, tolino developers: Let me know what you need here.
-
         fingerprint = 'ABCDEFGHIJKLMNOPQR'
-
         return (
                 os_id +
                 engine_id +
@@ -135,6 +110,34 @@ class Client(object):
                 )
 
     hardware_id = _hardware_id()
+
+
+    def store_token(
+                    account_name,
+                    refresh_token: str,
+                    expires_in: int,
+                    hardward_id: str,
+                    ):
+        """after one has connected in a browser, one can store the token for the app.
+
+        :account_name: internal name for reference
+        :refresh_token: given by server after a token POST request
+        :expires_in: time in seconds
+        :hardward_id: present in payload for every request to API.
+
+        """
+        pass
+
+    def retrieve_token(
+            account_name,
+            )->tuple[str, str]:
+        """get the token and data that were stored previousely. raise error if expired
+
+        :account_name: internal name under which token was stored
+        :returns: refresh_token, hardware_id
+
+        """
+        pass
 
     def __init__(self, server_name='www.buecher.de'):
 
