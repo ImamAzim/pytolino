@@ -122,20 +122,7 @@ class Client(object):
         self.retrieve_token(account_name)
 
         headers = {
-                'Host': 'www.orellfuessli.ch',
-                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
-                'Accept': "*/*",
-                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Accept-Encoding': 'gzip, deflate, br, zstd',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': '742',
                 'Referer': 'https://webreader.mytolino.com/',
-                'Origin': 'https://webreader.mytolino.com',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'cross-site',
-                'Connection': 'keep-alive',
-                'Priority': 'u=4',
                 }
         payload = {
             'client_id': 'webreader',
