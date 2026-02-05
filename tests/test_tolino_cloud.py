@@ -85,10 +85,9 @@ def delete_test():
     vb = VarBox('pytolino')
     ebook_id = vb.ebook_id
 
-    client = Client('www.orellfuessli.ch')
-    username, password = get_test_credentials(client.server_name)
-    fp = Path(__file__).parent / 'token.toml'
-    client.delete_ebook(epub_id)
+    client = Client()
+    client.retrieve_token(ACCOUNT_NAME)
+    client.delete_ebook(ebook_id)
 
 
 def inventory_test():
@@ -168,8 +167,8 @@ def refresh_token():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     # refresh_token()
-    upload_test()
-    # delete_test()
+    # upload_test()
+    delete_test()
     # add_cover_test()
     # metadata_test()
     # inventory_test()
