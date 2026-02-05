@@ -168,224 +168,23 @@ class Client(object):
     def login(self, username, password, fp=None):
         """login to the partner and get access token.
 
-        :username: str
-        :password: str
-        :returns: None, but raises pytolino exceptions if fail
         """
-        logging.info(f'login to {self.server_name}...')
-        if fp is not None:
-            with open(fp.as_posix(), 'rb') as f:
-                data = tomllib.load(f)
-            self.refresh_token = data['refresh_token']
-            self.hardware_id = data['hardware_id']
-
-        # self.browser.open(self.server_settings['login_url'])
-        # self.browser.select_form(id=self.server_settings['form_id'])
-        # self.browser[self.server_settings['username_field']] = username
-        # self.browser[self.server_settings['password_field']] = password
-        # host_response = self.browser.submit()
-
-        # for cookie in self.browser.cookiejar:
-            # self.session.cookies.set(cookie.name, cookie.value)
-
-        # logging.debug(self.server_settings['login_cookie'])
-        # self._log_mechanize(host_response)
-        # if not self.server_settings['login_cookie'] in self.session.cookies:
-            # raise PytolinoException(f'login to {self.server_name} failed.')
-
-        # rsp = self.session.get(
-                # self.server_settings['login_url'],
-                # impersonate='chrome',
-                # )
-        # print(rsp)
-        # headers= {
-            # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0'
-        # }
-        headers = {
-                'Host': 'www.orellfuessli.ch',
-                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
-                'Accept': "*/*",
-                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Accept-Encoding': 'gzip, deflate, br, zstd',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': '742',
-                'Referer': 'https://webreader.mytolino.com/',
-                'Origin': 'https://webreader.mytolino.com',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'cross-site',
-                'Connection': 'keep-alive',
-                'Priority': 'u=4',
-                }
-        payload = {
-            # 'client_id': self.server_settings['client_id'],
-            'client_id': 'webreader',
-            'grant_type': 'refresh_token',
-            'refresh_token': self.refresh_token,
-            'scope': 'SCOPE_BOSH',
-        }
-        host_response = self.session_cffi.post(
-                self.server_settings['token_url'],
-                data=payload,
-                verify=True,
-                allow_redirects=True,
-                headers=headers,
-                impersonate='chrome',
-                )
-        print(host_response)
-        try:
-            j = host_response.json()
-            self.access_token = j['access_token']
-            self.refresh_token = j['refresh_token']
-            self.token_expires = int(j['expires_in'])
-        # except requests.JSONDecodeError:
-        except json.decoder.JSONDecodeError:
-            raise PytolinoException('oauth access token request failed.')
-        else:
-            data = dict(
-                    refresh_token = self.refresh_token,
-                    hardware_id = self.hardware_id,
-                    )
-            if fp is not None:
-                with open(fp.as_posix(), 'wb') as f:
-                    tomli_w.dump(data, f)
-
-        # auth_code = ""
-
-        # params = {
-            # 'client_id': self.server_settings['client_id'],
-            # 'response_type': 'code',
-            # 'scope': self.server_settings['scope'],
-            # 'redirect_uri': self.server_settings['reader_url']
-        # }
-        # if 'login_form_url' in self.server_settings:
-            # params['x_buchde.skin_id'] = self.server_settings[
-                    # 'x_buchde.skin_id']
-            # params['x_buchde.mandant_id'] = self.server_settings[
-                    # 'x_buchde.mandant_id']
-        # host_response = self.session.get(
-                # self.server_settings['auth_url'],
-                # params=params,
-                # verify=True,
-                # allow_redirects=False,
-                # )
-
-        # self._log_requests(host_response)
-
-        # try:
-            # params = parse_qs(urlparse(
-                # host_response.headers['Location']
-                # ).query)
-            # auth_code = params['code'][0]
-        # except KeyError:
-            # self._log_requests(host_response, error=True)
-            # raise PytolinoException('oauth code request failed.')
-
-        # # Fetch OAUTH access token
-        # host_response = self.session.post(
-                # self.server_settings['token_url'],
-                # data={
-                    # 'client_id': self.server_settings['client_id'],
-                    # 'grant_type': 'authorization_code',
-                    # 'code': auth_code,
-                    # 'scope': self.server_settings['scope'],
-                    # 'redirect_uri': self.server_settings['reader_url']
-                    # },
-                # verify=True,
-                # allow_redirects=False,
-                # )
-        # self._log_requests(host_response)
-
+        msg = 'login does not work anymore because of bot protection'
+        'connect manualy (once) and use store_token and retrieve token'
+        'methods instead'
+        raise NotImplementedError(msg)
 
     def logout(self):
         """logout from tolino partner host
 
         """
-        return
-        if 'revoke_url' in self.server_settings:
-            host_response = self.session.post(
-                    self.server_settings['revoke_url'],
-                    data={
-                        'client_id': self.server_settings['client_id'],
-                        'token_type': 'refresh_token',
-                        'token': self.refresh_token,
-                        }
-                    )
-            self._log_requests(host_response)
-            if host_response.status_code != 200:
-                raise PytolinoException('logout failed.')
-        else:
-            host_response = self.session.post(
-                    self.server_settings['logout_url'],
-                    )
-            self._log_requests(host_response)
-            if host_response.status_code != 200:
-                raise PytolinoException('logout failed.')
+        raise NotImplementedError('logout is not necessary with tokens')
 
     def register(self):
-        """register your device. Needs to done only once! necessary to
-        upload files. you need to login first.
-
-        """
-        host_response = self.session.post(
-                self.server_settings['register_url'],
-                data=json.dumps({'hardware_name': 'tolino sync reader'}),
-                headers={
-                    'content-type': 'application/json',
-                    't_auth_token': self.access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
-                    'client_type': 'TOLINO_WEBREADER',
-                    'client_version': '4.4.1',
-                    'hardware_type': 'HTML5',
-                    }
-                )
-        self._log_requests(host_response)
-        if host_response.status_code != 200:
-            raise PytolinoException(f'register {self.hardware_id} failed.')
+        raise NotImplementedError('register is not necessary with tokens')
 
     def unregister(self, device_id=None):
-        """unregister a device from the host partner. If no device is given,
-        it is assumed the device in use will be removed
-
-        :device_id: None or str if we want to unregister another device
-        :returns: None
-
-        """
-        if device_id is None:
-            device_id = self.hardware_id
-
-        host_response = self.session.post(
-                self.server_settings['unregister_url'],
-                data=json.dumps({
-                    'deleteDevicesRequest': {
-                        'accounts': [{
-                            'auth_token': self.access_token,
-                            'reseller_id': self.server_settings['partner_id'],
-                            }],
-                        'devices': [{
-                            'device_id': device_id,
-                            'reseller_id': self.server_settings['partner_id'],
-                            }]
-                        }
-                    }),
-                headers={
-                    'content-type': 'application/json',
-                    't_auth_token': self.access_token,
-                    'reseller_id': self.server_settings['partner_id'],
-                    }
-                )
-        self._log_requests(host_response)
-        if host_response.status_code != 200:
-            try:
-                j = host_response.json()
-                raise PytolinoException(
-                        f"unregister {device_id} failed: ",
-                        f"{j['ResponseInfo']['message']}"
-                        )
-            except KeyError:
-                raise PytolinoException(
-                        f'unregister {device_id} failed: reason unknown.')
+        raise NotImplementedError('unregister is not necessary with tokens')
 
     def get_inventory(self):
         """download a list of the books on the cloud and their information
@@ -403,9 +202,8 @@ class Client(object):
                     }
                 )
 
-        self._log_requests(host_response)
-        if host_response.status_code != 200:
-            raise PytolinoException('invetory request failed')
+        if not host_response.ok:
+            raise PytolinoException(f'inventory request failed {host_response}')
 
         try:
             j = host_response.json()
@@ -459,9 +257,6 @@ class Client(object):
                     'client_type': 'TOLINO_WEBREADER',
                     }
                 )
-        self._log_requests(host_response)
-        if host_response.status_code != 200:
-            raise PytolinoException('add to collection failed')
 
     def upload_metadata(self, book_id, **new_metadata):
         """upload some metadata to a specific book on the cloud
@@ -482,9 +277,8 @@ class Client(object):
                 )
 
         book = host_response.json()
-        self._log_requests(host_response)
-        if host_response.status_code != 200:
-            raise PytolinoException('metadata upload failed')
+        if not host_response.ok
+            raise PytolinoException(f'metadata upload failed {host_response}')
 
         for key, value in new_metadata.items():
             book['metadata'][key] = value
@@ -504,9 +298,8 @@ class Client(object):
                     }
                 )
 
-        self._log_requests(host_response)
-        if host_response.status_code != 200:
-            raise PytolinoException('metadata upload failed')
+        if not host_response.ok:
+            raise PytolinoException(f'metadata upload failed {host_response}')
 
     def upload(self, file_path, name=None, extension=None):
         """upload an ebook to your cloud
@@ -544,9 +337,10 @@ class Client(object):
                     'reseller_id': self.server_settings['partner_id'],
                     }
                 )
-        # self._log_requests(host_response)
-        # if host_response.status_code != 200:
-            # raise PytolinoException('file upload failed.')
+
+        if not host_response.ok:
+            raise PytolinoException(f'upload failed {host_response}')
+
         try:
             j = host_response.json()
         except requests.JSONDecodeError:
@@ -573,9 +367,8 @@ class Client(object):
                     'reseller_id': self.server_settings['partner_id'],
                     }
                 )
-        self._log_requests(host_response)
 
-        if host_response.status_code != 200:
+        if not host_response.ok:
             try:
                 j = host_response.json()
                 raise PytolinoException(
@@ -616,10 +409,8 @@ class Client(object):
                     },
                 )
 
-        self._log_requests(host_response)
-
-        if host_response.status_code != 200:
-            raise PytolinoException('cover upload failed.')
+        if not host_response.ok:
+            raise PytolinoException(f'cover upload failed. {host_response}')
 
 
 if __name__ == '__main__':
