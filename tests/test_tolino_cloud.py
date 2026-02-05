@@ -16,6 +16,9 @@ from pathlib import Path
 import tomllib
 
 
+from varboxes import VarBox
+
+
 from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
 
 
@@ -55,108 +58,17 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(PytolinoException):
             Client(server_name='this tolino partner does not exists')
 
-
-def get_credentials():
-    CREDENTIAL_FILEPATH = os.path.join(
-            os.path.expanduser('~'),
-            'credentials.ini',
-            )
-    if os.path.exists(CREDENTIAL_FILEPATH):
-        credentials = configparser.ConfigParser()
-        credentials.read(CREDENTIAL_FILEPATH)
-        username = credentials['DEFAULT']['username']
-        password = credentials['DEFAULT']['password']
-    else:
-        username = input('username')
-        password = getpass.getpass()
-    return username, password
-
-
-def client_method_tests():
-
-    client = Client('www.orellfuessli.ch')
-    username, password = get_test_credentials(client.server_name)
-    try:
-        # reuse_access_token(client)
-        fp = Path(__file__).parent / 'token.toml'
-        client.login(username, password, fp=fp)
-    except PytolinoException as e:
-        print(e)
-    else:
-        print(client.access_token)
-        print(client.refresh_token)
-        print(client.token_expires)
-
-        client.logout()
-
-
-def register_test():
-
-    REGISTER_CHECK_PATH = os.path.join(
-            os.path.expanduser('~'),
-            'device_is_registered',
-            )
-    if not os.path.exists(REGISTER_CHECK_PATH):
-        username, password = get_credentials()
-        client = Client()
-        client.login(username, password)
-        client.register()
-        client.logout()
-        open(REGISTER_CHECK_PATH, 'w').close()
-    else:
-        print(
-                'I think this device is already registered.',
-                'If you want to do it again',
-                f', delete the file {REGISTER_CHECK_PATH}',
-                ' and re-run this function',
-                )
-
-
-def unregister_test():
-
-    username, password = get_credentials()
-    client = Client()
-    client.login(username, password)
-
-    client.unregister()
-
-    REGISTER_CHECK_PATH = os.path.join(
-            os.path.expanduser('~'),
-            'device_is_registered',
-            )
-    if os.path.exists(REGISTER_CHECK_PATH):
-        os.remove(REGISTER_CHECK_PATH)
-
-    client.logout()
-
-
-EPUB_ID_PATH = Path(__file__).parent / 'epub_id'
-
-def reuse_access_token(client):
-    fp = Path(__file__).parent / 'token.toml'
-    with open(fp.as_posix(), 'rb') as f:
-        data = tomllib.load(f)
-    refresh_token = data['refresh_token']
-    hw_id = data['hardware_id']
-    client.refresh_token = refresh_token
-    client.hardware_id = hw_id
-
-
 def upload_test():
 
     epub_fp = Path(__file__).parent / TEST_EPUB
-
     client = Client('www.orellfuessli.ch')
     username, password = get_test_credentials(client.server_name)
     fp = Path(__file__).parent / 'token.toml'
     client.login(username, password, fp=fp)
-    # client.register()
     ebook_id = client.upload(epub_fp.as_posix())
     print(ebook_id)
-    with open(EPUB_ID_PATH, 'w') as myfile:
-        myfile.write(ebook_id)
-    # client.unregister()
-    # client.logout()
+    vb = VarBox('pytolino')
+    vb.ebook_id = ebook_id
 
 def collection_test():
     with open(EPUB_ID_PATH, 'r') as myfile:
@@ -171,18 +83,13 @@ def collection_test():
 
 def delete_test():
 
-    with open(EPUB_ID_PATH, 'r') as myfile:
-        epub_id = myfile.read()
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
 
     client = Client('www.orellfuessli.ch')
     username, password = get_test_credentials(client.server_name)
     fp = Path(__file__).parent / 'token.toml'
-    client.login(username, password, fp=fp)
-    # username, password = get_credentials()
-    # client = Client()
-    # client.login(username, password)
     client.delete_ebook(epub_id)
-    # client.logout()
 
 
 def inventory_test():
@@ -246,34 +153,6 @@ def add_cover_test():
     client.add_cover(epub_id, cover_path)
     client.logout()
 
-def get_test_credentials(server_name: str):
-    from varboxes import VarBox
-    vb = VarBox('pytolino')
-    if not hasattr(vb, 'credentials'):
-        vb.credentials = dict()
-    if server_name in vb.credentials:
-        vb.credentials[server_name]: dict
-        username = vb.credentials[server_name].get('username')
-        password = vb.credentials[server_name].get('password')
-    else:
-        username = input('username: ')
-        password = getpass.getpass()
-        vb.credentials[server_name] = dict(
-                username=username,
-                password=password,
-                )
-        vb.save()
-    return username, password
-
-def del_test_credentials(server_name: str):
-    from varboxes import VarBox
-    vb = VarBox('pytolino')
-    if hasattr(vb, 'credentials'):
-        if server_name in vb.credentials:
-            del vb.credentials[server_name]
-            vb.save()
-
-
 def refresh_token():
     account_name = 'real_test_token'
     partner = 'www.orellfuessli.ch'
@@ -291,12 +170,6 @@ def refresh_token():
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.DEBUG)
     logging.basicConfig(level=logging.INFO)
-    # del_test_credentials('www.buecher.de')
-    # cred = get_test_credentials('www.buecher.de')
-    # print(cred)
-    # register_test()
-    # unregister_test()
-    # client_method_tests()
     # upload_test()
     # delete_test()
     # add_cover_test()
