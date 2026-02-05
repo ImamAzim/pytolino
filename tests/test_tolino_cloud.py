@@ -61,6 +61,7 @@ class TestClient(unittest.TestCase):
 
 def upload_test():
 
+    print('upload epub...')
     epub_fp = Path(__file__).parent / TEST_EPUB
     client = Client()
     client.retrieve_token(ACCOUNT_NAME)
@@ -82,6 +83,7 @@ def collection_test():
 
 def delete_test():
 
+    print('delete last epub')
     vb = VarBox('pytolino')
     ebook_id = vb.ebook_id
 
@@ -92,18 +94,17 @@ def delete_test():
 
 def inventory_test():
 
-    username, password = get_credentials()
+    print('get inventory')
     client = Client()
-    client.login(username, password)
-    client.register()
+    client.retrieve_token(ACCOUNT_NAME)
     inventory = client.get_inventory()
-    client.unregister()
-    client.logout()
-    print(inventory[0].keys())
-    for item in inventory:
-        metadata = item['epubMetaData']
-        print(metadata['title'])
-        # print(metadata.keys())
+    if inventory:
+        print(inventory[0].keys())
+        for item in inventory:
+            metadata = item['epubMetaData']
+            print(metadata['title'])
+    else:
+        print('empty')
 
 
 def metadata_test():
@@ -137,19 +138,19 @@ def metadata_test():
 
 def add_cover_test():
 
+    print('add cover')
+
     cover_path = os.path.join(
             os.path.expanduser('~'),
             'cover.jpg',
             )
 
-    with open(EPUB_ID_PATH, 'r') as myfile:
-        epub_id = myfile.read()
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
 
-    username, password = get_credentials()
     client = Client()
-    client.login(username, password)
-    client.add_cover(epub_id, cover_path)
-    client.logout()
+    client.retrieve_token(ACCOUNT_NAME)
+    client.add_cover(ebook_id, cover_path)
 
 def refresh_token():
     client = Client()
@@ -166,9 +167,10 @@ def refresh_token():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    # refresh_token()
-    # upload_test()
+    refresh_token()
+    upload_test()
+    inventory_test()
     delete_test()
+    inventory_test()
     # add_cover_test()
     # metadata_test()
-    # inventory_test()
