@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 
 
-import os
-import configparser
-import platform
 import logging
-from urllib.parse import urlparse, parse_qs
-from urllib3.util import Retry
 import json
 import time
 import tomllib
@@ -14,8 +9,6 @@ from pathlib import Path
 
 
 import requests
-from requests.adapters import HTTPAdapter
-import mechanize
 import curl_cffi
 from varboxes import VarBox
 
@@ -51,7 +44,8 @@ class Client(object):
                     expires_in: int,
                     hardward_id: str,
                     ):
-        """after one has connected in a browser, one can store the token for the app.
+        """after one has connected in a browser,
+        one can store the token for the app.
 
         :account_name: internal name for reference
         :refresh_token: given by server after a token POST request
@@ -95,8 +89,9 @@ class Client(object):
     def retrieve_token(
             self,
             account_name,
-            )->tuple[str, str]:
-        """get the token and data that were stored previousely. raise error if expired
+            ) -> tuple[str, str]:
+        """get the token and data that were stored previousely.
+        raise error if expired
 
         :account_name: internal name under which token was stored
         :returns: refresh_token, hardware_id
@@ -104,7 +99,8 @@ class Client(object):
         """
         vb = VarBox('pytolino', app_name=account_name)
         if not hasattr(vb, 'refresh_token'):
-            raise PytolinoException('there was no refresh token stored for that name')
+            raise PytolinoException(
+                    'there was no refresh token stored for that name')
         now = time.time()
         expiration_time = vb.timestamp + vb.expires_in
         if now > expiration_time:
@@ -162,7 +158,11 @@ class Client(object):
             self.access_token = j['access_token']
             self.refresh_token = j['refresh_token']
             self.token_expires = int(j['expires_in'])
-            Client.store_token(account_name, self.refresh_token, self.token_expires, self.hardware_id)
+            Client.store_token(
+                    account_name,
+                    self.refresh_token,
+                    self.token_expires,
+                    self.hardware_id)
             logging.info('got a new access token!')
 
     def login(self, username, password, fp=None):
@@ -203,7 +203,8 @@ class Client(object):
                 )
 
         if not host_response.ok:
-            raise PytolinoException(f'inventory request failed {host_response}')
+            raise PytolinoException(
+                    f'inventory request failed {host_response}')
 
         try:
             j = host_response.json()
@@ -257,6 +258,10 @@ class Client(object):
                     'client_type': 'TOLINO_WEBREADER',
                     }
                 )
+
+        if not host_response.ok:
+            raise PytolinoException(
+                    f'collection add failed {host_response}')
 
     def upload_metadata(self, book_id, **new_metadata):
         """upload some metadata to a specific book on the cloud
