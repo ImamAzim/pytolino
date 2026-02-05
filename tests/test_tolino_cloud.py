@@ -34,7 +34,7 @@ class TestClient(unittest.TestCase):
         cls.client = Client()
 
     def test_store_retrieve_token_error(self):
-        Client.store_token('test_account', 'test_token', 0, 'test_hw_id')
+        Client.store_token('test_account', 'test_token', -1, 'test_hw_id')
         with self.assertRaises(PytolinoException):
             Client.retrieve_token('test_account')
 

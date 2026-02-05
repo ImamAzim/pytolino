@@ -142,7 +142,15 @@ class Client(object):
         :returns: refresh_token, hardware_id
 
         """
-        pass
+        vb = VarBox('pytolino', app_name=account_name)
+        if not hasattr(vb, 'refresh_token'):
+            raise PytolinoException('there was no refresh token stored for that name')
+        now = time.time()
+        expiration_time = vb.timestamp + vb.expires_in
+        if now > expiration_time:
+            raise PytolinoException('the refresh token has expired')
+        else:
+            return vb.refresh_token, vb.hardware_id
 
     def __init__(self, server_name='www.buecher.de'):
 
