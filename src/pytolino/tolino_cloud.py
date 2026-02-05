@@ -43,6 +43,7 @@ class Client(object):
                     refresh_token: str,
                     expires_in: int,
                     hardward_id: str,
+                    access_token='',
                     ):
         """after one has connected in a browser,
         one can store the token for the app.
@@ -58,6 +59,7 @@ class Client(object):
         vb.hardware_id = hardward_id
         vb.expires_in = expires_in
         vb.timestamp = time.time()
+        vb.access_token = access_token
 
     @property
     def refresh_token(self) -> str:
@@ -108,6 +110,7 @@ class Client(object):
         else:
             self._refresh_token = vb.refresh_token
             self._hardware_id = vb.hardware_id
+            self._access_token = vb.access_token
 
     def get_new_token(self, account_name):
         """look at the store token, and get a new access and refresh tokens.
@@ -162,7 +165,9 @@ class Client(object):
                     account_name,
                     self.refresh_token,
                     self.token_expires,
-                    self.hardware_id)
+                    self.hardware_id,
+                    access_token=self.access_token,
+                    )
             logging.info('got a new access token!')
 
     def login(self, username, password, fp=None):

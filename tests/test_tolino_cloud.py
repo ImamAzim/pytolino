@@ -165,14 +165,14 @@ def refresh_token():
         expires_in = int(input('expires_in:\n'))
         hardware_id = input('hardware id:\n')
         Client.store_token(account_name, refresh_token, expires_in, hardware_id)
+        client.get_new_token(account_name)
 
 
 if __name__ == '__main__':
-    # logging.basicConfig(level=logging.DEBUG)
     logging.basicConfig(level=logging.INFO)
+    refresh_token()
     # upload_test()
     # delete_test()
     # add_cover_test()
     # metadata_test()
     # inventory_test()
-    refresh_token()
