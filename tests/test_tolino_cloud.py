@@ -22,9 +22,6 @@ from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
 TEST_EPUB = 'basic-v3plus2.epub'
 
 
-# logging.basicConfig(level=logging.INFO)
-
-
 class TestClient(unittest.TestCase):
 
     """all test concerning the Client class. """

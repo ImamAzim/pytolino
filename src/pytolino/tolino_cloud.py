@@ -45,31 +45,32 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
-    def __init__(self, server_name='www.buecher.de'):
+    @property
+    def refresh_token(self) -> str:
+        """refresh token to get new access token"""
+        return self._refresh_token
+
+    @property
+    def hardware_id(self) -> str:
+        """hardware id that is sent in request payloads"""
+        return self._hardware_id
+
+    def __init__(self, server_name='orellfuessli'):
 
         if server_name not in servers_settings:
             raise PytolinoException(
                     f'the partner {server_name} was not found.'
                     f'please choose one of the list: {PARTNERS}')
 
-        self.access_token = None
-        self.refresh_token = None
-        self.token_expires = None
+        self._access_token = None
+        self._refresh_token = None
+        self._token_expires = None
+        self._hardware_id = None
 
-        self.server_settings = servers_settings[server_name]
-        self.session = requests.Session()
-        self.session_cffi = curl_cffi.Session()
-        # retry_strategy = Retry(
-                # total=TOTAL_RETRY,
-                # status_forcelist=STATUS_FORCELIST,
-                # backoff_factor=2,
-                # allowed_methods=frozenset(['GET', 'POST']))
-        # adapter = HTTPAdapter(max_retries=retry_strategy)
-        # self.session.mount('http://', adapter)
-        # self.session.mount('https://', adapter)
-        # self.browser = mechanize.Browser()
-        # self.browser.set_handle_robots(False)
-        self.server_name = server_name
+        self._server_settings = servers_settings[server_name]
+        self._session = requests.Session()
+        self._session_cffi = curl_cffi.Session()
+        self._server_name = server_name
 
     def store_token(
                     account_name,
