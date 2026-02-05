@@ -1,6 +1,6 @@
 # orell fuessli
 [orellfuessli]
-partner_id = 8
+partner_id = "8"
 client_id = "dte_ereader_app_01"
 scope = "ebook_library"
 token_url = "https://www.orellfuessli.ch/auth/oauth2/token"
