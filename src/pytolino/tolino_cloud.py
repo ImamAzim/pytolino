@@ -45,73 +45,31 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
-    def _log_requests(self, host_response, error: True or None=None):
-        if host_response.status_code >= 400 or error is True:
-            logger = logging.error
-        else:
-            logger = logging.debug
-        logger('log request')
-        logger('---------------- HTTP response (requests)----------')
-        logger(f'status code: {host_response.status_code}')
-        logger(f'cookies: {host_response.cookies}')
-        logger(f'headers: {host_response.headers}')
-        try:
-            j = host_response.json()
-            logger(f'json: {j}')
-        except requests.JSONDecodeError:
-            logger(f'text: {host_response.text}')
-        logger('-------------------------------------------------------')
+    def __init__(self, server_name='www.buecher.de'):
 
-        try:
-            host_response.raise_for_status()
-        except requests.exceptions.HTTPError as e:
-            raise PytolinoException
-        except requests.exceptions.RequestException as e:
-            raise PytolinoException
+        if server_name not in servers_settings:
+            raise PytolinoException(
+                    f'the partner {server_name} was not found.'
+                    f'please choose one of the list: {PARTNERS}')
 
-    def _log_mechanize(self, host_response):
-        logging.debug('-------------- HTTP response (mechanize)--------------')
-        logging.debug(f'status code: {host_response.code}')
-        logging.debug(f'headers: {host_response.info()}')
-        logging.debug('-------------------------------------------------------')
-        if host_response.code >= 400:
-            logging.error('-------------- HTTP response (mechanize)----------')
-            logging.error(f'status code: {host_response.code}')
-            logging.error(f'headers: {host_response.info()}')
-            logging.error('--------------------------------------------------')
-            raise PytolinoException('http error')
+        self.access_token = None
+        self.refresh_token = None
+        self.token_expires = None
 
-    def _hardware_id():
-
-        os_id = {
-            'Windows': '1',
-            'Darwin': '2',
-            'Linux': '3'
-            }.get(platform.system(), 'x')
-
-        engine_id = 'x'
-        browser_id = 'xx'
-        version_id = '00'
-        fingerprint = 'ABCDEFGHIJKLMNOPQR'
-        return (
-                os_id +
-                engine_id +
-                browser_id +
-                fingerprint[0:1] +
-                '-' +
-                version_id +
-                fingerprint[1:4] +
-                '-' +
-                fingerprint[4:9] +
-                '-' +
-                fingerprint[9:14] +
-                '-' +
-                fingerprint[14:18] +
-                'h'
-                )
-
-    hardware_id = _hardware_id()
-
+        self.server_settings = servers_settings[server_name]
+        self.session = requests.Session()
+        self.session_cffi = curl_cffi.Session()
+        # retry_strategy = Retry(
+                # total=TOTAL_RETRY,
+                # status_forcelist=STATUS_FORCELIST,
+                # backoff_factor=2,
+                # allowed_methods=frozenset(['GET', 'POST']))
+        # adapter = HTTPAdapter(max_retries=retry_strategy)
+        # self.session.mount('http://', adapter)
+        # self.session.mount('https://', adapter)
+        # self.browser = mechanize.Browser()
+        # self.browser.set_handle_robots(False)
+        self.server_name = server_name
 
     def store_token(
                     account_name,
@@ -154,31 +112,6 @@ class Client(object):
             self.refresh_token = vb.refresh_token
             self.hardware_id = vb.hardware_id
 
-    def __init__(self, server_name='www.buecher.de'):
-
-        if server_name not in servers_settings:
-            raise PytolinoException(
-                    f'the partner {server_name} was not found.'
-                    f'please choose one of the list: {PARTNERS}')
-
-        self.access_token = None
-        self.refresh_token = None
-        self.token_expires = None
-
-        self.server_settings = servers_settings[server_name]
-        self.session = requests.Session()
-        self.session_cffi = curl_cffi.Session()
-        # retry_strategy = Retry(
-                # total=TOTAL_RETRY,
-                # status_forcelist=STATUS_FORCELIST,
-                # backoff_factor=2,
-                # allowed_methods=frozenset(['GET', 'POST']))
-        # adapter = HTTPAdapter(max_retries=retry_strategy)
-        # self.session.mount('http://', adapter)
-        # self.session.mount('https://', adapter)
-        # self.browser = mechanize.Browser()
-        # self.browser.set_handle_robots(False)
-        self.server_name = server_name
 
     def get_new_token(self, account_name):
         """look at the store token, and get a new access and refresh tokens.
