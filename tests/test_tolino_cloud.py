@@ -16,7 +16,7 @@ from pathlib import Path
 import tomllib
 
 
-from pytolino.tolino_cloud import Client, PytolinoException
+from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
 
 
 TEST_EPUB = 'basic-v3plus2.epub'
@@ -38,7 +38,7 @@ class TestClient(unittest.TestCase):
         hardware_id = 'test_hw_id'
         test_account = 'test_account'
         Client.store_token(test_account, refresh_token, -1, hardware_id)
-        with self.assertRaises(PytolinoException):
+        with self.assertRaises(ExpirationError):
             Client.retrieve_token(test_account)
 
     def test_store_retrieve_token(self):
@@ -287,6 +287,20 @@ def del_test_credentials(server_name: str):
         if server_name in vb.credentials:
             del vb.credentials[server_name]
             vb.save()
+
+
+def refresh_token():
+    account_name = 'real_test_token'
+    partner = 'www.orellfuessli.ch'
+    client = Client(partner)
+    try:
+        client.refresh_token(account_name)
+    except PytolinoException:
+        print(f'login on your browser at {partner} and get the token.')
+        refresh_token = input('refresh token:\n')
+        expires_in = input('expires_in:\n')
+        hardware_id = input('hardware id:\n')
+        Client.store_token(account_name, refresh_token, expires_in, hardware_id)
 
 
 if __name__ == '__main__':

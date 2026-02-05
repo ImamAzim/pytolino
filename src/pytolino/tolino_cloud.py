@@ -23,6 +23,10 @@ class PytolinoException(Exception):
     pass
 
 
+class ExpirationError(PytolinoException):
+    pass
+
+
 SERVERS_SETTINGS_FN = 'servers_settings.ini'
 SERVERS_SETTINGS_FILE_PATH = os.path.join(
         os.path.dirname(__file__),
@@ -148,7 +152,7 @@ class Client(object):
         now = time.time()
         expiration_time = vb.timestamp + vb.expires_in
         if now > expiration_time:
-            raise PytolinoException('the refresh token has expired')
+            raise ExpirationError('the refresh token has expired')
         else:
             return vb.refresh_token, vb.hardware_id
 
@@ -177,6 +181,15 @@ class Client(object):
         # self.browser = mechanize.Browser()
         # self.browser.set_handle_robots(False)
         self.server_name = server_name
+
+    def refresh_token(self, account_name):
+        """look at the store token, and get a new access and refresh tokens.
+
+        :account_name: TODO
+        :returns: TODO
+
+        """
+        pass
 
     def login(self, username, password, fp=None):
         """login to the partner and get access token.
