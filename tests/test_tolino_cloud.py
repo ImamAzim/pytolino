@@ -155,12 +155,11 @@ def add_cover_test():
 
 def refresh_token():
     account_name = 'real_test_token'
-    partner = 'www.orellfuessli.ch'
-    client = Client(partner)
+    client = Client()
     try:
         client.get_new_token(account_name)
     except PytolinoException:
-        print(f'login on your browser at {partner} and get the token.')
+        print('login on your browser and get the token.')
         refresh_token = input('refresh token:\n')
         expires_in = int(input('expires_in:\n'))
         hardware_id = input('hardware id:\n')

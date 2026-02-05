@@ -143,8 +143,8 @@ class Client(object):
             'refresh_token': self.refresh_token,
             'scope': 'SCOPE_BOSH',
         }
-        host_response = self.session_cffi.post(
-                self.server_settings['token_url'],
+        host_response = self._session_cffi.post(
+                self._server_settings['token_url'],
                 data=payload,
                 verify=True,
                 allow_redirects=True,
@@ -158,15 +158,15 @@ class Client(object):
             raise PytolinoException('failed to get a new token')
         else:
             j = host_response.json()
-            self.access_token = j['access_token']
+            self._access_token = j['access_token']
             self.refresh_token = j['refresh_token']
-            self.token_expires = int(j['expires_in'])
+            self._token_expires = int(j['expires_in'])
             Client.store_token(
                     account_name,
                     self.refresh_token,
-                    self.token_expires,
+                    self._token_expires,
                     self.hardware_id,
-                    access_token=self.access_token,
+                    access_token=self._access_token,
                     )
             logging.info('got a new access token!')
 
@@ -197,13 +197,13 @@ class Client(object):
 
         """
 
-        host_response = self.session.get(
-                self.server_settings['inventory_url'],
+        host_response = self._session.get(
+                self._server_settings['inventory_url'],
                 params={'strip': 'true'},
                 headers={
-                    't_auth_token': self.access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
+                    't_auth_token': self._access_token,
+                    'hardware_id': self._hardware_id,
+                    'reseller_id': self._server_settings['partner_id'],
                     }
                 )
 
@@ -252,14 +252,14 @@ class Client(object):
                     }]
                 }
 
-        host_response = self.session.patch(
-                self.server_settings['sync_data_url'],
+        host_response = self._session.patch(
+                self._server_settings['sync_data_url'],
                 data=json.dumps(payload),
                 headers={
                     'content-type': 'application/json',
-                    't_auth_token': self.access_token,
+                    't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
+                    'reseller_id': self._server_settings['partner_id'],
                     'client_type': 'TOLINO_WEBREADER',
                     }
                 )
@@ -276,13 +276,13 @@ class Client(object):
 
         """
 
-        url = self.server_settings['meta_url'] + f'/?deliverableId={book_id}'
-        host_response = self.session.get(
+        url = self._server_settings['meta_url'] + f'/?deliverableId={book_id}'
+        host_response = self._session.get(
                 url,
                 headers={
-                    't_auth_token': self.access_token,
+                    't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
+                    'reseller_id': self._server_settings['partner_id'],
                   }
                 )
 
@@ -297,14 +297,14 @@ class Client(object):
                 'uploadMetaData': book['metadata']
                 }
 
-        host_response = self.session.put(
+        host_response = self._session.put(
                 url,
                 data=json.dumps(payload),
                 headers={
                     'content-type': 'application/json',
-                    't_auth_token': self.access_token,
+                    't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
+                    'reseller_id': self._server_settings['partner_id'],
                     }
                 )
 
@@ -331,8 +331,8 @@ class Client(object):
                 'epub': 'application/epub+zip',
                 }.get(extension.lower(), 'application/pdf')
 
-        host_response = self.session.post(
-                self.server_settings['upload_url'],
+        host_response = self._session.post(
+                self._server_settings['upload_url'],
                 files=[(
                     'file',
                     (
@@ -342,9 +342,9 @@ class Client(object):
                         ),
                     )],
                 headers={
-                    't_auth_token': self.access_token,
+                    't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
+                    'reseller_id': self._server_settings['partner_id'],
                     }
                 )
 
@@ -368,13 +368,13 @@ class Client(object):
         :returns: None
 
         """
-        host_response = self.session.get(
-                self.server_settings['delete_url'],
+        host_response = self._session.get(
+                self._server_settings['delete_url'],
                 params={'deliverableId': ebook_id},
                 headers={
-                    't_auth_token': self.access_token,
+                    't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
+                    'reseller_id': self._server_settings['partner_id'],
                     }
                 )
 
@@ -408,14 +408,14 @@ class Client(object):
                 'jpg': 'image/jpeg'
                 }.get(ext.lower(), 'application/jpeg')
 
-        host_response = self.session.post(
-                self.server_settings['cover_url'],
+        host_response = self._session.post(
+                self._server_settings['cover_url'],
                 files=[('file', ('1092560016', open(filepath, 'rb'), mime))],
                 data={'deliverableId': book_id},
                 headers={
-                    't_auth_token': self.access_token,
+                    't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
-                    'reseller_id': self.server_settings['partner_id'],
+                    'reseller_id': self._server_settings['partner_id'],
                     },
                 )
 
