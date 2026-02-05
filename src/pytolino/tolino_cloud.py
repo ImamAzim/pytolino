@@ -191,7 +191,7 @@ class Client(object):
         :returns: TODO
 
         """
-        refresh_token, hardware_id = Client.retrieve_token(account_name)
+        self.retrieve_token(account_name)
 
         headers = {
                 'Host': 'www.orellfuessli.ch',
@@ -223,23 +223,18 @@ class Client(object):
                 headers=headers,
                 impersonate='chrome',
                 )
-        print(host_response)
-        try:
+        if not host_response.ok:
+            msg = str(host_response)
+            logging.error('failed to get a new token')
+            logging.error(msg)
+            raise PytolinoException('failed to get a new token')
+        else:
             j = host_response.json()
             self.access_token = j['access_token']
             self.refresh_token = j['refresh_token']
             self.token_expires = int(j['expires_in'])
-        # except requests.JSONDecodeError:
-        except json.decoder.JSONDecodeError:
-            raise PytolinoException('oauth access token request failed.')
-        else:
-            data = dict(
-                    refresh_token = self.refresh_token,
-                    hardware_id = self.hardware_id,
-                    )
-            if fp is not None:
-                with open(fp.as_posix(), 'wb') as f:
-                    tomli_w.dump(data, f)
+            Client.store_token(account_name, self.refresh_token, self.token_expires, self.hardware_id)
+            logging.info('got a new access token!')
 
     def login(self, username, password, fp=None):
         """login to the partner and get access token.

@@ -298,7 +298,7 @@ def refresh_token():
     client = Client(partner)
     try:
         client.get_new_token(account_name)
-    except ExpirationError:
+    except PytolinoException:
         print(f'login on your browser at {partner} and get the token.')
         refresh_token = input('refresh token:\n')
         expires_in = input('expires_in:\n')
