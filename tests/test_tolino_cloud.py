@@ -23,6 +23,7 @@ from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
 
 
 TEST_EPUB = 'basic-v3plus2.epub'
+ACCOUNT_NAME = 'real_test_token'
 
 
 class TestClient(unittest.TestCase):
@@ -61,10 +62,8 @@ class TestClient(unittest.TestCase):
 def upload_test():
 
     epub_fp = Path(__file__).parent / TEST_EPUB
-    client = Client('www.orellfuessli.ch')
-    username, password = get_test_credentials(client.server_name)
-    fp = Path(__file__).parent / 'token.toml'
-    client.login(username, password, fp=fp)
+    client = Client()
+    client.retrieve_token(ACCOUNT_NAME)
     ebook_id = client.upload(epub_fp.as_posix())
     print(ebook_id)
     vb = VarBox('pytolino')
@@ -154,10 +153,9 @@ def add_cover_test():
     client.logout()
 
 def refresh_token():
-    account_name = 'real_test_token'
     client = Client()
     try:
-        client.get_new_token(account_name)
+        client.get_new_token(ACCOUNT_NAME)
     except PytolinoException:
         print('login on your browser and get the token.')
         refresh_token = input('refresh token:\n')
@@ -169,8 +167,8 @@ def refresh_token():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    refresh_token()
-    # upload_test()
+    # refresh_token()
+    upload_test()
     # delete_test()
     # add_cover_test()
     # metadata_test()
