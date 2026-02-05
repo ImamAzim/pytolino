@@ -45,6 +45,26 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
+    def store_token(
+                    account_name,
+                    refresh_token: str,
+                    expires_in: int,
+                    hardward_id: str,
+                    ):
+        """after one has connected in a browser, one can store the token for the app.
+
+        :account_name: internal name for reference
+        :refresh_token: given by server after a token POST request
+        :expires_in: time in seconds
+        :hardward_id: present in payload for every request to API.
+
+        """
+        vb = VarBox('pytolino', app_name=account_name)
+        vb.refresh_token = refresh_token
+        vb.hardware_id = hardward_id
+        vb.expires_in = expires_in
+        vb.timestamp = time.time()
+
     @property
     def refresh_token(self) -> str:
         """refresh token to get new access token"""
@@ -72,26 +92,6 @@ class Client(object):
         self._session_cffi = curl_cffi.Session()
         self._server_name = server_name
 
-    def store_token(
-                    account_name,
-                    refresh_token: str,
-                    expires_in: int,
-                    hardward_id: str,
-                    ):
-        """after one has connected in a browser, one can store the token for the app.
-
-        :account_name: internal name for reference
-        :refresh_token: given by server after a token POST request
-        :expires_in: time in seconds
-        :hardward_id: present in payload for every request to API.
-
-        """
-        vb = VarBox('pytolino', app_name=account_name)
-        vb.refresh_token = refresh_token
-        vb.hardware_id = hardward_id
-        vb.expires_in = expires_in
-        vb.timestamp = time.time()
-
     def retrieve_token(
             self,
             account_name,
@@ -110,9 +110,8 @@ class Client(object):
         if now > expiration_time:
             raise ExpirationError('the refresh token has expired')
         else:
-            self.refresh_token = vb.refresh_token
-            self.hardware_id = vb.hardware_id
-
+            self._refresh_token = vb.refresh_token
+            self._hardware_id = vb.hardware_id
 
     def get_new_token(self, account_name):
         """look at the store token, and get a new access and refresh tokens.
