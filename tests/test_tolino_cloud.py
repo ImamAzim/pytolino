@@ -301,13 +301,14 @@ def refresh_token():
     except PytolinoException:
         print(f'login on your browser at {partner} and get the token.')
         refresh_token = input('refresh token:\n')
-        expires_in = input('expires_in:\n')
+        expires_in = int(input('expires_in:\n'))
         hardware_id = input('hardware id:\n')
         Client.store_token(account_name, refresh_token, expires_in, hardware_id)
 
 
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     # del_test_credentials('www.buecher.de')
     # cred = get_test_credentials('www.buecher.de')
     # print(cred)
