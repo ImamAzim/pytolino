@@ -182,7 +182,7 @@ class Client(object):
         # self.browser.set_handle_robots(False)
         self.server_name = server_name
 
-    def refresh_token(self, account_name):
+    def get_new_token(self, account_name):
         """look at the store token, and get a new access and refresh tokens.
 
         :account_name: TODO

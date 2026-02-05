@@ -294,7 +294,7 @@ def refresh_token():
     partner = 'www.orellfuessli.ch'
     client = Client(partner)
     try:
-        client.refresh_token(account_name)
+        client.get_new_token(account_name)
     except ExpirationError:
         print(f'login on your browser at {partner} and get the token.')
         refresh_token = input('refresh token:\n')
