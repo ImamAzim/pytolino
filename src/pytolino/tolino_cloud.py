@@ -16,7 +16,6 @@ import requests
 from requests.adapters import HTTPAdapter
 import mechanize
 import curl_cffi
-from bs4 import BeautifulSoup
 
 
 class PytolinoException(Exception):
