@@ -16,6 +16,7 @@ import requests
 from requests.adapters import HTTPAdapter
 import mechanize
 import curl_cffi
+from varboxes import VarBox
 
 
 class PytolinoException(Exception):
@@ -126,7 +127,11 @@ class Client(object):
         :hardward_id: present in payload for every request to API.
 
         """
-        pass
+        vb = VarBox('pytolino', app_name=account_name)
+        vb.refresh_token = refresh_token
+        vb.hardware_id = hardward_id
+        vb.expires_in = expires_in
+        vb.timestamp = time.time()
 
     def retrieve_token(
             account_name,
