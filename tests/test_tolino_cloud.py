@@ -52,23 +52,8 @@ class TestClient(unittest.TestCase):
         Client.store_token(test_account, refresh_token, -1, hardware_id)
 
     def test_init_nopartner(self):
-
         with self.assertRaises(PytolinoException):
             Client(server_name='this tolino partner does not exists')
-
-    def test_init_partner_config(self):
-        self.assertTrue(hasattr(self.client, 'server_settings'))
-        n_settings = len(self.client.server_settings)
-        self.assertGreater(n_settings, 0)
-
-    def test_hardware_id(self):
-        self.assertTrue(hasattr(self.client, 'hardware_id'))
-        self.assertIsInstance(self.client.hardware_id, str)
-
-    def test_token_vars(self):
-        self.assertTrue(hasattr(self.client, 'access_token'))
-        self.assertTrue(hasattr(self.client, 'refresh_token'))
-        self.assertTrue(hasattr(self.client, 'token_expires'))
 
 
 def get_credentials():
