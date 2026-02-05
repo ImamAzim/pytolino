@@ -277,7 +277,7 @@ class Client(object):
                 )
 
         book = host_response.json()
-        if not host_response.ok
+        if not host_response.ok:
             raise PytolinoException(f'metadata upload failed {host_response}')
 
         for key, value in new_metadata.items():
