@@ -1,5 +1,5 @@
 # orell fuessli
-[www.orellfuessli.ch]
+[orellfuessli]
 partner_id = 8
 client_id = "dte_ereader_app_01"
 scope = "ebook_library"

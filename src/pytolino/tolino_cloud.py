@@ -28,19 +28,17 @@ class ExpirationError(PytolinoException):
     pass
 
 
-SERVERS_SETTINGS_FN = 'servers_settings.ini'
+SERVERS_SETTINGS_FN = 'servers_settings.toml'
 SERVERS_SETTINGS_FP = Path(__file__).parent / SERVERS_SETTINGS_FN
-with open(SERVER_SETTINGS_FP.as_posix(), 'rb') as f:
-    server_settings = tomllib.load(f)
-
-PARTNERS = servers_settings.sections()
-TOTAL_RETRY = 5
-STATUS_FORCELIST = [404]
+servers_settings = tomllib.loads(SERVERS_SETTINGS_FP.read_text())
+PARTNERS = servers_settings.keys()
 
 
 def main():
-    print(SERVERS_SETTINGS_FILE_PATH)
-    print(servers_settings.sections())
+    for partner in PARTNERS:
+        print(partner)
+        for key, val in servers_settings[partner].items():
+            print(key, val)
 
 
 class Client(object):
