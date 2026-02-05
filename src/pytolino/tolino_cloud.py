@@ -12,7 +12,6 @@ import time
 import tomllib
 
 
-import tomli_w
 import requests
 from requests.adapters import HTTPAdapter
 import mechanize

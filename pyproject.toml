@@ -33,6 +33,7 @@ dev = [
 	'twine',
 	'sphinx-rtd-theme',
 	'varboxes',
+	'curl_cffi',
 ]
 
 [project.urls]
