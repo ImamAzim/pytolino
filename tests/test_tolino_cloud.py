@@ -108,6 +108,8 @@ def inventory_test():
 
 def metadata_test():
 
+
+    print('update metadata')
     metadata = dict(
             title='mytitle',
             isbn='myisbn',
@@ -116,24 +118,18 @@ def metadata_test():
             publisher='mypublisher',
             issued=time.time(),
             )
-    with open(EPUB_ID_PATH, 'r') as myfile:
-        epub_id = myfile.read()
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
 
-    username, password = get_credentials()
     client = Client()
-    client.login(username, password)
-    client.register()
-
-    client.upload_metadata(epub_id, **metadata)
+    client.retrieve_token(ACCOUNT_NAME)
+    client.upload_metadata(ebook_id, **metadata)
 
     inventory = client.get_inventory()
-    book = [el for el in inventory if el['epubMetaData']['identifier']==epub_id][0]
+    book = [el for el in inventory if el['epubMetaData']['identifier']==ebook_id][0]
     online_metadata = book['epubMetaData']
     for key in metadata:
         print(key, online_metadata[key])
-
-    client.unregister()
-    client.logout()
 
 def add_cover_test():
 
@@ -166,7 +162,7 @@ if __name__ == '__main__':
     refresh_token()
     upload_test()
     add_cover_test()
-    # metadata_test()
+    metadata_test()
     collection_test()
     inventory_test()
     delete_test()
