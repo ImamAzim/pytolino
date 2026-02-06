@@ -161,7 +161,7 @@ def refresh_token():
         refresh_token = input('refresh token:\n')
         expires_in = int(input('expires_in:\n'))
         hardware_id = input('hardware id:\n')
-        Client.store_token(account_name, refresh_token, expires_in, hardware_id)
+        Client.store_token(ACCOUNT_NAME, refresh_token, expires_in, hardware_id)
         client.get_new_token(account_name)
 
 
