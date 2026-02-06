@@ -21,6 +21,8 @@ description = "client for tolino cloud"
 dependencies = [
     'requests',
     'mechanize',
+    'curl_cffi',
+    'varboxes',
 ]
 
 [project.optional-dependencies]
@@ -32,8 +34,6 @@ dev = [
 	'build',
 	'twine',
 	'sphinx-rtd-theme',
-	'varboxes',
-	'curl_cffi',
 ]
 
 [project.urls]
