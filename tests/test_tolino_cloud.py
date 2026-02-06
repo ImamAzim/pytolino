@@ -5,15 +5,10 @@
 test all the tools in tolino cloud
 """
 
-import os
 import unittest
-import configparser
 import logging
 import time
-import logging
-import getpass
 from pathlib import Path
-import tomllib
 
 
 from varboxes import VarBox
@@ -60,6 +55,7 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(PytolinoException):
             Client(server_name='this tolino partner does not exists')
 
+
 def upload_test():
 
     print('upload epub...')
@@ -70,6 +66,7 @@ def upload_test():
     print(ebook_id)
     vb = VarBox('pytolino')
     vb.ebook_id = ebook_id
+
 
 def collection_test():
     print('add to a collection last epub')
@@ -108,7 +105,6 @@ def inventory_test():
 
 def metadata_test():
 
-
     print('update metadata')
     metadata = dict(
             title='mytitle',
@@ -126,10 +122,13 @@ def metadata_test():
     client.upload_metadata(ebook_id, **metadata)
 
     inventory = client.get_inventory()
-    book = [el for el in inventory if el['epubMetaData']['identifier']==ebook_id][0]
+    book = [
+            el for el in inventory if el[
+                'epubMetaData']['identifier'] == ebook_id][0]
     online_metadata = book['epubMetaData']
     for key in metadata:
         print(key, online_metadata[key])
+
 
 def add_cover_test():
 
@@ -144,6 +143,7 @@ def add_cover_test():
     client.retrieve_token(ACCOUNT_NAME)
     client.add_cover(ebook_id, cover_fp.as_posix())
 
+
 def refresh_token():
     client = Client()
     try:
@@ -153,7 +153,8 @@ def refresh_token():
         refresh_token = input('refresh token:\n')
         expires_in = int(input('expires_in:\n'))
         hardware_id = input('hardware id:\n')
-        Client.store_token(ACCOUNT_NAME, refresh_token, expires_in, hardware_id)
+        Client.store_token(
+                ACCOUNT_NAME, refresh_token, expires_in, hardware_id)
         client.get_new_token(ACCOUNT_NAME)
 
 
