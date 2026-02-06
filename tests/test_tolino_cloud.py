@@ -72,14 +72,13 @@ def upload_test():
     vb.ebook_id = ebook_id
 
 def collection_test():
-    with open(EPUB_ID_PATH, 'r') as myfile:
-        epub_id = myfile.read()
+    print('add to a collection last epub')
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
 
-    username, password = get_credentials()
     client = Client()
-    client.login(username, password)
-    client.add_to_collection(epub_id, 'test_coll')
-    client.logout()
+    client.retrieve_token(ACCOUNT_NAME)
+    client.add_to_collection(ebook_id, 'test_coll')
 
 
 def delete_test():
@@ -100,7 +99,6 @@ def inventory_test():
     client.retrieve_token(ACCOUNT_NAME)
     inventory = client.get_inventory()
     if inventory:
-        print(inventory[0].keys())
         for item in inventory:
             metadata = item['epubMetaData']
             print(metadata['title'])
@@ -169,7 +167,7 @@ if __name__ == '__main__':
     upload_test()
     add_cover_test()
     # metadata_test()
-    # collection_test()
+    collection_test()
     inventory_test()
     delete_test()
     inventory_test()
