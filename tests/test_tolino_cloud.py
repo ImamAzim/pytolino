@@ -24,6 +24,7 @@ from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
 
 TEST_EPUB = 'basic-v3plus2.epub'
 ACCOUNT_NAME = 'real_test_token'
+TEST_COVER = 'test_cover.png'
 
 
 class TestClient(unittest.TestCase):
@@ -140,17 +141,14 @@ def add_cover_test():
 
     print('add cover')
 
-    cover_path = os.path.join(
-            os.path.expanduser('~'),
-            'cover.jpg',
-            )
+    cover_fp = Path(__file__).parent / TEST_COVER
 
     vb = VarBox('pytolino')
     ebook_id = vb.ebook_id
 
     client = Client()
     client.retrieve_token(ACCOUNT_NAME)
-    client.add_cover(ebook_id, cover_path)
+    client.add_cover(ebook_id, cover_fp.as_posix())
 
 def refresh_token():
     client = Client()
@@ -169,7 +167,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     refresh_token()
     upload_test()
-    # add_cover_test()
+    add_cover_test()
     # metadata_test()
     # collection_test()
     inventory_test()
