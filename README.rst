@@ -1,7 +1,13 @@
+UPDATE
+===========
+
+because of heavy anti-bot protection, it is no longer possible to make a fully automatic login. One can however reuse authorization token after a manual login. The token can then be refreshed automatically, for example with a cronjob (at least once per hour.)
+
+
 pytolino
 ===================
 
-A client to interact (login, upload, delete ebooks, etc..) with the tolino cloud with python. Most of the code is forked from https://github.com/darkphoenix/tolino-calibre-sync
+A client to interact (login, upload, delete ebooks, etc..) with the tolino cloud with python. thanks to https://github.com/darkphoenix/tolino-calibre-sync for the inspiration.
 
 One difference is that I aim to create a python package from it and to put it on pypi, so that one can use this python module in other projects.
 
@@ -15,48 +21,50 @@ Installation
 Usage
 =====
 
+First, login manually, and use an inspector tool in the browser to inspect the requests. After connecting to the digital libray of tolino, there is POST request (named token). From the request response, copy the value of the refresh token (and the expiration time in seconds). Then, in a PATH request, in the request header, find the device_id number.
 
-Before being able to send requests, you need to register your computer on which you will run the code:
-
-.. code-block:: python
-
-    from pytolino.tolino_cloud import Client, PytolinoException
-    client = Client()
-    client.login(USERNAME, PASSWORD)
-    client.register() # do this only once!
-    client.logout()
-
-You can then upload, add to a collection or delete ebook on your cloud:
+You can then store the token:
 
 .. code-block:: python
 
-    from pytolino.tolino_cloud import Client, PytolinoException
-    client = Client()
-    client.login(USERNAME, PASSWORD)
+    from pytolino.tolino_cloud import Client
+    partner = 'orellfuessli'
+    account_name = 'any name for reference'
+    client = Client(partner)
+    print('login on your browser and get the token.')
+    refresh_token = input('refresh token:\n')
+    expires_in = int(input('expires_in:\n'))
+    hardware_id = input('hardware id:\n')
+    Client.store_token(
+    account_name, refresh_token, expires_in, hardware_id)
+
+Then, get a new access token. It will expires in 1 hours, so you might want to create a crontab job to do it regularely:
+
+.. code-block:: python
+
+    from pytolino.tolino_cloud import Client
+    partner = 'orellfuessli'
+    account_name = 'any name for reference'
+    client = Client(partner)
+    client.get_new_token(account_name)
+
+After this, instead of login, you only need to retrieve the access token that is stored on disk and upload, delete books, etc...
+
+.. code-block:: python
+
+    from pytolino.tolino_cloud import Client
+    partner = 'orellfuessli'
+    account_name = 'any name for reference'
+    client = Client(partner)
+    client.retrieve_token(account_name)
+
     ebook_id = client.upload(EPUB_FILE_PATH) # return a unique id that can be used for reference
     client.add_collection(epub_id, 'science fiction') # add the previous book to the collection science-fiction
     client.add_cover(epub_id, cover_path) # to upload a cover on the book.
     client.delete_ebook(epub_id) # delete the previousely uploaded ebook
     inventory = client.get_inventory() # get a list of all the books on the cloud and their metadata
     client.upload_metadata(epub_id, title='my title', author='someone') # you can upload various kind of metadata
-    client.logout()
 
-
-if you want to unregister your computer:
-
-.. code-block:: python
-
-    from pytolino.tolino_cloud import Client, PytolinoException
-    client = Client()
-    client.login(USERNAME, PASSWORD)
-    client.register() # now you will not be able to upload books from this computer
-    client.logout()
-
-By default, it will connect to 'www.buecher.de'. In principle you could change the partner with:
-
-.. code-block:: python
-
-   client = Client(server_name='www.orelfuessli') # for example if you have an account at orel fuessli.
 
 To get a list of the supported partners:
 
@@ -65,22 +73,17 @@ To get a list of the supported partners:
    from pytolino.tolino_cloud import PARTNERS
    print(PARTNERS)
 
-Unfortunately, the only supported partner now is 'www.buecher.de', because it has a different way of connection... So for now, the only solution is to create an account there and link it to your original account.
-
+for now, only orelfuessli is supported, but it should be easy to include the others (but always need of a manual login)
 
 
 Features
 ========
 
-* login to tolino partner (for now works only with buecher.de)
-* register device
-* unregister device
 * upload ebook
 * delete ebook from the cloud
 * add a book to a collection
 * download inventory
 * upload metadata
-* more to come...
 
 
 License
