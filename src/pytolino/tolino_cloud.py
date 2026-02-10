@@ -70,7 +70,7 @@ class Client(object):
 
     def raise_for_refresh_expiration(self) -> bool:
         """verify if refresh token is expired"""
-        if self._refresh_token_expiration_time < time.time():
+        if self._refresh_expiration_time < time.time():
             raise ExpirationError('refresh token is expired')
 
     @property
