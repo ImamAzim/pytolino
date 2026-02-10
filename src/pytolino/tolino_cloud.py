@@ -85,6 +85,8 @@ class Client(object):
         self._token_expires = None
         self._refresh_expires_in = None
         self._hardware_id = None
+        self._access_token_expiration_time = 0
+        self._refresh_expiration_time = 0
 
         self._server_settings = servers_settings[server_name]
         self._session = requests.Session()
@@ -107,13 +109,16 @@ class Client(object):
             raise PytolinoException(
                     'there was no refresh token stored for that name')
         now = time.time()
-        expiration_time = vb.timestamp + vb.expires_in
-        if now > expiration_time:
-            raise ExpirationError('the refresh token has expired')
-        else:
-            self._refresh_token = vb.refresh_token
-            self._hardware_id = vb.hardware_id
-            self._access_token = vb.access_token
+        access_expiration_time = vb.timestamp + vb.expires_in
+        refresh_expiration_time = vb.timestamp + vb.refresh_expires_in
+        self._refresh_token = vb.refresh_token
+        self._hardware_id = vb.hardware_id
+        self._access_token = vb.access_token
+        self._token_expires = vb.expires_in
+        self._refresh_expires_in = vb.refresh_expires_in
+        self._access_token_expiration_time = access_expiration_time
+        self._refresh_expiration_time = refresh_expiration_time
+
 
     def get_new_token(self, account_name):
         """look at the store token, and get a new access and refresh tokens.
