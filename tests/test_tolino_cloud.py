@@ -36,7 +36,9 @@ class TestClient(unittest.TestCase):
         test_account = 'test_account'
         Client.store_token(test_account, refresh_token, -1, -1, hardware_id)
         with self.assertRaises(ExpirationError):
-            Client().retrieve_token(test_account)
+            client = Client()
+            client.retrieve_token(test_account)
+            client.raise_for_access_expiration()
 
     def test_store_retrieve_token(self):
         refresh_token = 'test_token'
