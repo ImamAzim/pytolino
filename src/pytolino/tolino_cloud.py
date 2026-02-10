@@ -156,6 +156,8 @@ class Client(object):
                     access_token=self._access_token,
                     )
             logging.info('got a new access token!')
+            logging.info(
+                    f'it will expire in {self._token_expires}s')
 
     def login(self, username, password, fp=None):
         """login to the partner and get access token.
