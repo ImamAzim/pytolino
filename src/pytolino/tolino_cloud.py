@@ -42,6 +42,7 @@ class Client(object):
                     account_name,
                     refresh_token: str,
                     expires_in: int,
+                    refresh_expires_in: int,
                     hardward_id: str,
                     access_token='',
                     ):
@@ -58,6 +59,7 @@ class Client(object):
         vb.refresh_token = refresh_token
         vb.hardware_id = hardward_id
         vb.expires_in = expires_in
+        vb.refresh_expires_in = refresh_expires_in
         vb.timestamp = time.time()
         vb.access_token = access_token
 
@@ -81,6 +83,7 @@ class Client(object):
         self._access_token = None
         self._refresh_token = None
         self._token_expires = None
+        self._refresh_expires_in = None
         self._hardware_id = None
 
         self._server_settings = servers_settings[server_name]
