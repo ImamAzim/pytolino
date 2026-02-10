@@ -63,6 +63,16 @@ class Client(object):
         vb.timestamp = time.time()
         vb.access_token = access_token
 
+    def raise_for_access_expiration(self) -> bool:
+        """verify if access token is expired"""
+        if self._access_token_expiration_time < time.time():
+            raise ExpirationError('access token is expired')
+
+    def raise_for_refresh_expiration(self) -> bool:
+        """verify if refresh token is expired"""
+        if self._refresh_token_expiration_time < time.time():
+            raise ExpirationError('refresh token is expired')
+
     @property
     def refresh_token(self) -> str:
         """refresh token to get new access token"""
@@ -127,10 +137,7 @@ class Client(object):
 
         """
         self.retrieve_token(account_name)
-
-        now = time.time()
-        if self._refresh_expiration_time < now:
-            raise ExpirationError('refresh token is already expired')
+        self.raise_for_refresh_expiration()
 
         headers = {
                 'Referer': 'https://webreader.mytolino.com/',
