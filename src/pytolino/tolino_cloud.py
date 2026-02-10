@@ -108,7 +108,6 @@ class Client(object):
         if not hasattr(vb, 'refresh_token'):
             raise PytolinoException(
                     'there was no refresh token stored for that name')
-        now = time.time()
         access_expiration_time = vb.timestamp + vb.expires_in
         refresh_expiration_time = vb.timestamp + vb.refresh_expires_in
         self._refresh_token = vb.refresh_token
@@ -128,6 +127,10 @@ class Client(object):
 
         """
         self.retrieve_token(account_name)
+
+        now = time.time()
+        if self._refresh_expiration_time < now:
+            raise ExpirationError('refresh token is already expired')
 
         headers = {
                 'Referer': 'https://webreader.mytolino.com/',
@@ -156,16 +159,23 @@ class Client(object):
             self._access_token = j['access_token']
             self._refresh_token = j['refresh_token']
             self._token_expires = int(j['expires_in'])
+            self._refresh_expires_in = int(j['refresh_expires_in'])
+            now = time.time()
+            self._access_expiration_time = now + self._token_expires
+            self._refresh_expiration_time = now + self._refresh_expires_in
             Client.store_token(
                     account_name,
                     self.refresh_token,
                     self._token_expires,
+                    self._refresh_expires_in,
                     self.hardware_id,
                     access_token=self._access_token,
                     )
             logging.info('got a new access token!')
             logging.info(
-                    f'it will expire in {self._token_expires}s')
+                    f'access will expire in {self._token_expires}s')
+            logging.info(
+                    f'refresh will expire in {self._refresh_expires_in}s')
 
     def login(self, username, password, fp=None):
         """login to the partner and get access token.
