@@ -34,7 +34,7 @@ class TestClient(unittest.TestCase):
         refresh_token = 'test_token'
         hardware_id = 'test_hw_id'
         test_account = 'test_account'
-        Client.store_token(test_account, refresh_token, -1, hardware_id)
+        Client.store_token(test_account, refresh_token, -1, -1, hardware_id)
         with self.assertRaises(ExpirationError):
             Client().retrieve_token(test_account)
 
@@ -42,14 +42,14 @@ class TestClient(unittest.TestCase):
         refresh_token = 'test_token'
         hardware_id = 'test_hw_id'
         test_account = 'test_account'
-        Client.store_token(test_account, refresh_token, 10, hardware_id)
+        Client.store_token(test_account, refresh_token, 10, 10, hardware_id)
         client = Client()
         client.retrieve_token(test_account)
         retrieved_token = client.refresh_token
         retrieved_hardware_id = client.hardware_id
         self.assertEqual(refresh_token, retrieved_token)
         self.assertEqual(hardware_id, retrieved_hardware_id)
-        Client.store_token(test_account, refresh_token, -1, hardware_id)
+        Client.store_token(test_account, refresh_token, -1, -1, hardware_id)
 
     def test_init_nopartner(self):
         with self.assertRaises(PytolinoException):
@@ -152,9 +152,10 @@ def refresh_token():
         print('login on your browser and get the token.')
         refresh_token = input('refresh token:\n')
         expires_in = int(input('expires_in:\n'))
+        refresh_expires_in = int(input('refresh_expires_in:\n'))
         hardware_id = input('hardware id:\n')
         Client.store_token(
-                ACCOUNT_NAME, refresh_token, expires_in, hardware_id)
+                ACCOUNT_NAME, refresh_token, expires_in, refresh_expires_in, hardware_id)
         client.get_new_token(ACCOUNT_NAME)
 
 
