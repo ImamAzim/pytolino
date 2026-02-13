@@ -11,6 +11,7 @@ from pathlib import Path
 import requests
 import curl_cffi
 from varboxes import VarBox
+from seleniumbase import Driver
 
 
 class PytolinoException(Exception):
@@ -191,7 +192,14 @@ class Client(object):
         msg = 'login does not work anymore because of bot protection'
         'connect manualy (once) and use store_token and retrieve token'
         'methods instead'
-        raise NotImplementedError(msg)
+        # raise NotImplementedError(msg)
+        driver = Driver(uc=True, headless=False)
+        url = self._server_settings['login_url']
+        driver.get(url)
+        input('login manually and press ENTER...')
+        cookies = driver.get_cookies()
+        for cookie in cookies:
+            self._session.cookies.set(cookie['name'], cookie['value'])
 
     def logout(self):
         """logout from tolino partner host
