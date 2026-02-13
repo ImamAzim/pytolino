@@ -171,6 +171,16 @@ def refresh_token():
         client.get_new_token(ACCOUNT_NAME)
 
 
+def get_test_credentials():
+    vb = VarBox('test_credentials')
+    if not hasattr(vb, 'username'):
+        username = input('username:\n')
+        password = input('password:\n')
+        vb.username = username
+        vb.password = password
+    return vb.username, vb.password
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     refresh_token()
