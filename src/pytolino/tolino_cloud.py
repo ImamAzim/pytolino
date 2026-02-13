@@ -218,14 +218,14 @@ class Client(object):
                 url,
                 params=params,
                 verify=True,
-                allow_redirects=False,
+                allow_redirects=True,
                 headers=headers,
                 impersonate='chrome',
                 )
-        if host_response.ok:
-            print(host_response.headers.keys())
-        else:
-            raise PytolinoException('not ok')
+        print(host_response)
+        headers = host_response.headers
+        print(headers.get('location'))
+        print(headers.get('Location'))
 
 
     def logout(self):
