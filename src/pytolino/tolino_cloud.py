@@ -210,11 +210,17 @@ class Client(object):
         params['x_buchde.skin_id'] = 17,
         params['x_buchde.mandant_id'] = 37,
 
-        host_response = self._session.get(
+        headers = {
+                'Referer': 'https://webreader.mytolino.com/',
+                }
+
+        host_response = self._session_cffi.get(
                 url,
                 params=params,
                 verify=True,
                 allow_redirects=False,
+                headers=headers,
+                impersonate='chrome',
                 )
         print(host_response)
 
