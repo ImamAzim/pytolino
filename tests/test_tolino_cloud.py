@@ -181,13 +181,21 @@ def get_test_credentials():
     return vb.username, vb.password
 
 
+def login_test():
+    username, password = get_test_credentials()
+    client = Client()
+    client.login(username, password)
+    print(client.refresh_token, client.hardware_id)
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    refresh_token()
-    upload_test()
-    add_cover_test()
-    metadata_test()
-    collection_test()
-    inventory_test()
-    delete_test()
-    inventory_test()
+    # refresh_token()
+    # upload_test()
+    # add_cover_test()
+    # metadata_test()
+    # collection_test()
+    # inventory_test()
+    # delete_test()
+    # inventory_test()
+    login_test()
