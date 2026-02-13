@@ -200,6 +200,7 @@ class Client(object):
         cookies = driver.get_cookies()
         for cookie in cookies:
             self._session.cookies.set(cookie['name'], cookie['value'])
+        url = self._server_settings[]
 
     def logout(self):
         """logout from tolino partner host
