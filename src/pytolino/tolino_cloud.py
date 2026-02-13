@@ -200,7 +200,24 @@ class Client(object):
         cookies = driver.get_cookies()
         for cookie in cookies:
             self._session.cookies.set(cookie['name'], cookie['value'])
-        url = self._server_settings[]
+        url = self._server_settings['auth_url']
+        params = dict(
+                client_id='webreader',
+                response_type='code',
+                scope='SCOPE_BOSH',
+                redirect_uri='https://webreader.mytolino.com/library/',
+                )
+        params['x_buchde.skin_id'] = 17,
+        params['x_buchde.mandant_id'] = 37,
+
+        host_response = self._session.get(
+                url,
+                params=params,
+                verify=True,
+                allow_redirects=False,
+                )
+        print(host_response)
+
 
     def logout(self):
         """logout from tolino partner host
