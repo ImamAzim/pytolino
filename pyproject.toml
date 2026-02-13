@@ -23,6 +23,7 @@ dependencies = [
     'mechanize',
     'curl_cffi',
     'varboxes',
+    'seleniumbase',
 ]
 
 [project.optional-dependencies]
