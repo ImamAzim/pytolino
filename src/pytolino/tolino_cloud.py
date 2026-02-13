@@ -222,7 +222,11 @@ class Client(object):
                 headers=headers,
                 impersonate='chrome',
                 )
-        print(host_response)
+        if host_response.ok:
+            location = host_response.headers['Location']
+            print(location)
+        else:
+            raise PytolinoException('not ok')
 
 
     def logout(self):
