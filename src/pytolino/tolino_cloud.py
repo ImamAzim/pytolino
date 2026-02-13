@@ -223,8 +223,7 @@ class Client(object):
                 impersonate='chrome',
                 )
         if host_response.ok:
-            location = host_response.headers['location']
-            print(location)
+            print(host_response.headers.keys())
         else:
             raise PytolinoException('not ok')
 
