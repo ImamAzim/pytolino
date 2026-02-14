@@ -13,6 +13,8 @@ import curl_cffi
 from varboxes import VarBox
 from seleniumbase import Driver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.common.options import BaseOptions
 
 
 class PytolinoException(Exception):
@@ -208,7 +210,15 @@ class Client(object):
                 )
         username_field.send_keys(username)
         password_field.send_keys(password)
+        buttons = driver.find_elements(
+                By.TAG_NAME, 'button',
+                )
+        for button in buttons:
+            print(button.text)
+        # print(my_alert)
         input('accept cookie')
+        alert = Alert(driver)
+        print(alert.text)
 
         submit_button.click()
         input('login manually and press ENTER...')
