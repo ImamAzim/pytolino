@@ -209,6 +209,7 @@ class Client(object):
         username_field.send_keys(username)
         password_field.send_keys(password)
         input('accept cookie')
+
         submit_button.click()
         input('login manually and press ENTER...')
         cookies = driver.get_cookies()
@@ -228,18 +229,18 @@ class Client(object):
                 'Referer': 'https://webreader.mytolino.com/',
                 }
 
-        host_response = self._session_cffi.get(
-                url,
-                params=params,
-                verify=True,
-                allow_redirects=True,
-                headers=headers,
-                impersonate='chrome',
-                )
-        print(host_response)
-        headers = host_response.headers
-        print(headers.get('location'))
-        print(headers.get('Location'))
+        # host_response = self._session_cffi.get(
+                # url,
+                # params=params,
+                # verify=True,
+                # allow_redirects=True,
+                # headers=headers,
+                # impersonate='chrome',
+                # )
+        # print(host_response)
+        # headers = host_response.headers
+        # print(headers.get('location'))
+        # print(headers.get('Location'))
 
     def logout(self):
         """logout from tolino partner host
