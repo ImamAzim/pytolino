@@ -208,7 +208,8 @@ class Client(object):
                 )
         username_field.send_keys(username)
         password_field.send_keys(password)
-        # submit_button.click()
+        input('accept cookie')
+        submit_button.click()
         input('login manually and press ENTER...')
         cookies = driver.get_cookies()
         for cookie in cookies:
