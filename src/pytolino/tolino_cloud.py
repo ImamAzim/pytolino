@@ -129,7 +129,6 @@ class Client(object):
         self._access_token_expiration_time = access_expiration_time
         self._refresh_expiration_time = refresh_expiration_time
 
-
     def get_new_token(self, account_name):
         """look at the store token, and get a new access and refresh tokens.
 
@@ -189,9 +188,9 @@ class Client(object):
         """login to the partner and get access token.
 
         """
-        msg = 'login does not work anymore because of bot protection'
-        'connect manualy (once) and use store_token and retrieve token'
-        'methods instead'
+        # msg = 'login does not work anymore because of bot protection'
+        # 'connect manualy (once) and use store_token and retrieve token'
+        # 'methods instead'
         # raise NotImplementedError(msg)
         driver = Driver(uc=True, headless=False)
         url = self._server_settings['login_url']
@@ -226,7 +225,6 @@ class Client(object):
         headers = host_response.headers
         print(headers.get('location'))
         print(headers.get('Location'))
-
 
     def logout(self):
         """logout from tolino partner host
