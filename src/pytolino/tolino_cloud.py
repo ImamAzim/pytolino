@@ -197,11 +197,17 @@ class Client(object):
         driver.implicitly_wait(10)
         url = self._server_settings['login_url']
         driver.get(url)
-        # input('wait')
+        username_field = driver.find_element(
+                By.ID, 'email-input',
+                )
+        password_field = driver.find_element(
+                By.ID, 'password-input',
+                )
         submit_button = driver.find_element(
                 By.CSS_SELECTOR, '.element-button-primary.button-submit',
                 )
-        print(submit_button.text)
+        username_field.send_keys(username)
+        password_field.send_keys(password)
         # submit_button.click()
         input('login manually and press ENTER...')
         cookies = driver.get_cookies()
