@@ -12,6 +12,7 @@ import requests
 import curl_cffi
 from varboxes import VarBox
 from seleniumbase import Driver
+from selenium.webdriver.common.by import By
 
 
 class PytolinoException(Exception):
@@ -193,8 +194,15 @@ class Client(object):
         # 'methods instead'
         # raise NotImplementedError(msg)
         driver = Driver(uc=True, headless=False)
+        driver.implicitly_wait(10)
         url = self._server_settings['login_url']
         driver.get(url)
+        # input('wait')
+        submit_button = driver.find_element(
+                By.CSS_SELECTOR, '.element-button-primary.button-submit',
+                )
+        print(submit_button.text)
+        # submit_button.click()
         input('login manually and press ENTER...')
         cookies = driver.get_cookies()
         for cookie in cookies:
