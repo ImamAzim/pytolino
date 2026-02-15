@@ -246,7 +246,7 @@ class Client(object):
                 'Cookie': cookie_str,
                 'Host': 'www.orellfuessli.ch',
                 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
-                'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
                 'Accept-Encoding': 'gzip, deflate, br, zstd',
                 'Referer': 'https://webreader.mytolino.com/',
