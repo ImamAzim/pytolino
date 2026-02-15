@@ -274,7 +274,27 @@ class Client(object):
         query_str = urlparse(location_url).query
         location_parameters = parse_qs(query_str)
         auth_code = location_parameters['code'][0]
-        print(auth_code)
+
+        params = dict(
+                client_id='webreader',
+                grant_type='authorization_code',
+                code=auth_code,
+                scope='SCOPE_BOSH',
+                redirect_uri='https://webreader.mytolino.com/library/',
+                )
+        params['x_buchde.skin_id'] = 17,
+        params['x_buchde.mandant_id'] = 37,
+
+        url = self._server_settings['token_url']
+        host_response = self._session.get(
+                url,
+                params=params,
+                verify=True,
+                allow_redirects=False,
+                # headers=headers,
+                # impersonate='chrome',
+                )
+        print(host_response)
 
     def logout(self):
         """logout from tolino partner host
