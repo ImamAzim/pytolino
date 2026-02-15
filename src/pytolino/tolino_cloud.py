@@ -200,11 +200,15 @@ class Client(object):
         url = self._server_settings['login_url']
         driver.get(url)
 
-        time.sleep(2)
         wrapper = driver.find_element(By.ID, 'usercentrics-root')
+        print(wrapper)
         shadowroot = driver.execute_script(
                 "return arguments[0].shadowRoot;", wrapper)
         buttons = shadowroot.find_elements(By.CSS_SELECTOR, 'button')
+        for button in buttons:
+            print(button.text)
+        import sys
+        sys.exit()
         key_text = 'technisch'
         deny_buttons = [button for button in buttons if key_text in button.text]
         deny_button = deny_buttons[0]
