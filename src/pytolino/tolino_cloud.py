@@ -305,7 +305,7 @@ class Client(object):
         url = self._server_settings['token_url']
         for cookie in cookies:
             self._session_cffi.cookies.set(cookie['name'], cookie['value'])
-        host_response = self._session_cffi.get(
+        host_response = self._session_cffi.post(
                 url,
                 params=params,
                 verify=True,
