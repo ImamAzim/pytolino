@@ -199,6 +199,17 @@ class Client(object):
         driver.implicitly_wait(10)
         url = self._server_settings['login_url']
         driver.get(url)
+
+        time.sleep(2)
+        wrapper = driver.find_element(By.ID, 'usercentrics-root')
+        shadowroot = driver.execute_script(
+                "return arguments[0].shadowRoot;", wrapper)
+        buttons = shadowroot.find_elements(By.CSS_SELECTOR, 'button')
+        key_text = 'technisch'
+        deny_buttons = [button for button in buttons if key_text in button.text]
+        deny_button = deny_buttons[0]
+        deny_button.click()
+
         username_field = driver.find_element(
                 By.ID, 'email-input',
                 )
@@ -210,24 +221,9 @@ class Client(object):
                 )
         username_field.send_keys(username)
         password_field.send_keys(password)
-
-        wrapper = driver.find_element(By.ID, 'usercentrics-root')
-        shadowroot = driver.execute_script(
-                "return arguments[0].shadowRoot;", wrapper)
-        buttons = shadowroot.find_elements(By.CSS_SELECTOR, 'button')
-        key_text = 'technisch'
-        deny_buttons = [button for button in buttons if key_text in button.text]
-        deny_button = deny_buttons[0]
-        deny_button.click()
-        # buttons = driver.find_elements(
-                # By.TAG_NAME, 'button',
-                # )
-        # for button in buttons:
-            # print(button.text)
-        input('accept cookie')
+        time.sleep(2)
 
         submit_button.click()
-        input('login manually and press ENTER...')
         cookies = driver.get_cookies()
         for cookie in cookies:
             self._session.cookies.set(cookie['name'], cookie['value'])
@@ -244,6 +240,7 @@ class Client(object):
         headers = {
                 'Referer': 'https://webreader.mytolino.com/',
                 }
+        input('')
 
         # host_response = self._session_cffi.get(
                 # url,
