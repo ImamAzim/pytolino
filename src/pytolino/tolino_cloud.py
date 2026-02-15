@@ -193,24 +193,24 @@ class Client(object):
         """login to the partner and get access token.
 
         """
+        timeout = 2
         # msg = 'login does not work anymore because of bot protection'
         # 'connect manualy (once) and use store_token and retrieve token'
         # 'methods instead'
         # raise NotImplementedError(msg)
         driver = Driver(uc=True, headless=False)
-        driver.implicitly_wait(10)
+        driver.implicitly_wait(timeout)
         url = self._server_settings['login_url']
         driver.get(url)
 
         shadow_host = driver.find_element(By.ID, 'usercentrics-root')
         shadow_root = shadow_host.shadow_root
         css = '.sc-gsFSXq.xZpYl'
-        deny_button = WebDriverWait(
-                shadow_root, 10).until(
-                        expected_conditions.element_to_be_clickable(
-                            (By.CSS_SELECTOR, css)))
+        wait = WebDriverWait(shadow_root, timeout)
+        deny_button = wait.until(
+                expected_conditions.element_to_be_clickable(
+                    (By.CSS_SELECTOR, css)))
         deny_button.click()
-
         username_field = driver.find_element(
                 By.ID, 'email-input',
                 )
@@ -224,8 +224,9 @@ class Client(object):
         password_field.send_keys(password)
 
         wait = WebDriverWait(driver, timeout=2)
-        wait.until(expected_conditions.element_to_be_clickable(submit_button))
-
+        wait.until(
+                expected_conditions.element_to_be_clickable(
+                    submit_button))
         submit_button.click()
         cookies = driver.get_cookies()
         for cookie in cookies:
