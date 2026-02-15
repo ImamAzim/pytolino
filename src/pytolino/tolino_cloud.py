@@ -210,15 +210,21 @@ class Client(object):
                 )
         username_field.send_keys(username)
         password_field.send_keys(password)
-        buttons = driver.find_elements(
-                By.TAG_NAME, 'button',
-                )
-        for button in buttons:
-            print(button.text)
-        # print(my_alert)
+
+        wrapper = driver.find_element(By.ID, 'usercentrics-root')
+        shadowroot = driver.execute_script(
+                "return arguments[0].shadowRoot;", wrapper)
+        buttons = shadowroot.find_elements(By.CSS_SELECTOR, 'button')
+        key_text = 'technisch'
+        deny_buttons = [button for button in buttons if key_text in button.text]
+        deny_button = deny_buttons[0]
+        deny_button.click()
+        # buttons = driver.find_elements(
+                # By.TAG_NAME, 'button',
+                # )
+        # for button in buttons:
+            # print(button.text)
         input('accept cookie')
-        alert = Alert(driver)
-        print(alert.text)
 
         submit_button.click()
         input('login manually and press ENTER...')
