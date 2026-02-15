@@ -284,7 +284,6 @@ class Client(object):
                 )
         data['x_buchde.skin_id'] = 17
         data['x_buchde.mandant_id'] = 37
-        print(data)
 
         headers = {
                 'Host': 'www.orellfuessli.ch',
@@ -315,6 +314,11 @@ class Client(object):
                 impersonate='chrome',
                 )
         print(host_response)
+        data_rsp = host_response.json()
+        self._access_token = data_rsp['access_token']
+        self._refresh_token = data_rsp['refresh_token']
+        self._access_expiration_time = data_rsp['expires_in']
+        self._refresh_expiration_time = data_rsp['refresh_expires_in']
 
     def logout(self):
         """logout from tolino partner host
