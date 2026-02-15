@@ -275,7 +275,7 @@ class Client(object):
         location_parameters = parse_qs(query_str)
         auth_code = location_parameters['code'][0]
 
-        params = dict(
+        data = dict(
                 client_id='webreader',
                 grant_type='authorization_code',
                 code=auth_code,
@@ -307,7 +307,7 @@ class Client(object):
             self._session_cffi.cookies.set(cookie['name'], cookie['value'])
         host_response = self._session_cffi.post(
                 url,
-                params=params,
+                data=data,
                 verify=True,
                 allow_redirects=False,
                 headers=headers,
