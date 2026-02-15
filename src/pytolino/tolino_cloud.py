@@ -284,6 +284,7 @@ class Client(object):
                 )
         data['x_buchde.skin_id'] = 17,
         data['x_buchde.mandant_id'] = 37,
+        print(data)
 
         headers = {
                 'Host': 'www.orellfuessli.ch',
@@ -303,8 +304,8 @@ class Client(object):
                 'TE': 'trailers',
                 }
         url = self._server_settings['token_url']
-        for cookie in cookies:
-            self._session_cffi.cookies.set(cookie['name'], cookie['value'])
+        # for cookie in cookies:
+            # self._session_cffi.cookies.set(cookie['name'], cookie['value'])
         host_response = self._session_cffi.post(
                 url,
                 data=data,
