@@ -6,6 +6,7 @@ import json
 import time
 import tomllib
 from pathlib import Path
+from urllib.parse import urlparse, parse_qs
 
 
 import requests
@@ -268,9 +269,12 @@ class Client(object):
                 impersonate='chrome',
                 )
         print(host_response)
-        # headers = host_response.headers
-        # print(headers.get('location'))
-        # print(headers.get('Location'))
+        headers = host_response.headers
+        location_url = headers['location']
+        query_str = urlparse(location_url).query
+        location_parameters = parse_qs(query_str)
+        auth_code = location_parameters['code'][0]
+        print(auth_code)
 
     def logout(self):
         """logout from tolino partner host
