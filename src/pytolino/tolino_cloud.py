@@ -222,7 +222,9 @@ class Client(object):
                 )
         username_field.send_keys(username)
         password_field.send_keys(password)
-        time.sleep(2)
+
+        wait = WebDriverWait(driver, timeout=2)
+        wait.until(expected_conditions.element_to_be_clickable(submit_button))
 
         submit_button.click()
         cookies = driver.get_cookies()
