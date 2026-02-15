@@ -15,6 +15,8 @@ from seleniumbase import Driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.options import BaseOptions
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class PytolinoException(Exception):
@@ -200,18 +202,13 @@ class Client(object):
         url = self._server_settings['login_url']
         driver.get(url)
 
-        wrapper = driver.find_element(By.ID, 'usercentrics-root')
-        print(wrapper)
-        shadowroot = driver.execute_script(
-                "return arguments[0].shadowRoot;", wrapper)
-        buttons = shadowroot.find_elements(By.CSS_SELECTOR, 'button')
-        for button in buttons:
-            print(button.text)
-        import sys
-        sys.exit()
-        key_text = 'technisch'
-        deny_buttons = [button for button in buttons if key_text in button.text]
-        deny_button = deny_buttons[0]
+        shadow_host = driver.find_element(By.ID, 'usercentrics-root')
+        shadow_root = shadow_host.shadow_root
+        css = '.sc-gsFSXq.xZpYl'
+        deny_button = WebDriverWait(
+                shadow_root, 10).until(
+                        expected_conditions.element_to_be_clickable(
+                            (By.CSS_SELECTOR, css)))
         deny_button.click()
 
         username_field = driver.find_element(
