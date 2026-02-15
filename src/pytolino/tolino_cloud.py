@@ -259,13 +259,13 @@ class Client(object):
                 'TE': 'trailers',
                 }
 
-        host_response = self._session.get(
+        host_response = self._session_cffi.get(
                 url,
                 params=params,
                 verify=True,
                 allow_redirects=False,
                 headers=headers,
-                # impersonate='chrome',
+                impersonate='chrome',
                 )
         print(host_response)
         # headers = host_response.headers
