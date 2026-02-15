@@ -240,8 +240,8 @@ class Client(object):
                 scope='SCOPE_BOSH',
                 redirect_uri='https://webreader.mytolino.com/library/',
                 )
-        params['x_buchde.skin_id'] = 17,
-        params['x_buchde.mandant_id'] = 37,
+        params['x_buchde.skin_id'] = 17
+        params['x_buchde.mandant_id'] = 37
 
         headers = {
                 'Cookie': cookie_str,
@@ -282,8 +282,8 @@ class Client(object):
                 scope='SCOPE_BOSH',
                 redirect_uri='https://webreader.mytolino.com/library/',
                 )
-        data['x_buchde.skin_id'] = 17,
-        data['x_buchde.mandant_id'] = 37,
+        data['x_buchde.skin_id'] = 17
+        data['x_buchde.mandant_id'] = 37
         print(data)
 
         headers = {
