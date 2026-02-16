@@ -330,31 +330,35 @@ class Client(object):
                 }
             })
         headers = {
-                'm_id': '8',
-                'Host': 'bosh.pageplace.de',
-                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
-                'Accept': "application/json",
-                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                # 'm_id': '8',
+                # 'Host': 'bosh.pageplace.de',
+                # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                # 'Accept': "application/json",
+                # 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                # 'Accept-Encoding': 'gzip, deflate, br, zstd',
                 'Content-Type': "application/json",
-                'Content-Length': "752",
-                'Referer': 'https://management.mytolino.com/',
-                'Origin': 'https://management.mytolino.com',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'cross-site',
+                # 'Content-Length': "752",
+                # 'Referer': 'https://management.mytolino.com/',
+                # 'Origin': 'https://management.mytolino.com',
+                # 'Sec-Fetch-Dest': 'empty',
+                # 'Sec-Fetch-Mode': 'cors',
+                # 'Sec-Fetch-Site': 'cross-site',
                 't_auth_token': self._access_token,
-                'Connection': 'keep-alive',
+                # 'Connection': 'keep-alive',
+                'reseller_id': self._server_settings['partner_id'],
                 }
-        host_response = self._session_cffi.post(
+        host_response = self._session.post(
                 url,
                 data=data,
                 # verify=True,
                 # allow_redirects=False,
                 headers=headers,
-                impersonate='chrome',
+                # impersonate='chrome',
                 )
         print(host_response)
+        j = host_response.json()
+        for el in j['deviceListResponse']['devices']:
+            print(el['deviceId'], el['deviceLastUsage'])
 
     def logout(self):
         """logout from tolino partner host
