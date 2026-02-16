@@ -320,6 +320,42 @@ class Client(object):
         self._access_expiration_time = data_rsp['expires_in']
         self._refresh_expiration_time = data_rsp['refresh_expires_in']
 
+        url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
+        data = json.dumps({
+            'deviceListRequest': {
+                'accounts': [{
+                    'auth_token'  : self._access_token,
+                    'reseller_id' : self._server_settings['partner_id']
+                    }]
+                }
+            })
+        headers = {
+                'm_id': '8',
+                'Host': 'bosh.pageplace.de',
+                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                'Accept': "application/json",
+                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'Content-Type': "application/json",
+                'Content-Length': "752",
+                'Referer': 'https://management.mytolino.com/',
+                'Origin': 'https://management.mytolino.com',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'cross-site',
+                't_auth_token': self._access_token,
+                'Connection': 'keep-alive',
+                }
+        host_response = self._session_cffi.post(
+                url,
+                data=data,
+                # verify=True,
+                # allow_redirects=False,
+                headers=headers,
+                impersonate='chrome',
+                )
+        print(host_response)
+
     def logout(self):
         """logout from tolino partner host
 
