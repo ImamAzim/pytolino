@@ -172,7 +172,7 @@ def refresh_token():
 
 
 def get_test_credentials():
-    vb = VarBox('test_credentials')
+    vb = VarBox('pytolino', 'test_credentials')
     if not hasattr(vb, 'username'):
         username = input('username:\n')
         password = input('password:\n')
@@ -186,8 +186,8 @@ def login_test():
     client = Client()
     client.login(username, password)
     # print(client.refresh_token, client.hardware_id)
-    client.store_current_token('test')
-    client.get_new_token('test')
+    client.store_current_token('token_test')
+    client.get_new_token('token_test')
 
 
 if __name__ == '__main__':
