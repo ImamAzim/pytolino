@@ -70,11 +70,12 @@ class Client(object):
         vb.timestamp = time.time()
         vb.access_token = access_token
 
-    def store_current_token(self):
+    def store_current_token(self, account_name):
         """store the token with attribute of self
 
         """
-        self.store_token(
+        Client.store_token(
+                account_name,
                 self._refresh_token,
                 self._token_expires,
                 self._refresh_expires_in,

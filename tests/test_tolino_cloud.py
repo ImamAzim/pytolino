@@ -186,7 +186,8 @@ def login_test():
     client = Client()
     client.login(username, password)
     # print(client.refresh_token, client.hardware_id)
-    client.get_new_token()
+    Client.store_current_token('test')
+    client.get_new_token('test')
 
 
 if __name__ == '__main__':
