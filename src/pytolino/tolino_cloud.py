@@ -330,8 +330,8 @@ class Client(object):
         data_rsp = host_response.json()
         self._access_token = data_rsp['access_token']
         self._refresh_token = data_rsp['refresh_token']
-        self._access_expiration_time = data_rsp['expires_in']
-        self._refresh_expiration_time = data_rsp['refresh_expires_in']
+        self._token_expires = data_rsp['expires_in']
+        self._refresh_expires_in = data_rsp['refresh_expires_in']
 
         url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
         data = json.dumps({
