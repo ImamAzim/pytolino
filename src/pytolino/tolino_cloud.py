@@ -357,8 +357,12 @@ class Client(object):
                 )
         print(host_response)
         j = host_response.json()
-        for el in j['deviceListResponse']['devices']:
-            print(el['deviceId'], el['deviceLastUsage'])
+        devices =  j['deviceListResponse']['devices']
+        devices.sort(key=lambda el:el['deviceLastUsage'])
+        my_dev = devices[-1]
+        hardware_id = my_dev['deviceId']
+        self._hardware_id = hardware_id
+
 
     def logout(self):
         """logout from tolino partner host
