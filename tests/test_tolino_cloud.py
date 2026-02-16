@@ -186,8 +186,8 @@ def login_test():
     client = Client()
     client.login(username, password)
     # print(client.refresh_token, client.hardware_id)
-    client.store_current_token('test')
-    client.get_new_token('test')
+    client.store_current_token('tolino_news')
+    client.get_new_token('tolino_news')
 
 
 if __name__ == '__main__':
