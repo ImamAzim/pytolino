@@ -70,6 +70,18 @@ class Client(object):
         vb.timestamp = time.time()
         vb.access_token = access_token
 
+    def store_current_token(self):
+        """store the token with attribute of self
+
+        """
+        self.store_token(
+                self._refresh_token,
+                self._token_expires,
+                self._refresh_expires_in,
+                self._hardware_id,
+                self._access_token,
+                )
+
     def raise_for_access_expiration(self) -> bool:
         """verify if access token is expired"""
         if self._access_token_expiration_time < time.time():
