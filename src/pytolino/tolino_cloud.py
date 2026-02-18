@@ -45,17 +45,25 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
-    def _log_request(self, rsp: requests.Response):
+    def _log_request(self, rsp: requests.Response, data=None):
         if rsp.ok:
             log = logging.info
         else:
             log = logging.error
+        log('=====request=======')
         log(rsp.url)
         log(rsp.request.method)
+        log('data:')
+        log(data)
+        log('response:')
         log(rsp)
+        log('response text:')
         log(rsp.text)
+        log('request header:')
         log(rsp.request.headers)
+        log('response header:')
         log(rsp.headers)
+        log('===================')
 
         if not rsp.ok:
             raise PytolinoException('host response not ok')
@@ -210,7 +218,7 @@ class Client(object):
                 headers=headers,
                 impersonate='chrome',
                 )
-        self._log_request(host_response)
+        self._log_request(host_response, data=payload)
         j = host_response.json()
         self._access_token = j['access_token']
         self._refresh_token = j['refresh_token']
