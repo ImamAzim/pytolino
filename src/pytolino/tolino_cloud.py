@@ -47,7 +47,7 @@ class Client(object):
 
     def _log_request(self, rsp: requests.Response, data=None):
         if rsp.ok:
-            log = logging.info
+            log = logging.debug
         else:
             log = logging.error
         log('=====request=======')
