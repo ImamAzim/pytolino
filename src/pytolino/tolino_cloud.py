@@ -53,6 +53,8 @@ class Client(object):
         log(rsp.url)
         log(rsp)
         log(rsp.text)
+        log(rsp.request.headers)
+        log(rsp.headers)
 
         if not rsp.ok:
             raise PytolinoException('host response not ok')
