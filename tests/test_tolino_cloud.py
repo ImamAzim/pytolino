@@ -191,7 +191,7 @@ def login_test():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    refresh_token()
+    refresh_token(ask_new_credentials=False)
     # upload_test()
     # add_cover_test()
     # metadata_test()
