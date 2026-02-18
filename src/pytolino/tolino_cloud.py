@@ -192,7 +192,7 @@ class Client(object):
                 'Accept-Encoding': 'gzip, deflate, br, zstd',
                 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
                 'Connection': 'keep-alive',
-                'Content-Length': "288",
+                'Content-Length': "742",
                 'Content-Type': "application/x-www-form-urlencoded",
                 'Host': 'www.orellfuessli.ch',
                 'Origin': 'https://webreader.mytolino.com',
@@ -201,7 +201,6 @@ class Client(object):
                 'Sec-Fetch-Dest': 'empty',
                 'Sec-Fetch-Mode': 'cors',
                 'Sec-Fetch-Site': 'cross-site',
-                'TE': 'trailers',
                 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
                 }
         payload = {
