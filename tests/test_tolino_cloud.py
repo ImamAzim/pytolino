@@ -157,11 +157,8 @@ def add_cover_test():
     client.add_cover(ebook_id, cover_fp.as_posix())
 
 
-def refresh_token():
-    client = Client()
-    try:
-        client.get_new_token(ACCOUNT_NAME)
-    except PytolinoException:
+def refresh_token(ask_new_credentials=False):
+    if ask_new_credentials:
         print('login on your browser and get the token.')
         refresh_token = input('refresh token:\n')
         expires_in = int(input('expires_in:\n'))
@@ -169,7 +166,8 @@ def refresh_token():
         hardware_id = input('hardware id:\n')
         Client.store_token(
                 ACCOUNT_NAME, refresh_token, expires_in, refresh_expires_in, hardware_id)
-        client.get_new_token(ACCOUNT_NAME)
+    client = Client()
+    client.get_new_token(ACCOUNT_NAME)
 
 
 def get_test_credentials():
