@@ -3,6 +3,7 @@
 partner_id = "8"
 client_id = "dte_ereader_app_01"
 scope = "ebook_library"
+auth_url = "https://www.orellfuessli.ch/auth/oauth2/autologin?"
 token_url = "https://www.orellfuessli.ch/auth/oauth2/token"
 login_url = "https://www.orellfuessli.ch/shop/home/login/login?"
 reader_url = "https://webreader.mytolino.com/library/"

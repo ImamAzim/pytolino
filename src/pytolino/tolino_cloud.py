@@ -6,11 +6,18 @@ import json
 import time
 import tomllib
 from pathlib import Path
+from urllib.parse import urlparse, parse_qs
 
 
 import requests
 import curl_cffi
 from varboxes import VarBox
+from seleniumbase import Driver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.common.options import BaseOptions
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class PytolinoException(Exception):
@@ -38,6 +45,30 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
+    def _log_request(self, rsp: requests.Response, data=None):
+        if rsp.ok:
+            log = logging.info
+        else:
+            log = logging.error
+        log('=====request=======')
+        log(rsp.url)
+        log(rsp.request.method)
+        log('data:')
+        log(data)
+        log('response:')
+        log(rsp)
+        log('response text:')
+        log(rsp.text)
+        log('request header:')
+        log(rsp.request.headers)
+        log('response header:')
+        log(rsp.headers)
+        log('===================')
+
+        if not rsp.ok:
+            raise PytolinoException('host response not ok')
+
+
     def store_token(
                     account_name,
                     refresh_token: str,
@@ -63,6 +94,19 @@ class Client(object):
         vb.timestamp = time.time()
         vb.access_token = access_token
 
+    def store_current_token(self, account_name):
+        """store the token with attribute of self
+
+        """
+        Client.store_token(
+                account_name,
+                self._refresh_token,
+                self._token_expires,
+                self._refresh_expires_in,
+                self._hardware_id,
+                self._access_token,
+                )
+
     def raise_for_access_expiration(self) -> bool:
         """verify if access token is expired"""
         if self._access_token_expiration_time < time.time():
@@ -70,7 +114,12 @@ class Client(object):
 
     def raise_for_refresh_expiration(self) -> bool:
         """verify if refresh token is expired"""
-        if self._refresh_expiration_time < time.time():
+        now = time.time()
+        if self._refresh_expiration_time < now:
+            # msg = f'refresh expiration is at {self._refresh_expiration_time}'
+            # logging.error(msg)
+            # msg = f'now is {now}'
+            # logging.error(msg)
             raise ExpirationError('refresh token is expired')
 
     @property
@@ -128,7 +177,6 @@ class Client(object):
         self._access_token_expiration_time = access_expiration_time
         self._refresh_expiration_time = refresh_expiration_time
 
-
     def get_new_token(self, account_name):
         """look at the store token, and get a new access and refresh tokens.
 
@@ -140,7 +188,19 @@ class Client(object):
         self.raise_for_refresh_expiration()
 
         headers = {
+                # 'Accept': "*/*",
+                # 'Accept-Encoding': 'gzip, deflate, br, zstd',
+                # 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                # 'Connection': 'keep-alive',
+                # 'Content-Type': "application/x-www-form-urlencoded",
+                # 'Host': 'www.orellfuessli.ch',
+                # 'Origin': 'https://webreader.mytolino.com',
+                # 'Priority': 'u=4',
                 'Referer': 'https://webreader.mytolino.com/',
+                # 'Sec-Fetch-Dest': 'empty',
+                # 'Sec-Fetch-Mode': 'cors',
+                # 'Sec-Fetch-Site': 'cross-site',
+                # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
                 }
         payload = {
             'client_id': 'webreader',
@@ -156,42 +216,202 @@ class Client(object):
                 headers=headers,
                 impersonate='chrome',
                 )
-        if not host_response.ok:
-            msg = str(host_response)
-            logging.error('failed to get a new token')
-            logging.error(msg)
-            raise PytolinoException('failed to get a new token')
-        else:
-            j = host_response.json()
-            self._access_token = j['access_token']
-            self._refresh_token = j['refresh_token']
-            self._token_expires = int(j['expires_in'])
-            self._refresh_expires_in = int(j['refresh_expires_in'])
-            now = time.time()
-            self._access_expiration_time = now + self._token_expires
-            self._refresh_expiration_time = now + self._refresh_expires_in
-            Client.store_token(
-                    account_name,
-                    self.refresh_token,
-                    self._token_expires,
-                    self._refresh_expires_in,
-                    self.hardware_id,
-                    access_token=self._access_token,
-                    )
-            logging.info('got a new access token!')
-            logging.info(
-                    f'access will expire in {self._token_expires}s')
-            logging.info(
-                    f'refresh will expire in {self._refresh_expires_in}s')
+        self._log_request(host_response, data=payload)
+        j = host_response.json()
+        self._access_token = j['access_token']
+        self._refresh_token = j['refresh_token']
+        self._token_expires = int(j['expires_in'])
+        self._refresh_expires_in = int(j['refresh_expires_in'])
+        now = time.time()
+        self._access_expiration_time = now + self._token_expires
+        self._refresh_expiration_time = now + self._refresh_expires_in
+        Client.store_token(
+                account_name,
+                self.refresh_token,
+                self._token_expires,
+                self._refresh_expires_in,
+                self.hardware_id,
+                access_token=self._access_token,
+                )
+        logging.info('got a new access token!')
+        logging.info(
+                f'access will expire in {self._token_expires}s')
+        logging.info(
+                f'refresh will expire in {self._refresh_expires_in}s')
 
     def login(self, username, password, fp=None):
         """login to the partner and get access token.
 
         """
-        msg = 'login does not work anymore because of bot protection'
-        'connect manualy (once) and use store_token and retrieve token'
-        'methods instead'
-        raise NotImplementedError(msg)
+        timeout = 2
+        # msg = 'login does not work anymore because of bot protection'
+        # 'connect manualy (once) and use store_token and retrieve token'
+        # 'methods instead'
+        # raise NotImplementedError(msg)
+        driver = Driver(uc=True, headless=False)
+        driver.implicitly_wait(timeout)
+        url = self._server_settings['login_url']
+        driver.get(url)
+
+        shadow_host = driver.find_element(By.ID, 'usercentrics-root')
+        shadow_root = shadow_host.shadow_root
+        css = '.sc-gsFSXq.xZpYl'
+        wait = WebDriverWait(shadow_root, timeout)
+        deny_button = wait.until(
+                expected_conditions.element_to_be_clickable(
+                    (By.CSS_SELECTOR, css)))
+        deny_button.click()
+        username_field = driver.find_element(
+                By.ID, 'email-input',
+                )
+        password_field = driver.find_element(
+                By.ID, 'password-input',
+                )
+        submit_button = driver.find_element(
+                By.CSS_SELECTOR, '.element-button-primary.button-submit',
+                )
+        username_field.send_keys(username)
+        password_field.send_keys(password)
+
+        wait = WebDriverWait(driver, timeout=2)
+        wait.until(
+                expected_conditions.element_to_be_clickable(
+                    submit_button))
+        submit_button.click()
+        cookies = driver.get_cookies()
+        # for cookie in cookies:
+            # self._session.cookies.set(cookie['name'], cookie['value'])
+        cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
+        url = self._server_settings['auth_url']
+        params = dict(
+                client_id='webreader',
+                response_type='code',
+                scope='SCOPE_BOSH',
+                redirect_uri='https://webreader.mytolino.com/library/',
+                )
+        params['x_buchde.skin_id'] = 17
+        params['x_buchde.mandant_id'] = 37
+
+        headers = {
+                'Cookie': cookie_str,
+                'Host': 'www.orellfuessli.ch',
+                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'Referer': 'https://webreader.mytolino.com/',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'cross-site',
+                'Connection': 'keep-alive',
+                'Priority': 'u=0, i',
+                'Upgrade-Insecure-Requests': '1',
+                'TE': 'trailers',
+                }
+
+        host_response = self._session_cffi.get(
+                url,
+                params=params,
+                verify=True,
+                allow_redirects=False,
+                headers=headers,
+                impersonate='chrome',
+                )
+        print(host_response)
+        headers = host_response.headers
+        location_url = headers['location']
+        query_str = urlparse(location_url).query
+        location_parameters = parse_qs(query_str)
+        auth_code = location_parameters['code'][0]
+
+        data = dict(
+                client_id='webreader',
+                grant_type='authorization_code',
+                code=auth_code,
+                scope='SCOPE_BOSH',
+                redirect_uri='https://webreader.mytolino.com/library/',
+                )
+        data['x_buchde.skin_id'] = 17
+        data['x_buchde.mandant_id'] = 37
+
+        headers = {
+                'Host': 'www.orellfuessli.ch',
+                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                'Accept': "*/*",
+                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'Content-Type': "application/x-www-form-urlencoded",
+                'Content-Length': "288",
+                'Referer': 'https://webreader.mytolino.com/',
+                'Origin': 'https://webreader.mytolino.com',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'cross-site',
+                'Connection': 'keep-alive',
+                'Priority': 'u=4',
+                'TE': 'trailers',
+                }
+        url = self._server_settings['token_url']
+        # for cookie in cookies:
+            # self._session_cffi.cookies.set(cookie['name'], cookie['value'])
+        host_response = self._session_cffi.post(
+                url,
+                data=data,
+                verify=True,
+                allow_redirects=False,
+                headers=headers,
+                impersonate='chrome',
+                )
+        print(host_response)
+        data_rsp = host_response.json()
+        self._access_token = data_rsp['access_token']
+        self._refresh_token = data_rsp['refresh_token']
+        self._token_expires = data_rsp['expires_in']
+        self._refresh_expires_in = data_rsp['refresh_expires_in']
+
+        url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
+        data = json.dumps({
+            'deviceListRequest': {
+                'accounts': [{
+                    'auth_token'  : self._access_token,
+                    'reseller_id' : self._server_settings['partner_id']
+                    }]
+                }
+            })
+        headers = {
+                # 'm_id': '8',
+                # 'Host': 'bosh.pageplace.de',
+                # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                # 'Accept': "application/json",
+                # 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                # 'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'Content-Type': "application/json",
+                # 'Content-Length': "752",
+                # 'Referer': 'https://management.mytolino.com/',
+                # 'Origin': 'https://management.mytolino.com',
+                # 'Sec-Fetch-Dest': 'empty',
+                # 'Sec-Fetch-Mode': 'cors',
+                # 'Sec-Fetch-Site': 'cross-site',
+                't_auth_token': self._access_token,
+                # 'Connection': 'keep-alive',
+                'reseller_id': self._server_settings['partner_id'],
+                }
+        host_response = self._session.post(
+                url,
+                data=data,
+                # verify=True,
+                # allow_redirects=False,
+                headers=headers,
+                # impersonate='chrome',
+                )
+        print(host_response)
+        j = host_response.json()
+        devices =  j['deviceListResponse']['devices']
+        devices.sort(key=lambda el:el['deviceLastUsage'])
+        my_dev = devices[-1]
+        hardware_id = my_dev['deviceId']
+        self._hardware_id = hardware_id
+
 
     def logout(self):
         """logout from tolino partner host

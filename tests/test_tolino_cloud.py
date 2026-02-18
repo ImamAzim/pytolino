@@ -18,7 +18,8 @@ from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
 
 
 TEST_EPUB = 'basic-v3plus2.epub'
-ACCOUNT_NAME = 'real_test_token'
+# ACCOUNT_NAME = 'real_test_token'
+ACCOUNT_NAME = 'test_token'
 TEST_COVER = 'test_cover.png'
 
 
@@ -156,11 +157,8 @@ def add_cover_test():
     client.add_cover(ebook_id, cover_fp.as_posix())
 
 
-def refresh_token():
-    client = Client()
-    try:
-        client.get_new_token(ACCOUNT_NAME)
-    except PytolinoException:
+def refresh_token(ask_new_credentials=False):
+    if ask_new_credentials:
         print('login on your browser and get the token.')
         refresh_token = input('refresh token:\n')
         expires_in = int(input('expires_in:\n'))
@@ -168,16 +166,37 @@ def refresh_token():
         hardware_id = input('hardware id:\n')
         Client.store_token(
                 ACCOUNT_NAME, refresh_token, expires_in, refresh_expires_in, hardware_id)
-        client.get_new_token(ACCOUNT_NAME)
+    client = Client()
+    client.get_new_token(ACCOUNT_NAME)
+
+
+def get_test_credentials():
+    vb = VarBox('pytolino', 'test_credentials')
+    if not hasattr(vb, 'username'):
+        username = input('username:\n')
+        password = input('password:\n')
+        vb.username = username
+        vb.password = password
+    return vb.username, vb.password
+
+
+def login_test():
+    username, password = get_test_credentials()
+    client = Client()
+    client.login(username, password)
+    # print(client.refresh_token, client.hardware_id)
+    client.store_current_token('token_test')
+    client.get_new_token('token_test')
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
-    refresh_token()
-    upload_test()
-    add_cover_test()
-    metadata_test()
-    collection_test()
-    inventory_test()
-    delete_test()
-    inventory_test()
+    # logging.basicConfig(level=logging.INFO)
+    refresh_token(ask_new_credentials=False)
+    # upload_test()
+    # add_cover_test()
+    # metadata_test()
+    # collection_test()
+    # inventory_test()
+    # delete_test()
+    # inventory_test()
+    # login_test()
