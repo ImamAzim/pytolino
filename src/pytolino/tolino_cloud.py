@@ -45,6 +45,17 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
+    def _log_request(self, rsp: requests.Response):
+        if rsp.ok:
+            log = logging.info
+        else:
+            level = logging.error
+        log(rsp)
+
+        if not rsp.ok:
+            raise PytolinoException('host response not ok')
+
+
     def store_token(
                     account_name,
                     refresh_token: str,
@@ -175,33 +186,28 @@ class Client(object):
                 headers=headers,
                 impersonate='chrome',
                 )
-        if not host_response.ok:
-            msg = str(host_response)
-            logging.error('failed to get a new token')
-            logging.error(msg)
-            raise PytolinoException('failed to get a new token')
-        else:
-            j = host_response.json()
-            self._access_token = j['access_token']
-            self._refresh_token = j['refresh_token']
-            self._token_expires = int(j['expires_in'])
-            self._refresh_expires_in = int(j['refresh_expires_in'])
-            now = time.time()
-            self._access_expiration_time = now + self._token_expires
-            self._refresh_expiration_time = now + self._refresh_expires_in
-            Client.store_token(
-                    account_name,
-                    self.refresh_token,
-                    self._token_expires,
-                    self._refresh_expires_in,
-                    self.hardware_id,
-                    access_token=self._access_token,
-                    )
-            logging.info('got a new access token!')
-            logging.info(
-                    f'access will expire in {self._token_expires}s')
-            logging.info(
-                    f'refresh will expire in {self._refresh_expires_in}s')
+        self._log_request(host_response)
+        j = host_response.json()
+        self._access_token = j['access_token']
+        self._refresh_token = j['refresh_token']
+        self._token_expires = int(j['expires_in'])
+        self._refresh_expires_in = int(j['refresh_expires_in'])
+        now = time.time()
+        self._access_expiration_time = now + self._token_expires
+        self._refresh_expiration_time = now + self._refresh_expires_in
+        Client.store_token(
+                account_name,
+                self.refresh_token,
+                self._token_expires,
+                self._refresh_expires_in,
+                self.hardware_id,
+                access_token=self._access_token,
+                )
+        logging.info('got a new access token!')
+        logging.info(
+                f'access will expire in {self._token_expires}s')
+        logging.info(
+                f'refresh will expire in {self._refresh_expires_in}s')
 
     def login(self, username, password, fp=None):
         """login to the partner and get access token.
