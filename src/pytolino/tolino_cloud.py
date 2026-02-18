@@ -51,6 +51,8 @@ class Client(object):
         else:
             log = logging.error
         log(rsp.url)
+        log(rsp.request.method)
+        log(rsp.request.bodyRaw)
         log(rsp)
         log(rsp.text)
         log(rsp.request.headers)
@@ -105,7 +107,12 @@ class Client(object):
 
     def raise_for_refresh_expiration(self) -> bool:
         """verify if refresh token is expired"""
-        if self._refresh_expiration_time < time.time():
+        now = time.time()
+        if self._refresh_expiration_time < now:
+            msg = f'refresh expiration is at {self._refresh_expiration_time}'
+            logging.error(msg)
+            msg = f'now is {now}'
+            logging.error(msg)
             raise ExpirationError('refresh token is expired')
 
     @property
