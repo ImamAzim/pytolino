@@ -49,7 +49,7 @@ class Client(object):
         if rsp.ok:
             log = logging.info
         else:
-            level = logging.error
+            log = logging.error
         log(rsp)
 
         if not rsp.ok:
