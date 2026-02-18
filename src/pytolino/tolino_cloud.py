@@ -192,7 +192,7 @@ class Client(object):
                 'Accept-Encoding': 'gzip, deflate, br, zstd',
                 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
                 'Connection': 'keep-alive',
-                'Content-Length': "742",
+                # 'Content-Length': 742,
                 'Content-Type': "application/x-www-form-urlencoded",
                 'Host': 'www.orellfuessli.ch',
                 'Origin': 'https://webreader.mytolino.com',
