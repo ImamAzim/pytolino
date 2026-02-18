@@ -188,20 +188,19 @@ class Client(object):
         self.raise_for_refresh_expiration()
 
         headers = {
-                'Accept': "*/*",
-                'Accept-Encoding': 'gzip, deflate, br, zstd',
-                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Connection': 'keep-alive',
-                # 'Content-Length': 742,
-                'Content-Type': "application/x-www-form-urlencoded",
-                'Host': 'www.orellfuessli.ch',
-                'Origin': 'https://webreader.mytolino.com',
-                'Priority': 'u=4',
+                # 'Accept': "*/*",
+                # 'Accept-Encoding': 'gzip, deflate, br, zstd',
+                # 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
+                # 'Connection': 'keep-alive',
+                # 'Content-Type': "application/x-www-form-urlencoded",
+                # 'Host': 'www.orellfuessli.ch',
+                # 'Origin': 'https://webreader.mytolino.com',
+                # 'Priority': 'u=4',
                 'Referer': 'https://webreader.mytolino.com/',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'cross-site',
-                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+                # 'Sec-Fetch-Dest': 'empty',
+                # 'Sec-Fetch-Mode': 'cors',
+                # 'Sec-Fetch-Site': 'cross-site',
+                # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
                 }
         payload = {
             'client_id': 'webreader',
