@@ -50,7 +50,9 @@ class Client(object):
             log = logging.info
         else:
             log = logging.error
+        log(rsp.url)
         log(rsp)
+        log(rsp.text)
 
         if not rsp.ok:
             raise PytolinoException('host response not ok')
