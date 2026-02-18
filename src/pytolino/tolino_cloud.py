@@ -52,7 +52,6 @@ class Client(object):
             log = logging.error
         log(rsp.url)
         log(rsp.request.method)
-        log(rsp.request.bodyRaw)
         log(rsp)
         log(rsp.text)
         log(rsp.request.headers)
