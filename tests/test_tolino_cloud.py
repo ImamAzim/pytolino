@@ -18,7 +18,8 @@ from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
 
 
 TEST_EPUB = 'basic-v3plus2.epub'
-ACCOUNT_NAME = 'real_test_token'
+# ACCOUNT_NAME = 'real_test_token'
+ACCOUNT_NAME = 'test_token'
 TEST_COVER = 'test_cover.png'
 
 
@@ -192,7 +193,7 @@ def login_test():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    # refresh_token()
+    refresh_token()
     # upload_test()
     # add_cover_test()
     # metadata_test()
@@ -200,4 +201,4 @@ if __name__ == '__main__':
     # inventory_test()
     # delete_test()
     # inventory_test()
-    login_test()
+    # login_test()
