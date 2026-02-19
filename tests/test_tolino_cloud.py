@@ -184,9 +184,9 @@ def login_test():
     username, password = get_test_credentials()
     client = Client()
     client.login(username, password)
-    # print(client.refresh_token, client.hardware_id)
-    client.store_current_token('token_test')
-    client.get_new_token('token_test')
+    print(client.refresh_token, client.hardware_id)
+    # client.store_current_token('token_test')
+    # client.get_new_token('token_test')
 
 
 if __name__ == '__main__':

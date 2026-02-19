@@ -243,6 +243,11 @@ class Client(object):
         """login to the partner and get access token.
 
         """
+        from seleniumbase import SB
+        with SB(uc=True) as sb:
+            url = self._server_settings['login_url']
+            sb.activate_cdp_mode(url)
+        return
         timeout = 2
         driver = Driver(uc=True, headless=False)
         driver.implicitly_wait(timeout)
