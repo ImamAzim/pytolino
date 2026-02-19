@@ -244,10 +244,6 @@ class Client(object):
 
         """
         timeout = 2
-        # msg = 'login does not work anymore because of bot protection'
-        # 'connect manualy (once) and use store_token and retrieve token'
-        # 'methods instead'
-        # raise NotImplementedError(msg)
         driver = Driver(uc=True, headless=False)
         driver.implicitly_wait(timeout)
         url = self._server_settings['login_url']
@@ -279,6 +275,7 @@ class Client(object):
                     submit_button))
         submit_button.click()
         cookies = driver.get_cookies()
+        driver.quit()
         # for cookie in cookies:
             # self._session.cookies.set(cookie['name'], cookie['value'])
         cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
