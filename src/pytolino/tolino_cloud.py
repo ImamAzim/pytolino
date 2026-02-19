@@ -239,7 +239,7 @@ class Client(object):
         logging.info(
                 f'refresh will expire in {self._refresh_expires_in}s')
 
-    def login(self, username, password, fp=None):
+    def login(self, username, password):
         """login to the partner and get access token.
 
         """
