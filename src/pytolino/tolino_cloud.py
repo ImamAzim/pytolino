@@ -243,44 +243,47 @@ class Client(object):
         """login to the partner and get access token.
 
         """
-        from seleniumbase import SB
-        with SB(uc=True) as sb:
-            url = self._server_settings['login_url']
-            sb.activate_cdp_mode(url)
-        return
         timeout = 2
-        driver = Driver(uc=True, headless=False)
-        driver.implicitly_wait(timeout)
-        url = self._server_settings['login_url']
-        driver.get(url)
+        from seleniumbase import SB
+        with SB(uc=True, xvfb=True) as sb:
+            driver = sb.driver
+            url = self._server_settings['login_url']
+            sb.uc_open_with_reconnect(url, 5)
+            sb.uc_gui_click_captcha()
+            return
 
-        shadow_host = driver.find_element(By.ID, 'usercentrics-root')
-        shadow_root = shadow_host.shadow_root
-        css = '.sc-gsFSXq.xZpYl'
-        wait = WebDriverWait(shadow_root, timeout)
-        deny_button = wait.until(
-                expected_conditions.element_to_be_clickable(
-                    (By.CSS_SELECTOR, css)))
-        deny_button.click()
-        username_field = driver.find_element(
-                By.ID, 'email-input',
-                )
-        password_field = driver.find_element(
-                By.ID, 'password-input',
-                )
-        submit_button = driver.find_element(
-                By.CSS_SELECTOR, '.element-button-primary.button-submit',
-                )
-        username_field.send_keys(username)
-        password_field.send_keys(password)
+            # driver = Driver(uc=True, headless=False)
+            # driver.implicitly_wait(timeout)
+            # url = self._server_settings['login_url']
+            # driver.get(url)
 
-        wait = WebDriverWait(driver, timeout=2)
-        wait.until(
-                expected_conditions.element_to_be_clickable(
-                    submit_button))
-        submit_button.click()
-        cookies = driver.get_cookies()
-        driver.quit()
+            # shadow_host = driver.find_element(By.ID, 'usercentrics-root')
+            # shadow_root = shadow_host.shadow_root
+            # css = '.sc-gsFSXq.xZpYl'
+            # wait = WebDriverWait(shadow_root, timeout)
+            # deny_button = wait.until(
+                    # expected_conditions.element_to_be_clickable(
+                        # (By.CSS_SELECTOR, css)))
+            # deny_button.click()
+            # username_field = driver.find_element(
+                    # By.ID, 'email-input',
+                    # )
+            # password_field = driver.find_element(
+                    # By.ID, 'password-input',
+                    # )
+            # submit_button = driver.find_element(
+                    # By.CSS_SELECTOR, '.element-button-primary.button-submit',
+                    # )
+            # username_field.send_keys(username)
+            # password_field.send_keys(password)
+
+            wait = WebDriverWait(driver, timeout=2)
+            wait.until(
+                    expected_conditions.element_to_be_clickable(
+                        submit_button))
+            submit_button.click()
+            cookies = driver.get_cookies()
+        # driver.quit()
         # for cookie in cookies:
             # self._session.cookies.set(cookie['name'], cookie['value'])
         cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
