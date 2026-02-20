@@ -247,22 +247,26 @@ class Client(object):
         url = self._server_settings['login_url']
         driver.get(url)
 
-        shadow_host = driver.find_element(By.ID, 'usercentrics-root')
+        shadow_host_id = self._server_settings['shadow_host_id']
+        shadow_host = driver.find_element(By.ID, shadow_host_id)
         shadow_root = shadow_host.shadow_root
-        css = '.sc-gsFSXq.xZpYl'
+        css = self._server_settings['cookie_deny_all_css']
         wait = WebDriverWait(shadow_root, timeout)
         deny_button = wait.until(
                 expected_conditions.element_to_be_clickable(
                     (By.CSS_SELECTOR, css)))
         deny_button.click()
+        username_field_id = self._server_settings['username_field_id']
         username_field = driver.find_element(
-                By.ID, 'email-input',
+                By.ID, username_field_id,
                 )
+        password_field_id = self._server_settings['password_field_id']
         password_field = driver.find_element(
-                By.ID, 'password-input',
+                By.ID, password_field_id,
                 )
+        css = self._server_settings['submit_button_css']
         submit_button = driver.find_element(
-                By.CSS_SELECTOR, '.element-button-primary.button-submit',
+                By.CSS_SELECTOR, css,
                 )
         username_field.send_keys(username)
         password_field.send_keys(password)
