@@ -1,0 +1,7 @@
+client_id = "webreader"
+scope = 'SCOPE_BOSH'
+redirect_uri = 'https://webreader.mytolino.com/library/'
+
+[additional_request_parameters]
+x_buchde.skin_id = 17
+x_buchde.mandant_id = 37
