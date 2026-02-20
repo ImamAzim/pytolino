@@ -9,3 +9,5 @@ devices_url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
 
 [headers.devices_list]
 Content-Type = "application/json"
+[headers.token]
+Referer = 'https://webreader.mytolino.com/'

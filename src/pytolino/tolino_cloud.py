@@ -43,6 +43,7 @@ additional_request_parameters = common_settings[
 'additional_request_parameters']
 devices_url = common_settings['devices_url']
 devices_list_headers = common_settings['headers']['devices_list']
+token_headers = common_settings['headers']['token']
 
 USERAGENT = 'User-Agent'
 ACCESS_TOKEN = 'access_token'
@@ -381,7 +382,7 @@ class Client(object):
                 )
         data.update(additional_request_parameters)
 
-        headers = self._token_header
+        headers = token_headers
         headers = self._add_user_agent(headers)
         url = self._token_url
         host_response = self._session_cffi.post(

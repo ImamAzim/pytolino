@@ -18,16 +18,3 @@ cookie_deny_all_css = '.sc-gsFSXq.xZpYl'
 username_field_id = 'email-input'
 password_field_id = 'password-input'
 submit_button_css = '.element-button-primary.button-submit'
-[orellfuessli.token_header]
-Host = 'www.orellfuessli.ch'
-Accept = "*/*"
-Accept-Encoding = 'gzip, deflate, br, zstd'
-Content-Type = "application/x-www-form-urlencoded"
-Referer = 'https://webreader.mytolino.com/'
-Origin = 'https://webreader.mytolino.com'
-Sec-Fetch-Dest = 'empty'
-Sec-Fetch-Mode = 'cors'
-Sec-Fetch-Site = 'cross-site'
-Connection = 'keep-alive'
-Priority = 'u=4'
-TE = 'trailers'
