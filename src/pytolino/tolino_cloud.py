@@ -336,14 +336,7 @@ class Client(object):
         auth_code = location_parameters[CODE][0]
         return auth_code
 
-    def login(self, username, password):
-        """login to the partner and get access token.
-
-        """
-        self._get_login_cookies(username, password)
-
-        auth_code = self._get_auth_code()
-
+    def _get_token(self, auth_code: str):
         data = dict(
                 client_id='webreader',
                 grant_type='authorization_code',
@@ -388,6 +381,14 @@ class Client(object):
         self._refresh_token = data_rsp['refresh_token']
         self._token_expires = data_rsp['expires_in']
         self._refresh_expires_in = data_rsp['refresh_expires_in']
+
+    def login(self, username, password):
+        """login to the partner and get access token.
+
+        """
+        self._get_login_cookies(username, password)
+        auth_code = self._get_auth_code()
+        self._get_token(auth_code)
 
         url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
         data = json.dumps({
