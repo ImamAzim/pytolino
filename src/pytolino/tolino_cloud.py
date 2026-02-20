@@ -240,6 +240,7 @@ class Client(object):
                 f'refresh will expire in {self._refresh_expires_in}s')
 
     def _get_login_cookies(self, username, password):
+
         timeout = 2
         driver = Driver(uc=True, headless=False)
         driver.implicitly_wait(timeout)
@@ -273,8 +274,6 @@ class Client(object):
         submit_button.click()
         cookies = driver.get_cookies()
         driver.quit()
-        # for cookie in cookies:
-            # self._session.cookies.set(cookie['name'], cookie['value'])
         cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
         return cookie_str
 

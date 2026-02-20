@@ -13,3 +13,8 @@ cover_url = "https://bosh.pageplace.de/bosh/rest/cover"
 sync_data_url  = "https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks"
 delete_url  = "https://bosh.pageplace.de/bosh/rest/deletecontent"
 inventory_url  = "https://bosh.pageplace.de/bosh/rest/inventory/delta"
+shadow_host_id = "usercentrics-root"
+cookie_deny_all_css = '.sc-gsFSXq.xZpYl'
+username_fied_id = 'email-input'
+password_fied_id = 'password-input'
+submit_button_css = '.element-button-primary.button-submit'
