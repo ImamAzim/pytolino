@@ -42,12 +42,18 @@ redirect_uri = common_settings['redirect_uri']
 additional_request_parameters = common_settings[
 'additional_request_parameters']
 devices_url = common_settings['devices_url']
+devices_list_headers = common_settings['headers']['devices_list']
 
 USERAGENT = 'User-Agent'
 ACCESS_TOKEN = 'access_token'
 REFRESH_TOKEN = 'refresh_token'
 EXPIRES_IN = 'expires_in'
 REFRESH_EXPIRES_IN = 'refresh_expires_in'
+AUTH_TOKEN = 'auth_token'
+RESELLER_ID = 'reseller_id'
+DEVICE_LIST_REQUEST = 'deviceListRequest'
+ACCOUNTS = 'accounts'
+T_AUTH_TOKEN = 't_auth_token'
 
 
 def main():
@@ -344,10 +350,16 @@ class Client(object):
                 )
         self._log_request(host_response, params)
         headers = host_response.headers
-        location_url = headers[LOCATION]
-        query_str = urlparse(location_url).query
-        location_parameters = parse_qs(query_str)
-        auth_code = location_parameters[CODE][0]
+        try:
+            location_url = headers[LOCATION]
+        except KeyError:
+            raise PytolinoException(
+                    'failed to get auth code, '
+                    'response headers has no location key')
+        else:
+            query_str = urlparse(location_url).query
+            location_parameters = parse_qs(query_str)
+            auth_code = location_parameters[CODE][0]
         return auth_code
 
     def _add_user_agent(self, headers: dict)->dict:
@@ -389,49 +401,24 @@ class Client(object):
 
     def _get_hardware_id(self):
         url = devices_url
-        # data_dict = dict(
-                # deviceListRequest=dict(
-                    # accounts=list(
-                        # dict(
-                            # auth_token=self._access_token,
-                            # reseller_id=self._partner_id,
-                            # )
-                        # )
-                    # ))
-        # data = json.dumps(data_dict)
-        data = json.dumps({
-            'deviceListRequest': {
-                'accounts': [{
-                    'auth_token'  : self._access_token,
-                    'reseller_id' : self._partner_id
-                    }]
+        account = {
+                AUTH_TOKEN: self._access_token,
+                RESELLER_ID: self._partner_id,
                 }
-            })
-        headers = {
-                # 'm_id': '8',
-                # 'Host': 'bosh.pageplace.de',
-                # 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
-                # 'Accept': "application/json",
-                # 'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
-                # 'Accept-Encoding': 'gzip, deflate, br, zstd',
-                'Content-Type': "application/json",
-                # 'Content-Length': "752",
-                # 'Referer': 'https://management.mytolino.com/',
-                # 'Origin': 'https://management.mytolino.com',
-                # 'Sec-Fetch-Dest': 'empty',
-                # 'Sec-Fetch-Mode': 'cors',
-                # 'Sec-Fetch-Site': 'cross-site',
-                't_auth_token': self._access_token,
-                # 'Connection': 'keep-alive',
-                'reseller_id': self._server_settings['partner_id'],
+        accounts = [account]
+        data_dict = {
+                DEVICE_LIST_REQUEST: {
+                    ACCOUNTS: accounts
+                    }
                 }
+        data = json.dumps(data_dict)
+        headers = devices_list_headers
+        headers[T_AUTH_TOKEN] = self._access_token
+        headers[RESELLER_ID] = self._partner_id
         host_response = self._session.post(
                 url,
                 data=data,
-                # verify=True,
-                # allow_redirects=False,
                 headers=headers,
-                # impersonate='chrome',
                 )
         self._log_request(host_response, data)
         j = host_response.json()

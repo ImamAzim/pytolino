@@ -6,3 +6,6 @@ devices_url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
 [additional_request_parameters]
 "x_buchde.skin_id" = 17
 "x_buchde.mandant_id" = 37
+
+[headers.devices_list]
+Content-Type = "application/json"
