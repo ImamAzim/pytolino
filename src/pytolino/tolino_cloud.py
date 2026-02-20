@@ -294,11 +294,7 @@ class Client(object):
         cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
         return cookie_str
 
-    def login(self, username, password):
-        """login to the partner and get access token.
-
-        """
-        cookie_str = self._get_login_cookies(username, password)
+    def _get_auth_code(self, cookie_str: str):
 
         url = self._server_settings['auth_url']
         params = dict(
@@ -341,6 +337,15 @@ class Client(object):
         query_str = urlparse(location_url).query
         location_parameters = parse_qs(query_str)
         auth_code = location_parameters['code'][0]
+        return auth_code
+
+    def login(self, username, password):
+        """login to the partner and get access token.
+
+        """
+        cookie_str = self._get_login_cookies(username, password)
+
+        auth_code = self._get_auth_code(cookie_str)
 
         data = dict(
                 client_id='webreader',
