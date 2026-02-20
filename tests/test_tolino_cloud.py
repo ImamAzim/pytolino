@@ -185,7 +185,8 @@ def login_test():
     client = Client()
     try:
         client.login(username, password)
-    except PytolinoException:
+    except PytolinoException as e:
+        print(e)
         print('failed to login')
     else:
         client.store_current_token('token_test')

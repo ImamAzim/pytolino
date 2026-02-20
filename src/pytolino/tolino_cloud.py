@@ -55,6 +55,10 @@ RESELLER_ID = 'reseller_id'
 DEVICE_LIST_REQUEST = 'deviceListRequest'
 ACCOUNTS = 'accounts'
 T_AUTH_TOKEN = 't_auth_token'
+DEVICE_LIST_RESPONSE = 'deviceListResponse'
+DEVICES = 'devices'
+DEVICE_LAST_USAGE = 'deviceLastUsage'
+DEVICE_ID = 'deviceId'
 
 
 def main():
@@ -421,10 +425,10 @@ class Client(object):
                 )
         self._log_request(host_response, data)
         j = host_response.json()
-        devices =  j['deviceListResponse']['devices']
-        devices.sort(key=lambda el:el['deviceLastUsage'])
+        devices =  j[DEVICE_LIST_RESPONSE][DEVICES]
+        devices.sort(key=lambda el:el[DEVICE_LAST_USAGE])
         my_dev = devices[-1]
-        hardware_id = my_dev['deviceId']
+        hardware_id = my_dev[DEVICE_ID]
         self._hardware_id = hardware_id
 
     def login(self, username, password):
