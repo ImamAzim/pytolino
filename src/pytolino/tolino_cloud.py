@@ -54,6 +54,8 @@ class Client(object):
 
     """create a client to communicate with a tolino partner (login, etc..)"""
 
+    _IMPERSONATE = 'chrome'
+
     def _log_request(self, rsp: requests.Response, data=None):
         if rsp.ok:
             log = logging.debug
@@ -233,7 +235,7 @@ class Client(object):
                 verify=True,
                 allow_redirects=True,
                 headers=headers,
-                impersonate='chrome',
+                impersonate=self._IMPERSONATE,
                 )
         self._log_request(host_response, data=payload)
         j = host_response.json()
@@ -341,7 +343,7 @@ class Client(object):
                 verify=True,
                 allow_redirects=False,
                 headers=headers,
-                impersonate='chrome',
+                impersonate=self._IMPERSONATE,
                 )
         print(host_response)
         headers = host_response.headers
@@ -395,7 +397,7 @@ class Client(object):
                 verify=True,
                 allow_redirects=False,
                 headers=headers,
-                impersonate='chrome',
+                impersonate=self._IMPERSONATE,
                 )
         print(host_response)
         data_rsp = host_response.json()
