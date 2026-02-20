@@ -184,12 +184,13 @@ def login_test():
     username, password = get_test_credentials()
     client = Client()
     try:
-        client.login(username, password)
+        client.login(username, password, force_new_token=True)
     except PytolinoException as e:
         print(e)
         print('failed to login')
     else:
-        client.get_new_token()
+        print('sucess, refresh with login method')
+        client.login(username, password)
 
 
 if __name__ == '__main__':
