@@ -40,7 +40,7 @@ client_id = common_settings['client_id']
 scope = common_settings['scope']
 redirect_uri = common_settings['redirect_uri']
 additional_request_parameters = common_settings[
-'additionnal_request_parameters']
+'additional_request_parameters']
 
 
 def main():
