@@ -185,7 +185,6 @@ class Client(object):
         self._login_url = self._server_settings['login_url']
         self._auth_url = self._server_settings['auth_url']
         self._token_url = self._server_settings['token_url']
-        self._token_header = self._server_settings['token_header']
         self._partner_id = self._server_settings['partner_id']
 
         self._session = requests.Session()
@@ -383,7 +382,6 @@ class Client(object):
         data.update(additional_request_parameters)
 
         headers = token_headers
-        headers = self._add_user_agent(headers)
         url = self._token_url
         host_response = self._session_cffi.post(
                 url,
