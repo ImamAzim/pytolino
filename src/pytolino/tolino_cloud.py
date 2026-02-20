@@ -168,6 +168,7 @@ class Client(object):
         self._submit_css = self._server_settings['submit_button_css']
         self._login_url = self._server_settings['login_url']
         self._auth_url = self._server_settings['auth_url']
+        self._token_url = self._server_settings['token_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -337,15 +338,17 @@ class Client(object):
         return auth_code
 
     def _get_token(self, auth_code: str):
+
+        AUTHORIZATION_CODE = 'authorization_code'
+
         data = dict(
-                client_id='webreader',
-                grant_type='authorization_code',
+                client_id=client_id,
+                grant_type=AUTHORIZATION_CODE,
                 code=auth_code,
-                scope='SCOPE_BOSH',
-                redirect_uri='https://webreader.mytolino.com/library/',
+                scope=scope,
+                redirect_uri=redirect_uri,
                 )
-        data['x_buchde.skin_id'] = 17
-        data['x_buchde.mandant_id'] = 37
+        params.update(additional_request_parameters)
 
         headers = {
                 'Host': 'www.orellfuessli.ch',
@@ -364,9 +367,7 @@ class Client(object):
                 'Priority': 'u=4',
                 'TE': 'trailers',
                 }
-        url = self._server_settings['token_url']
-        # for cookie in cookies:
-            # self._session_cffi.cookies.set(cookie['name'], cookie['value'])
+        url = self._token_url
         host_response = self._session_cffi.post(
                 url,
                 data=data,
@@ -375,7 +376,7 @@ class Client(object):
                 headers=headers,
                 impersonate=self._IMPERSONATE,
                 )
-        print(host_response)
+        self._log_request(host_response, data)
         data_rsp = host_response.json()
         self._access_token = data_rsp['access_token']
         self._refresh_token = data_rsp['refresh_token']
