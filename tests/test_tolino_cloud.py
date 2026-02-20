@@ -189,8 +189,7 @@ def login_test():
         print(e)
         print('failed to login')
     else:
-        client.store_current_token('token_test')
-        client.get_new_token('token_test')
+        client.get_new_token()
 
 
 if __name__ == '__main__':

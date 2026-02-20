@@ -220,14 +220,15 @@ class Client(object):
         self._access_token_expiration_time = access_expiration_time
         self._refresh_expiration_time = refresh_expiration_time
 
-    def get_new_token(self, account_name):
+    def get_new_token(self, account_name=None):
         """look at the store token, and get a new access and refresh tokens.
 
         :account_name: TODO
         :returns: TODO
 
         """
-        self.retrieve_token(account_name)
+        if account_name is not None:
+            self.retrieve_token(account_name)
         self.raise_for_refresh_expiration()
 
         headers = {
@@ -268,14 +269,15 @@ class Client(object):
         now = time.time()
         self._access_expiration_time = now + self._expires_in
         self._refresh_expiration_time = now + self._refresh_expires_in
-        Client.store_token(
-                account_name,
-                self.refresh_token,
-                self._expires_in,
-                self._refresh_expires_in,
-                self.hardware_id,
-                access_token=self._access_token,
-                )
+        if account_name is not None:
+            Client.store_token(
+                    account_name,
+                    self.refresh_token,
+                    self._expires_in,
+                    self._refresh_expires_in,
+                    self.hardware_id,
+                    access_token=self._access_token,
+                    )
         logging.info('got a new access token!')
         logging.info(
                 f'access will expire in {self._expires_in}s')
@@ -401,6 +403,9 @@ class Client(object):
         self._refresh_token = data_rsp[REFRESH_TOKEN]
         self._expires_in = data_rsp[EXPIRES_IN]
         self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
+        now = time.time()
+        self._access_expiration_time = now + self._expires_in
+        self._refresh_expiration_time = now + self._refresh_expires_in
 
     def _get_hardware_id(self):
         url = devices_url
