@@ -385,14 +385,7 @@ class Client(object):
         self._expires_in = data_rsp[EXPIRES_IN]
         self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
 
-    def login(self, username, password):
-        """login to the partner and get access token.
-
-        """
-        self._get_login_cookies(username, password)
-        auth_code = self._get_auth_code()
-        self._get_token(auth_code)
-
+    def _get_hardware_id(self):
         url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
         data = json.dumps({
             'deviceListRequest': {
@@ -436,6 +429,14 @@ class Client(object):
         hardware_id = my_dev['deviceId']
         self._hardware_id = hardware_id
 
+    def login(self, username, password):
+        """login to the partner and get access token.
+
+        """
+        self._get_login_cookies(username, password)
+        auth_code = self._get_auth_code()
+        self._get_token(auth_code)
+        self._get_hardware_id()
 
     def logout(self):
         """logout from tolino partner host
