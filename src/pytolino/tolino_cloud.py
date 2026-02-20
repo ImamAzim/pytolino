@@ -140,11 +140,14 @@ class Client(object):
 
         """
         vb = VarBox(app_name=f'{self._server_name}.{username}')
+        if not hasattr(vb, 'refresh_token'):
+            raise PytolinoException(
+                    'there was no refresh token stored for that name')
         self._refresh_token = vb.refresh_token
         self._access_token = vb.access_token
         self._hardware_id = vb.hardware_id
-        self._access_expiration_time = access_expiration_time
-        self._refresh_expiration_time = refresh_expiration_time
+        self._access_expiration_time = vb.access_expiration_time
+        self._refresh_expiration_time = vb.refresh_expiration_time
 
     def raise_for_access_expiration(self) -> bool:
         """verify if access token is expired"""
@@ -446,14 +449,37 @@ class Client(object):
         hardware_id = my_dev[DEVICE_ID]
         self._hardware_id = hardware_id
 
-    def login(self, username, password):
+    def login(self, username, password, force_new_token=False):
         """login to the partner and get access token.
 
         """
-        self._get_login_cookies(username, password)
-        auth_code = self._get_auth_code()
-        self._get_token(auth_code)
-        self._get_hardware_id()
+        if not force_new_token:
+            try:
+                self._retrieve_last_token(username)
+                try:
+                    self.raise_for_access_expiration
+                except ExpirationError:
+                    try:
+                        self.raise_for_refresh_expiration()
+                    except ExpirationError:
+                        logged_in = False
+                    else:
+                        self.get_new_token()
+                        logged_in = True
+                else:
+                    self.get_new_token()
+                    logged_in = True
+            except PytolinoException:
+                logged_in = False
+        else:
+            logged_in = False
+
+        if not logged_in:
+            self._get_login_cookies(username, password)
+            auth_code = self._get_auth_code()
+            self._get_token(auth_code)
+            self._get_hardware_id()
+        self._store_current_token(username)
 
     def logout(self):
         """logout from tolino partner host
