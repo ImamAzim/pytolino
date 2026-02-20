@@ -41,6 +41,7 @@ scope = common_settings['scope']
 redirect_uri = common_settings['redirect_uri']
 additional_request_parameters = common_settings[
 'additional_request_parameters']
+devices_url = common_settings['devices_url']
 
 USERAGENT = 'User-Agent'
 ACCESS_TOKEN = 'access_token'
@@ -178,6 +179,7 @@ class Client(object):
         self._auth_url = self._server_settings['auth_url']
         self._token_url = self._server_settings['token_url']
         self._token_header = self._server_settings['token_header']
+        self._partner_id = self._server_settings['partner_id']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -386,12 +388,22 @@ class Client(object):
         self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
 
     def _get_hardware_id(self):
-        url = 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list'
+        url = devices_url
+        # data_dict = dict(
+                # deviceListRequest=dict(
+                    # accounts=list(
+                        # dict(
+                            # auth_token=self._access_token,
+                            # reseller_id=self._partner_id,
+                            # )
+                        # )
+                    # ))
+        # data = json.dumps(data_dict)
         data = json.dumps({
             'deviceListRequest': {
                 'accounts': [{
                     'auth_token'  : self._access_token,
-                    'reseller_id' : self._server_settings['partner_id']
+                    'reseller_id' : self._partner_id
                     }]
                 }
             })
@@ -421,7 +433,7 @@ class Client(object):
                 headers=headers,
                 # impersonate='chrome',
                 )
-        print(host_response)
+        self._log_request(host_response, data)
         j = host_response.json()
         devices =  j['deviceListResponse']['devices']
         devices.sort(key=lambda el:el['deviceLastUsage'])
