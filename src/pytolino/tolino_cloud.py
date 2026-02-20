@@ -239,10 +239,7 @@ class Client(object):
         logging.info(
                 f'refresh will expire in {self._refresh_expires_in}s')
 
-    def login(self, username, password):
-        """login to the partner and get access token.
-
-        """
+    def _get_login_cookies(self, username, password):
         timeout = 2
         driver = Driver(uc=True, headless=False)
         driver.implicitly_wait(timeout)
@@ -279,6 +276,14 @@ class Client(object):
         # for cookie in cookies:
             # self._session.cookies.set(cookie['name'], cookie['value'])
         cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
+        return cookie_str
+
+    def login(self, username, password):
+        """login to the partner and get access token.
+
+        """
+        cookie_str = self._get_login_cookies(username, password)
+
         url = self._server_settings['auth_url']
         params = dict(
                 client_id='webreader',
