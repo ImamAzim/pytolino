@@ -374,7 +374,7 @@ class Client(object):
                 data=data,
                 verify=True,
                 allow_redirects=False,
-                headers=headers,
+                # headers=headers,
                 impersonate=self._IMPERSONATE,
                 )
         self._log_request(host_response, data)
