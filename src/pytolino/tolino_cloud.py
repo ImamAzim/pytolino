@@ -135,9 +135,20 @@ class Client(object):
         vb.access_expiration_time = self._access_expiration_time
         vb.refresh_expiration_time = self._refresh_expiration_time
 
+    def _retrieve_last_token(self, username):
+        """retrieve token that was stored with this username
+
+        """
+        vb = VarBox(app_name=f'{self._server_name}.{username}')
+        self._refresh_token = vb.refresh_token
+        self._access_token = vb.access_token
+        self._hardware_id = vb.hardware_id
+        self._access_expiration_time = access_expiration_time
+        self._refresh_expiration_time = refresh_expiration_time
+
     def raise_for_access_expiration(self) -> bool:
         """verify if access token is expired"""
-        if self._access_token_expiration_time < time.time():
+        if self._access_expiration_time < time.time():
             raise ExpirationError('access token is expired')
 
     def raise_for_refresh_expiration(self) -> bool:
@@ -173,7 +184,7 @@ class Client(object):
         self._expires_in = None
         self._refresh_expires_in = None
         self._hardware_id = None
-        self._access_token_expiration_time = 0
+        self._access_expiration_time = 0
         self._refresh_expiration_time = 0
         self._user_agent = None
 
@@ -216,7 +227,7 @@ class Client(object):
         self._access_token = vb.access_token
         self._expires_in = vb.expires_in
         self._refresh_expires_in = vb.refresh_expires_in
-        self._access_token_expiration_time = access_expiration_time
+        self._access_expiration_time = access_expiration_time
         self._refresh_expiration_time = refresh_expiration_time
 
     def get_new_token(self, account_name=None):
