@@ -33,6 +33,15 @@ SERVERS_SETTINGS_FP = Path(__file__).parent / SERVERS_SETTINGS_FN
 servers_settings = tomllib.loads(SERVERS_SETTINGS_FP.read_text())
 PARTNERS = servers_settings.keys()
 
+COMMON_SETTINGS_FN = 'common_settings.toml'
+COMMON_SETTINGS_FP = Path(__file__).parent / COMMON_SETTINGS_FN
+common_settings = tomllib.loads(COMMON_SETTINGS_FP.read_text())
+client_id = common_settings['client_id']
+scope = common_settings['scope']
+redirect_uri = common_settings['redirect_uri']
+additional_request_parameters = common_settings[
+'additionnal_request_parameters']
+
 
 def main():
     for partner in PARTNERS:
@@ -298,11 +307,14 @@ class Client(object):
     def _get_auth_code(self, cookie_str: str):
 
         url = self._auth_url
+        LOCATION = 'location'
+        CODE = 'code'
+
         params = dict(
-                client_id='webreader',
-                response_type='code',
-                scope='SCOPE_BOSH',
-                redirect_uri='https://webreader.mytolino.com/library/',
+                client_id=client_id,
+                response_type=CODE,
+                scope=scope,
+                redirect_uri=redirect_uri,
                 )
         params['x_buchde.skin_id'] = 17
         params['x_buchde.mandant_id'] = 37
@@ -334,10 +346,10 @@ class Client(object):
                 )
         print(host_response)
         headers = host_response.headers
-        location_url = headers['location']
+        location_url = headers[LOCATION]
         query_str = urlparse(location_url).query
         location_parameters = parse_qs(query_str)
-        auth_code = location_parameters['code'][0]
+        auth_code = location_parameters[CODE][0]
         return auth_code
 
     def login(self, username, password):
