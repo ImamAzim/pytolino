@@ -156,6 +156,7 @@ class Client(object):
         self._password_field_id = self._server_settings['password_field_id']
         self._submit_css = self._server_settings['submit_button_css']
         self._login_url = self._server_settings['login_url']
+        self._auth_url = self._server_settings['auth_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -296,7 +297,7 @@ class Client(object):
 
     def _get_auth_code(self, cookie_str: str):
 
-        url = self._server_settings['auth_url']
+        url = self._auth_url
         params = dict(
                 client_id='webreader',
                 response_type='code',
