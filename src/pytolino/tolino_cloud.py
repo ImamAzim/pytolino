@@ -44,6 +44,7 @@ additional_request_parameters = common_settings[
 
 
 def main():
+    print(additional_request_parameters)
     for partner in PARTNERS:
         print(partner)
         for key, val in servers_settings[partner].items():
@@ -348,7 +349,7 @@ class Client(object):
                 scope=scope,
                 redirect_uri=redirect_uri,
                 )
-        params.update(additional_request_parameters)
+        data.update(additional_request_parameters)
 
         headers = {
                 'Host': 'www.orellfuessli.ch',
