@@ -119,7 +119,7 @@ class Client(object):
         Client.store_token(
                 account_name,
                 self._refresh_token,
-                self._token_expires,
+                self._expires_in,
                 self._refresh_expires_in,
                 self._hardware_id,
                 self._access_token,
@@ -159,7 +159,7 @@ class Client(object):
 
         self._access_token = None
         self._refresh_token = None
-        self._token_expires = None
+        self._expires_in = None
         self._refresh_expires_in = None
         self._hardware_id = None
         self._access_token_expiration_time = 0
@@ -203,7 +203,7 @@ class Client(object):
         self._refresh_token = vb.refresh_token
         self._hardware_id = vb.hardware_id
         self._access_token = vb.access_token
-        self._token_expires = vb.expires_in
+        self._expires_in = vb.expires_in
         self._refresh_expires_in = vb.refresh_expires_in
         self._access_token_expiration_time = access_expiration_time
         self._refresh_expiration_time = refresh_expiration_time
@@ -251,22 +251,22 @@ class Client(object):
         j = host_response.json()
         self._access_token = j['access_token']
         self._refresh_token = j['refresh_token']
-        self._token_expires = int(j['expires_in'])
+        self._expires_in = int(j['expires_in'])
         self._refresh_expires_in = int(j['refresh_expires_in'])
         now = time.time()
-        self._access_expiration_time = now + self._token_expires
+        self._access_expiration_time = now + self._expires_in
         self._refresh_expiration_time = now + self._refresh_expires_in
         Client.store_token(
                 account_name,
                 self.refresh_token,
-                self._token_expires,
+                self._expires_in,
                 self._refresh_expires_in,
                 self.hardware_id,
                 access_token=self._access_token,
                 )
         logging.info('got a new access token!')
         logging.info(
-                f'access will expire in {self._token_expires}s')
+                f'access will expire in {self._expires_in}s')
         logging.info(
                 f'refresh will expire in {self._refresh_expires_in}s')
 
@@ -382,7 +382,7 @@ class Client(object):
         data_rsp = host_response.json()
         self._access_token = data_rsp[ACCESS_TOKEN]
         self._refresh_token = data_rsp[REFRESH_TOKEN]
-        self._token_expires = data_rsp[EXPIRES_IN]
+        self._expires_in = data_rsp[EXPIRES_IN]
         self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
 
     def login(self, username, password):
