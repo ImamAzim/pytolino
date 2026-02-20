@@ -256,6 +256,7 @@ class Client(object):
         url = self._login_url
         driver.get(url)
 
+        # deny cookies
         shadow_host_id = self._shadow_host_id
         shadow_host = driver.find_element(By.ID, shadow_host_id)
         shadow_root = shadow_host.shadow_root
@@ -265,6 +266,8 @@ class Client(object):
                 expected_conditions.element_to_be_clickable(
                     (By.CSS_SELECTOR, css)))
         deny_button.click()
+
+        # fill credentials and submit
         username_field_id = self._username_field_id
         username_field = driver.find_element(
                 By.ID, username_field_id,
@@ -279,12 +282,13 @@ class Client(object):
                 )
         username_field.send_keys(username)
         password_field.send_keys(password)
-
         wait = WebDriverWait(driver, timeout=2)
         wait.until(
                 expected_conditions.element_to_be_clickable(
                     submit_button))
         submit_button.click()
+
+        # get cookies
         cookies = driver.get_cookies()
         driver.quit()
         cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
