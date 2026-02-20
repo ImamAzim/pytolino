@@ -42,6 +42,8 @@ redirect_uri = common_settings['redirect_uri']
 additional_request_parameters = common_settings[
 'additional_request_parameters']
 
+USERAGENT = 'User-Agent'
+
 
 def main():
     print(additional_request_parameters)
@@ -158,6 +160,7 @@ class Client(object):
         self._hardware_id = None
         self._access_token_expiration_time = 0
         self._refresh_expiration_time = 0
+        self._user_agent = None
 
         self._server_settings = servers_settings[server_name]
         self._shadow_host_id = self._server_settings['shadow_host_id']
@@ -305,6 +308,8 @@ class Client(object):
 
         # get cookies
         cookies = driver.get_cookies()
+        user_agent = driver.get_user_agent()
+        self._user_agent = user_agent
         driver.quit()
         for cookie in cookies:
             self._session_cffi.cookies.set(cookie['name'], cookie['value'])
@@ -339,6 +344,12 @@ class Client(object):
         auth_code = location_parameters[CODE][0]
         return auth_code
 
+    def _add_user_agent(self, headers: dict)->dict:
+        if self._user_agent:
+            user_agent = self._user_agent
+            headers[USERAGENT] = user_agent
+        return headers
+
     def _get_token(self, auth_code: str):
 
         AUTHORIZATION_CODE = 'authorization_code'
@@ -353,6 +364,7 @@ class Client(object):
         data.update(additional_request_parameters)
 
         headers = self._token_header
+        headers = self._add_user_agent(headers)
         url = self._token_url
         host_response = self._session_cffi.post(
                 url,
