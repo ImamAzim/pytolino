@@ -304,6 +304,9 @@ class Client(object):
         cookies = driver.get_cookies()
         driver.quit()
         cookie_str = '; '.join([f"{cookie['name']}=\"{cookie['value']}\"" for cookie in cookies])
+        for cookie in cookies:
+            self._session_cffi.cookies.set(cookie['name'], cookie['value'])
+            self._session.cookies.set(cookie['name'], cookie['value'])
         return cookie_str
 
     def _get_auth_code(self, cookie_str: str):
@@ -321,7 +324,7 @@ class Client(object):
         params.update(additional_request_parameters)
 
         headers = {
-                'Cookie': cookie_str,
+                # 'Cookie': cookie_str,
                 'Host': 'www.orellfuessli.ch',
                 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
                 'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
