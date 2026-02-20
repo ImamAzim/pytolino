@@ -148,6 +148,15 @@ class Client(object):
         self._refresh_expiration_time = 0
 
         self._server_settings = servers_settings[server_name]
+        self._shadow_host_id = self._server_settings['shadow_host_id']
+        self._username_field_id = self._server_settings['username_field_id']
+        self._username_field_id = self._server_settings['username_field_id']
+        self._cookie_deny_css = self._server_settings['cookie_deny_all_css']
+        self._username_field_id = self._server_settings['username_field_id']
+        self._password_field_id = self._server_settings['password_field_id']
+        self._submit_css = self._server_settings['submit_button_css']
+        self._login_url = self._server_settings['login_url']
+
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
         self._server_name = server_name
@@ -244,27 +253,27 @@ class Client(object):
         timeout = 2
         driver = Driver(uc=True, headless=False)
         driver.implicitly_wait(timeout)
-        url = self._server_settings['login_url']
+        url = self._login_url
         driver.get(url)
 
-        shadow_host_id = self._server_settings['shadow_host_id']
+        shadow_host_id = self._shadow_host_id
         shadow_host = driver.find_element(By.ID, shadow_host_id)
         shadow_root = shadow_host.shadow_root
-        css = self._server_settings['cookie_deny_all_css']
+        css = self._cookie_deny_css
         wait = WebDriverWait(shadow_root, timeout)
         deny_button = wait.until(
                 expected_conditions.element_to_be_clickable(
                     (By.CSS_SELECTOR, css)))
         deny_button.click()
-        username_field_id = self._server_settings['username_field_id']
+        username_field_id = self._username_field_id
         username_field = driver.find_element(
                 By.ID, username_field_id,
                 )
-        password_field_id = self._server_settings['password_field_id']
+        password_field_id = self._password_field_id
         password_field = driver.find_element(
                 By.ID, password_field_id,
                 )
-        css = self._server_settings['submit_button_css']
+        css = self._submit_css
         submit_button = driver.find_element(
                 By.CSS_SELECTOR, css,
                 )
