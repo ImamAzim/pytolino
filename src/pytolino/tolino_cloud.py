@@ -43,6 +43,10 @@ additional_request_parameters = common_settings[
 'additional_request_parameters']
 
 USERAGENT = 'User-Agent'
+ACCESS_TOKEN = 'access_token'
+REFRESH_TOKEN = 'refresh_token'
+EXPIRES_IN = 'expires_in'
+REFRESH_EXPIRES_IN = 'refresh_expires_in'
 
 
 def main():
@@ -376,10 +380,10 @@ class Client(object):
                 )
         self._log_request(host_response, data)
         data_rsp = host_response.json()
-        self._access_token = data_rsp['access_token']
-        self._refresh_token = data_rsp['refresh_token']
-        self._token_expires = data_rsp['expires_in']
-        self._refresh_expires_in = data_rsp['refresh_expires_in']
+        self._access_token = data_rsp[ACCESS_TOKEN]
+        self._refresh_token = data_rsp[REFRESH_TOKEN]
+        self._token_expires = data_rsp[EXPIRES_IN]
+        self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
 
     def login(self, username, password):
         """login to the partner and get access token.
