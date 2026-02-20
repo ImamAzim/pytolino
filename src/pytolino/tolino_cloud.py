@@ -170,6 +170,7 @@ class Client(object):
         self._login_url = self._server_settings['login_url']
         self._auth_url = self._server_settings['auth_url']
         self._token_url = self._server_settings['token_url']
+        self._token_header = self._server_settings['token_header']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -351,30 +352,14 @@ class Client(object):
                 )
         data.update(additional_request_parameters)
 
-        headers = {
-                'Host': 'www.orellfuessli.ch',
-                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
-                'Accept': "*/*",
-                'Accept-Language': 'fr,fr-FR;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Accept-Encoding': 'gzip, deflate, br, zstd',
-                'Content-Type': "application/x-www-form-urlencoded",
-                'Content-Length': "288",
-                'Referer': 'https://webreader.mytolino.com/',
-                'Origin': 'https://webreader.mytolino.com',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'cross-site',
-                'Connection': 'keep-alive',
-                'Priority': 'u=4',
-                'TE': 'trailers',
-                }
+        headers = self._token_header
         url = self._token_url
         host_response = self._session_cffi.post(
                 url,
                 data=data,
                 verify=True,
                 allow_redirects=False,
-                # headers=headers,
+                headers=headers,
                 impersonate=self._IMPERSONATE,
                 )
         self._log_request(host_response, data)
