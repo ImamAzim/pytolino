@@ -124,18 +124,16 @@ class Client(object):
         vb.timestamp = time.time()
         vb.access_token = access_token
 
-    def store_current_token(self, account_name):
+    def _store_current_token(self, username: str):
         """store the token with attribute of self
 
         """
-        Client.store_token(
-                account_name,
-                self._refresh_token,
-                self._expires_in,
-                self._refresh_expires_in,
-                self._hardware_id,
-                self._access_token,
-                )
+        vb = VarBox(app_name=f'{self._server_name}.{username}')
+        vb.refresh_token = self._refresh_token
+        vb.access_token = self._access_token
+        vb.hardware_id = self._hardware_id
+        vb.access_expiration_time = self._access_expiration_time
+        vb.refresh_expiration_time = self._refresh_expiration_time
 
     def raise_for_access_expiration(self) -> bool:
         """verify if access token is expired"""
@@ -169,6 +167,7 @@ class Client(object):
                     f'the partner {server_name} was not found.'
                     f'please choose one of the list: {PARTNERS}')
 
+        self._server_name = server_name
         self._access_token = None
         self._refresh_token = None
         self._expires_in = None
