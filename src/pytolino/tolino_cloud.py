@@ -345,7 +345,7 @@ class Client(object):
                 headers=headers,
                 impersonate=self._IMPERSONATE,
                 )
-        print(host_response)
+        self._log_request(host_response, params)
         headers = host_response.headers
         location_url = headers[LOCATION]
         query_str = urlparse(location_url).query
