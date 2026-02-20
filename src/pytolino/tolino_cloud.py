@@ -316,8 +316,7 @@ class Client(object):
                 scope=scope,
                 redirect_uri=redirect_uri,
                 )
-        params['x_buchde.skin_id'] = 17
-        params['x_buchde.mandant_id'] = 37
+        params.update(additional_request_parameters)
 
         headers = {
                 'Cookie': cookie_str,
