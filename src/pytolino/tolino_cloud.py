@@ -221,6 +221,7 @@ class Client(object):
         self._token_url = self._server_settings['token_url']
         self._partner_id = self._server_settings['partner_id']
         self._upload_url = self._server_settings['upload_url']
+        self._delete_url = self._server_settings['delete_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -692,8 +693,9 @@ class Client(object):
         :returns: None
 
         """
+        url = self._delete_url
         host_response = self._session.get(
-                self._server_settings['delete_url'],
+                url,
                 params={'deliverableId': ebook_id},
                 headers={
                     't_auth_token': self._access_token,
