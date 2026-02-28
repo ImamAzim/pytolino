@@ -7,6 +7,7 @@ import time
 import tomllib
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+import warnings
 
 
 import requests
@@ -628,7 +629,11 @@ class Client(object):
         if not host_response.ok:
             raise PytolinoException(f'metadata upload failed {host_response}')
 
-    def upload(self, file_path, name=None, extension=None):
+    def upload(
+            self,
+            file_path: Path or str,
+            name=None,
+            ):
         """upload an ebook to your cloud
 
         :file_path: str path to the ebook to upload
@@ -637,11 +642,15 @@ class Client(object):
         :returns: epub_id on the server
 
         """
+        if isinstance(file_path, str):
+            file_path = Path(file_path)
+            warnings.warn(
+                    'file_path arg should better be a Path object',
+                    DeprecationWarning,)
 
         if name is None:
-            name = file_path.split('/')[-1]
-        if extension is None:
-            extension = file_path.split('.')[-1]
+            name = file_path.name
+        extension = file_path.suffix
 
         mime = {
                 'pdf': 'application/pdf',
