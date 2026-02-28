@@ -718,7 +718,7 @@ class Client(object):
         filepath has no extension
 
         """
-        FILECOVER = '1092560016'
+        FILENAME = '1092560016'  # example from tolino api doc. different?
 
         if isinstance(filepath, str):
             filepath = Path(filepath)
@@ -738,7 +738,7 @@ class Client(object):
         data = {DELIVERABLE_ID: book_id}
         headers = self._get_auth_headers()
         with open(filepath, 'rb') as cover_file:
-            files=[('file', (FILECOVER, cover_file, mime))]
+            files=[('file', (FILENAME, cover_file, mime))]
             host_response = self._session.post(
                     url,
                     files=files,
