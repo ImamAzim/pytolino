@@ -229,6 +229,14 @@ class Client(object):
         self._session_cffi = curl_cffi.Session()
         self._server_name = server_name
 
+    def _get_auth_headers(self):
+        headers={
+            T_AUTH_TOKEN: self.access_token,
+            HARDWARE_ID: self.hardware_id,
+            RESELLER_ID: self._partner_id,
+            }
+        return headers
+
     def retrieve_token(
             self,
             account_name,
@@ -662,11 +670,7 @@ class Client(object):
         mime = epubmime if extension == '.epub' else pdfmime
 
         url = self._upload_url
-        headers={
-            T_AUTH_TOKEN: self.access_token,
-            HARDWARE_ID: self.hardware_id,
-            RESELLER_ID: self._partner_id,
-            }
+        headers = self._get_auth_headers()
         with open(file_path, 'rb') as ebook_file:
             files = [('file', (name, open(file_path, 'rb'), mime))]
             host_response = self._session.post(
@@ -697,11 +701,7 @@ class Client(object):
         """
         url = self._delete_url
         params = {DELIVERABLE_ID: ebook_id}
-        headers={
-            T_AUTH_TOKEN: self.access_token,
-            HARDWARE_ID: self.hardware_id,
-            RESELLER_ID: self._partner_id,
-            }
+        headers = self._get_auth_headers()
         host_response = self._session.get(
                 url,
                 params=params,
@@ -735,15 +735,12 @@ class Client(object):
 
         url = self._cover_url
         data = {DELIVERABLE_ID: book_id}
+        headers = self._get_auth_headers()
         host_response = self._session.post(
                 url,
                 files=[('file', ('1092560016', open(filepath, 'rb'), mime))],
                 data=data,
-                headers={
-                    't_auth_token': self._access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self._server_settings['partner_id'],
-                    },
+                headers=headers,
                 )
         self._log_request(host_response)
 
