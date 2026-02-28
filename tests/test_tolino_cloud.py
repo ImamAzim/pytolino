@@ -205,7 +205,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     # save_new_token()
     upload_test()
-    # add_cover_test()
+    add_cover_test()
     # metadata_test()
     # collection_test()
     # inventory_test()

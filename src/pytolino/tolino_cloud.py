@@ -708,7 +708,7 @@ class Client(object):
                 )
         self._log_request(host_response, params)
 
-    def add_cover(self, book_id, filepath, file_ext=None):
+    def add_cover(self, book_id, filepath: Path or str):
         """upload a a cover to a book on the cloud
 
         :book_id: id of the book on the serveer
@@ -718,8 +718,13 @@ class Client(object):
 
         """
 
-        if file_ext is None:
-            ext = filepath.split('.')[-1]
+        if isinstance(filepath, str):
+            filepath = Path(filepath)
+            warnings.warn(
+                    'file_path arg should better be a Path object',
+                    DeprecationWarning,)
+
+        ext = filepath.suffix
 
         mime = {
                 'png': 'image/png',
