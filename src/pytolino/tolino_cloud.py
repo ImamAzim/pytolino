@@ -61,6 +61,7 @@ DEVICES = 'devices'
 DEVICE_LAST_USAGE = 'deviceLastUsage'
 DEVICE_ID = 'deviceId'
 HARDWARE_ID = 'hardware_id'
+DELIVERABLE_ID = 'deliverableId'
 
 
 def main():
@@ -694,9 +695,10 @@ class Client(object):
 
         """
         url = self._delete_url
+        params = {DELIVERABLE_ID: ebook_id}
         host_response = self._session.get(
                 url,
-                params={'deliverableId': ebook_id},
+                params=params,
                 headers={
                     't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
