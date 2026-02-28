@@ -223,6 +223,7 @@ class Client(object):
         self._partner_id = self._server_settings['partner_id']
         self._upload_url = self._server_settings['upload_url']
         self._delete_url = self._server_settings['delete_url']
+        self._cover_url = self._server_settings['cover_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -732,8 +733,9 @@ class Client(object):
                 '.jpg': 'image/jpeg'
                 }.get(ext.lower(), 'application/jpeg')
 
+        url = self._cover_url
         host_response = self._session.post(
-                self._server_settings['cover_url'],
+                url,
                 files=[('file', ('1092560016', open(filepath, 'rb'), mime))],
                 data={'deliverableId': book_id},
                 headers={
