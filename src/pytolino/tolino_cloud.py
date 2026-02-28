@@ -60,6 +60,7 @@ DEVICE_LIST_RESPONSE = 'deviceListResponse'
 DEVICES = 'devices'
 DEVICE_LAST_USAGE = 'deviceLastUsage'
 DEVICE_ID = 'deviceId'
+HARDWARE_ID = 'hardware_id'
 
 
 def main():
@@ -658,16 +659,17 @@ class Client(object):
         mime = epubmime if extension == '.epub' else pdfmime
 
         url = self._upload_url
+        headers={
+            T_AUTH_TOKEN: self.access_token,
+            HARDWARE_ID: self.hardware_id,
+            RESELLER_ID: self._partner_id,
+            }
         with open(file_path, 'rb') as ebook_file:
             files = [('file', (name, open(file_path, 'rb'), mime))]
             host_response = self._session.post(
                     url,
                     files=files,
-                    headers={
-                        't_auth_token': self._access_token,
-                        'hardware_id': self.hardware_id,
-                        'reseller_id': self._server_settings['partner_id'],
-                        }
+                    headers=headers,
                     )
         self._log_request(host_response)
 
