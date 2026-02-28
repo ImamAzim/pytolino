@@ -696,14 +696,15 @@ class Client(object):
         """
         url = self._delete_url
         params = {DELIVERABLE_ID: ebook_id}
+        headers={
+            T_AUTH_TOKEN: self.access_token,
+            HARDWARE_ID: self.hardware_id,
+            RESELLER_ID: self._partner_id,
+            }
         host_response = self._session.get(
                 url,
                 params=params,
-                headers={
-                    't_auth_token': self._access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self._server_settings['partner_id'],
-                    }
+                headers=headers,
                 )
 
         if not host_response.ok:
