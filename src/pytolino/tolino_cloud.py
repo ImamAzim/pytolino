@@ -219,6 +219,7 @@ class Client(object):
         self._auth_url = self._server_settings['auth_url']
         self._token_url = self._server_settings['token_url']
         self._partner_id = self._server_settings['partner_id']
+        self._upload_url = self._server_settings['upload_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -656,8 +657,9 @@ class Client(object):
         pdfmime = 'application/pdf'
         mime = epubmime if extension == '.epub' else pdfmime
 
+        url = self._upload_url
         host_response = self._session.post(
-                self._server_settings['upload_url'],
+                url,
                 files=[(
                     'file',
                     (
