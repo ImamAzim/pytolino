@@ -718,6 +718,7 @@ class Client(object):
         filepath has no extension
 
         """
+        FILECOVER = '1092560016'
 
         if isinstance(filepath, str):
             filepath = Path(filepath)
@@ -736,14 +737,15 @@ class Client(object):
         url = self._cover_url
         data = {DELIVERABLE_ID: book_id}
         headers = self._get_auth_headers()
-        host_response = self._session.post(
-                url,
-                files=[('file', ('1092560016', open(filepath, 'rb'), mime))],
-                data=data,
-                headers=headers,
-                )
-        self._log_request(host_response)
-
+        with open(filepath, 'rb') as cover_file:
+            files=[('file', (FILECOVER, cover_file, mime))]
+            host_response = self._session.post(
+                    url,
+                    files=files,
+                    data=data,
+                    headers=headers,
+                    )
+        self._log_request(host_response, data)
 
 
 if __name__ == '__main__':
