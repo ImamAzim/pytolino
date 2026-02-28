@@ -706,17 +706,7 @@ class Client(object):
                 params=params,
                 headers=headers,
                 )
-
-        if not host_response.ok:
-            try:
-                j = host_response.json()
-                raise PytolinoException(
-                        f"delete {ebook_id} failed: ",
-                        f"{j['ResponseInfo']['message']}"
-                        )
-            except KeyError:
-                raise PytolinoException(
-                        f'delete {ebook_id} failed: reason unknown.')
+        self._log_request(host_response, params)
 
     def add_cover(self, book_id, filepath, file_ext=None):
         """upload a a cover to a book on the cloud
