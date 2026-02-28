@@ -174,6 +174,21 @@ class Client(object):
         """hardware id that is sent in request payloads"""
         return self._hardware_id
 
+    @property
+    def expires_in(self) -> int:
+        """expiration time in second of access token"""
+        return self._expires_in
+
+    @property
+    def refresh_expires_in(self) -> int:
+        """expiration time (s) of refresh token"""
+        return self._refresh_expires_in
+
+    @property
+    def access_token(self) -> str:
+        """value of access token"""
+        return self._access_token
+
     def __init__(self, server_name='orellfuessli'):
 
         if server_name not in servers_settings:

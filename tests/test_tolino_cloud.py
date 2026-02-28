@@ -157,16 +157,21 @@ def add_cover_test():
     client.add_cover(ebook_id, cover_fp.as_posix())
 
 
-def refresh_token(ask_new_credentials=False):
-    if ask_new_credentials:
+def save_new_token(autologin=True):
+    client = Client()
+    if autologin:
+        username, password = get_test_credentials()
+        client.login()
+        refresh_token = client.refresh_token
+        expires_in = client
+    else:
         print('login on your browser and get the token.')
         refresh_token = input('refresh token:\n')
         expires_in = int(input('expires_in:\n'))
         refresh_expires_in = int(input('refresh_expires_in:\n'))
         hardware_id = input('hardware id:\n')
-        Client.store_token(
+    Client.store_token(
                 ACCOUNT_NAME, refresh_token, expires_in, refresh_expires_in, hardware_id)
-    client = Client()
     client.get_new_token(ACCOUNT_NAME)
 
 
