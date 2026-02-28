@@ -671,8 +671,7 @@ class Client(object):
                     files=files,
                     headers=headers,
                     )
-        self._log_request(host_response)
-
+        self._log_request(host_response, files)
 
         try:
             j = host_response.json()
