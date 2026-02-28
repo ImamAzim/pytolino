@@ -658,25 +658,19 @@ class Client(object):
         mime = epubmime if extension == '.epub' else pdfmime
 
         url = self._upload_url
-        host_response = self._session.post(
-                url,
-                files=[(
-                    'file',
-                    (
-                        name,
-                        open(file_path, 'rb'),
-                        mime,
-                        ),
-                    )],
-                headers={
-                    't_auth_token': self._access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self._server_settings['partner_id'],
-                    }
-                )
+        with open(file_path, 'rb') as ebook_file:
+            files = [('file', (name, open(file_path, 'rb'), mime))]
+            host_response = self._session.post(
+                    url,
+                    files=files,
+                    headers={
+                        't_auth_token': self._access_token,
+                        'hardware_id': self.hardware_id,
+                        'reseller_id': self._server_settings['partner_id'],
+                        }
+                    )
+        self._log_request(host_response)
 
-        if not host_response.ok:
-            raise PytolinoException(f'upload failed {host_response}')
 
         try:
             j = host_response.json()
