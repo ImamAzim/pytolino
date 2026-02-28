@@ -652,10 +652,9 @@ class Client(object):
             name = file_path.name
         extension = file_path.suffix
 
-        mime = {
-                'pdf': 'application/pdf',
-                'epub': 'application/epub+zip',
-                }.get(extension.lower(), 'application/pdf')
+        epubmime = 'application/epub+zip'
+        pdfmime = 'application/pdf'
+        mime = epubmime if extension == '.epub' else pdfmime
 
         host_response = self._session.post(
                 self._server_settings['upload_url'],
