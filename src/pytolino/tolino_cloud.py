@@ -734,10 +734,11 @@ class Client(object):
                 }.get(ext.lower(), 'application/jpeg')
 
         url = self._cover_url
+        data = {DELIVERABLE_ID: book_id}
         host_response = self._session.post(
                 url,
                 files=[('file', ('1092560016', open(filepath, 'rb'), mime))],
-                data={'deliverableId': book_id},
+                data=data,
                 headers={
                     't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
