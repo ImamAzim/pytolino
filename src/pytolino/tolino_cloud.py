@@ -457,7 +457,7 @@ class Client(object):
             try:
                 self._retrieve_last_token(username)
                 try:
-                    self.raise_for_access_expiration
+                    self.raise_for_access_expiration()
                 except ExpirationError:
                     try:
                         self.raise_for_refresh_expiration()
