@@ -154,7 +154,7 @@ def add_cover_test():
 
     client = Client()
     client.retrieve_token(ACCOUNT_NAME)
-    client.add_cover(ebook_id, cover_fp.as_posix())
+    client.add_cover(ebook_id, cover_fp)
 
 
 def save_new_token(autologin=True):

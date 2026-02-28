@@ -727,9 +727,9 @@ class Client(object):
         ext = filepath.suffix
 
         mime = {
-                'png': 'image/png',
-                'jpeg': 'image/jpeg',
-                'jpg': 'image/jpeg'
+                '.png': 'image/png',
+                '.jpeg': 'image/jpeg',
+                '.jpg': 'image/jpeg'
                 }.get(ext.lower(), 'application/jpeg')
 
         host_response = self._session.post(
@@ -742,9 +742,8 @@ class Client(object):
                     'reseller_id': self._server_settings['partner_id'],
                     },
                 )
+        self._log_request(host_response)
 
-        if not host_response.ok:
-            raise PytolinoException(f'cover upload failed. {host_response}')
 
 
 if __name__ == '__main__':
