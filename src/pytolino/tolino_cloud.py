@@ -676,12 +676,14 @@ class Client(object):
         try:
             j = host_response.json()
         except requests.JSONDecodeError:
-            raise PytolinoException('file upload failed.')
+            raise PytolinoException('file upload failed. answer not json')
         else:
             try:
                 return j['metadata']['deliverableId']
             except KeyError:
-                raise PytolinoException('file upload failed.')
+                raise PytolinoException(
+                        'file upload failed.'
+                        'no metadata or deliverableId in response')
 
     def delete_ebook(self, ebook_id):
         """delete an ebook present on your cloud
