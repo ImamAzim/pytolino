@@ -536,14 +536,11 @@ class Client(object):
         """
 
         url = self._inventory_url
+        headers = self._get_auth_headers()
         host_response = self._session.get(
                 url,
                 params={'strip': 'true'},
-                headers={
-                    't_auth_token': self._access_token,
-                    'hardware_id': self._hardware_id,
-                    'reseller_id': self._server_settings['partner_id'],
-                    }
+                headers=headers,
                 )
 
         if not host_response.ok:
