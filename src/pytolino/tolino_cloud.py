@@ -438,7 +438,7 @@ class Client(object):
         hardware_id = my_dev[DEVICE_ID]
         self._hardware_id = hardware_id
 
-    def login(self, password):
+    def login(self, password, allow_GUI_autologin=True):
         """login to the partner and get access token.
 
         """
@@ -465,12 +465,14 @@ class Client(object):
             else:
                 logged_in = True
 
-        if not logged_in:
+        if not logged_in and allow_GUI_autologin:
             self._get_login_cookies(username, password)
             auth_code = self._get_auth_code()
             self._get_token(auth_code)
             self._get_hardware_id()
             self._store_current_token()
+        else:
+            raise PytolinoException('could not login')
 
     def logout(self):
         """logout from tolino partner host
