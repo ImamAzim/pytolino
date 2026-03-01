@@ -287,16 +287,13 @@ class Client(object):
         self._access_expiration_time = access_expiration_time
         self._refresh_expiration_time = refresh_expiration_time
 
-    def get_new_token(self, account_name=None):
+    def _renew_access_token(self):
         """look at the store token, and get a new access and refresh tokens.
 
         :account_name: TODO
         :returns: TODO
 
         """
-        if account_name is not None:
-            self.retrieve_token(account_name)
-        self.raise_for_refresh_expiration()
 
         headers = {
                 # 'Accept': "*/*",
