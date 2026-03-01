@@ -45,6 +45,7 @@ additional_request_parameters = common_settings[
 devices_url = common_settings['devices_url']
 devices_list_headers = common_settings['headers']['devices_list']
 token_headers = common_settings['headers']['token']
+client_type = common_settings['client_type']
 
 USERAGENT = 'User-Agent'
 ACCESS_TOKEN = 'access_token'
@@ -64,6 +65,7 @@ HARDWARE_ID = 'hardware_id'
 DELIVERABLE_ID = 'deliverableId'
 UPLOAD_METADATA = 'uploadMetaData'
 CONTENT_TYPE = 'content-type'
+CLIENT_TYPE = 'client_type'
 
 
 def main():
@@ -588,16 +590,13 @@ class Client(object):
                 }
 
         url = self._sync_data_url
+        headers = self._get_auth_headers()
+        headers[CONTENT_TYPE] = 'application/json'
+        headers[CLIENT_TYPE] = client_type
         host_response = self._session.patch(
                 url,
                 data=json.dumps(payload),
-                headers={
-                    'content-type': 'application/json',
-                    't_auth_token': self._access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self._server_settings['partner_id'],
-                    'client_type': 'TOLINO_WEBREADER',
-                    }
+                headers=headers,
                 )
 
         if not host_response.ok:
