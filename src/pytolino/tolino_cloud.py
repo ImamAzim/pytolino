@@ -176,6 +176,11 @@ class Client(object):
         return self._refresh_expires_in
 
     @property
+    def access_expiration_time(self) -> float:
+        """time (seconds from epoch) for expiration of access token"""
+        return self._access_expiration_time
+
+    @property
     def access_token(self) -> str:
         """value of access token"""
         return self._access_token

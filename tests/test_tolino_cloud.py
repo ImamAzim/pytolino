@@ -161,13 +161,13 @@ def add_cover_test():
 def login_test():
     username, password = get_test_credentials()
     client = Client(username=username)
-    expiration = client.access_token_expiration_time
+    expiration = client.access_expiration_time
     print('access token expiration time:')
     print(datetime.datetime.fromtimestamp(expiration))
     print('login...')
     client.login(password)
     client = Client(username=username)
-    expiration = client.access_token_expiration_time
+    expiration = client.access_expiration_time
     print('access token new expiration time:')
     print(datetime.datetime.fromtimestamp(expiration))
 
