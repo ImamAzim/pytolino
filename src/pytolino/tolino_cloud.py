@@ -230,6 +230,7 @@ class Client(object):
         self._cover_url = self._server_settings['cover_url']
         self._meta_url = self._server_settings['meta_url']
         self._sync_data_url = self._server_settings['sync_data_url']
+        self._inventory_url = self._server_settings['inventory_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -534,8 +535,9 @@ class Client(object):
 
         """
 
+        url = self._inventory_url
         host_response = self._session.get(
-                self._server_settings['inventory_url'],
+                url,
                 params={'strip': 'true'},
                 headers={
                     't_auth_token': self._access_token,
