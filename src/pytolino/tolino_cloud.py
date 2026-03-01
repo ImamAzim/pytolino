@@ -89,32 +89,6 @@ class Client(object):
         if not rsp.ok:
             raise PytolinoException('host response not ok')
 
-
-    def store_token(
-                    account_name,
-                    refresh_token: str,
-                    expires_in: int,
-                    refresh_expires_in: int,
-                    hardward_id: str,
-                    access_token='',
-                    ):
-        """after one has connected in a browser,
-        one can store the token for the app.
-
-        :account_name: internal name for reference
-        :refresh_token: given by server after a token POST request
-        :expires_in: time in seconds
-        :hardward_id: present in payload for every request to API.
-
-        """
-        vb = VarBox('pytolino', app_name=account_name)
-        vb.refresh_token = refresh_token
-        vb.hardware_id = hardward_id
-        vb.expires_in = expires_in
-        vb.refresh_expires_in = refresh_expires_in
-        vb.timestamp = time.time()
-        vb.access_token = access_token
-
     def _store_current_token(self):
         """store the token with attribute of self
 
@@ -261,31 +235,6 @@ class Client(object):
             RESELLER_ID: self._partner_id,
             }
         return headers
-
-    def retrieve_token(
-            self,
-            account_name,
-            ) -> tuple[str, str]:
-        """get the token and data that were stored previousely.
-        raise error if expired
-
-        :account_name: internal name under which token was stored
-        :returns: refresh_token, hardware_id
-
-        """
-        vb = VarBox('pytolino', app_name=account_name)
-        if not hasattr(vb, 'refresh_token'):
-            raise PytolinoException(
-                    'there was no refresh token stored for that name')
-        access_expiration_time = vb.timestamp + vb.expires_in
-        refresh_expiration_time = vb.timestamp + vb.refresh_expires_in
-        self._refresh_token = vb.refresh_token
-        self._hardware_id = vb.hardware_id
-        self._access_token = vb.access_token
-        self._expires_in = vb.expires_in
-        self._refresh_expires_in = vb.refresh_expires_in
-        self._access_expiration_time = access_expiration_time
-        self._refresh_expiration_time = refresh_expiration_time
 
     def _renew_access_token(self):
         """get a new access and refresh tokens.
