@@ -62,6 +62,7 @@ DEVICE_LAST_USAGE = 'deviceLastUsage'
 DEVICE_ID = 'deviceId'
 HARDWARE_ID = 'hardware_id'
 DELIVERABLE_ID = 'deliverableId'
+UPLOAD_METADATA = 'uploadMetaData'
 
 
 def main():
@@ -618,28 +619,30 @@ class Client(object):
                 )
         self._log_request(host_response, params)
 
-        book = host_response.json()
-
-        for key, value in new_metadata.items():
-            book['metadata'][key] = value
-
-        payload = {
-                'uploadMetaData': book['metadata']
-                }
-
-        host_response = self._session.put(
-                url,
-                data=json.dumps(payload),
-                headers={
-                    'content-type': 'application/json',
-                    't_auth_token': self._access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self._server_settings['partner_id'],
+        try:
+            book = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException('metadata upload failed. answer not json')
+        else:
+            for key, value in new_metadata.items():
+                book['metadata'][key] = value
+            payload = {
+                    UPLOAD_METADATA: book['metadata']
                     }
-                )
 
-        if not host_response.ok:
-            raise PytolinoException(f'metadata upload failed {host_response}')
+            host_response = self._session.put(
+                    url,
+                    data=json.dumps(payload),
+                    headers={
+                        'content-type': 'application/json',
+                        't_auth_token': self._access_token,
+                        'hardware_id': self.hardware_id,
+                        'reseller_id': self._server_settings['partner_id'],
+                        }
+                    )
+
+            if not host_response.ok:
+                raise PytolinoException(f'metadata upload failed {host_response}')
 
     def upload(
             self,
