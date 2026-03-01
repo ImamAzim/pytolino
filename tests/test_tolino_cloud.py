@@ -74,8 +74,9 @@ def upload_test():
 
     print('upload epub...')
     epub_fp = Path(__file__).parent / TEST_EPUB
-    client = Client()
-    client.retrieve_token(ACCOUNT_NAME)
+    username, password = get_test_credentials()
+    client = Client(username)
+    client.login(password)
     ebook_id = client.upload(epub_fp)
     print(ebook_id)
     vb = VarBox('pytolino')
@@ -87,8 +88,9 @@ def collection_test():
     vb = VarBox('pytolino')
     ebook_id = vb.ebook_id
 
-    client = Client()
-    client.retrieve_token(ACCOUNT_NAME)
+    username, password = get_test_credentials()
+    client = Client(username)
+    client.login(password)
     client.add_to_collection(ebook_id, 'test_coll')
 
 
@@ -98,8 +100,9 @@ def delete_test():
     vb = VarBox('pytolino')
     ebook_id = vb.ebook_id
 
-    client = Client()
-    client.retrieve_token(ACCOUNT_NAME)
+    username, password = get_test_credentials()
+    client = Client(username)
+    client.login(password)
     client.delete_ebook(ebook_id)
 
 
@@ -108,6 +111,7 @@ def inventory_test():
     print('get inventory')
     username, password = get_test_credentials()
     client = Client(username)
+    client.login(password)
     inventory = client.get_inventory()
     if inventory:
         for item in inventory:
@@ -130,9 +134,10 @@ def metadata_test():
             )
     vb = VarBox('pytolino')
     ebook_id = vb.ebook_id
+    username, password = get_test_credentials()
+    client = Client(username)
+    client.login(password)
 
-    client = Client()
-    client.retrieve_token(ACCOUNT_NAME)
     client.upload_metadata(ebook_id, **metadata)
 
     inventory = client.get_inventory()
@@ -153,8 +158,9 @@ def add_cover_test():
     vb = VarBox('pytolino')
     ebook_id = vb.ebook_id
 
-    client = Client()
-    client.retrieve_token(ACCOUNT_NAME)
+    username, password = get_test_credentials()
+    client = Client(username)
+    client.login(password)
     client.add_cover(ebook_id, cover_fp)
 
 
@@ -185,10 +191,10 @@ def get_test_credentials():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     login_test()
-    # upload_test()
-    # add_cover_test()
-    # metadata_test()
-    # collection_test()
-    # inventory_test()
-    # delete_test()
-    # inventory_test()
+    upload_test()
+    add_cover_test()
+    metadata_test()
+    collection_test()
+    inventory_test()
+    delete_test()
+    inventory_test()
