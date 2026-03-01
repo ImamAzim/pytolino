@@ -1,4 +1,3 @@
-
 SHADOW_HOST_ID = 'shadow_host_id'
 USERNAME_FIELD_ID = 'username_field_id'
 USERNAME_FIELD_ID = 'username_field_id'

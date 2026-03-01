@@ -21,6 +21,9 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
 
+from pytolino import server_settings_keys
+
+
 class PytolinoException(Exception):
     pass
 
@@ -214,23 +217,40 @@ class Client(object):
         self._user_agent = None
 
         self._server_settings = servers_settings[server_name]
-        self._shadow_host_id = self._server_settings['shadow_host_id']
-        self._username_field_id = self._server_settings['username_field_id']
-        self._username_field_id = self._server_settings['username_field_id']
-        self._cookie_deny_css = self._server_settings['cookie_deny_all_css']
-        self._username_field_id = self._server_settings['username_field_id']
-        self._password_field_id = self._server_settings['password_field_id']
-        self._submit_css = self._server_settings['submit_button_css']
-        self._login_url = self._server_settings['login_url']
-        self._auth_url = self._server_settings['auth_url']
-        self._token_url = self._server_settings['token_url']
-        self._partner_id = self._server_settings['partner_id']
-        self._upload_url = self._server_settings['upload_url']
-        self._delete_url = self._server_settings['delete_url']
-        self._cover_url = self._server_settings['cover_url']
-        self._meta_url = self._server_settings['meta_url']
-        self._sync_data_url = self._server_settings['sync_data_url']
-        self._inventory_url = self._server_settings['inventory_url']
+        self._shadow_host_id = self._server_settings[
+                server_settings_keys.SHADOW_HOST_ID]
+        self._username_field_id = self._server_settings[
+                server_settings_keys.USERNAME_FIELD_ID]
+        self._username_field_id = self._server_settings[
+                server_settings_keys.USERNAME_FIELD_ID]
+        self._cookie_deny_css = self._server_settings[
+                server_settings_keys.COOKIE_DENY_CSS]
+        self._username_field_id = self._server_settings[
+                server_settings_keys.USERNAME_FIELD_ID]
+        self._password_field_id = self._server_settings[
+                server_settings_keys.PASSWORD_FIELD_ID]
+        self._submit_css = self._server_settings[
+                server_settings_keys.SUBMIT_CSS]
+        self._login_url = self._server_settings[
+                server_settings_keys.LOGIN_URL]
+        self._auth_url = self._server_settings[
+                server_settings_keys.AUTH_URL]
+        self._token_url = self._server_settings[
+                server_settings_keys.TOKEN_URL]
+        self._partner_id = self._server_settings[
+                server_settings_keys.PARTNER_ID]
+        self._upload_url = self._server_settings[
+                server_settings_keys.UPLOAD_URL]
+        self._delete_url = self._server_settings[
+                server_settings_keys.DELETE_URL]
+        self._cover_url = self._server_settings[
+                server_settings_keys.COVER_URL]
+        self._meta_url = self._server_settings[
+                server_settings_keys.META_URL]
+        self._sync_data_url = self._server_settings[
+                server_settings_keys.SYNC_DATA_URL]
+        self._inventory_url = self._server_settings[
+                server_settings_keys.INVENTORY_URL]
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
