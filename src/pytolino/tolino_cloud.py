@@ -63,6 +63,7 @@ DEVICE_ID = 'deviceId'
 HARDWARE_ID = 'hardware_id'
 DELIVERABLE_ID = 'deliverableId'
 UPLOAD_METADATA = 'uploadMetaData'
+CONTENT_TYPE = 'content-type'
 
 
 def main():
@@ -630,16 +631,13 @@ class Client(object):
                     UPLOAD_METADATA: book['metadata']
                     }
             data = json.dumps(payload)
+            headers = self._get_auth_headers()
+            headers[CONTENT_TYPE] = 'application/json'
 
             host_response = self._session.put(
                     url,
                     data=data,
-                    headers={
-                        'content-type': 'application/json',
-                        't_auth_token': self._access_token,
-                        'hardware_id': self.hardware_id,
-                        'reseller_id': self._server_settings['partner_id'],
-                        }
+                    headers=headers,
                     )
         self._log_request(host_response, data)
 
