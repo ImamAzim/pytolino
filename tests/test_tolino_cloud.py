@@ -206,7 +206,7 @@ if __name__ == '__main__':
     # save_new_token()
     upload_test()
     add_cover_test()
-    # metadata_test()
+    metadata_test()
     # collection_test()
     # inventory_test()
     delete_test()

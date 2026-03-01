@@ -607,19 +607,20 @@ class Client(object):
 
         """
 
-        url = self._server_settings['meta_url'] + f'/?deliverableId={book_id}'
+        url = self._server_settings['meta_url']
+        params = {DELIVERABLE_ID: book_id}
         host_response = self._session.get(
                 url,
+                params=params,
                 headers={
                     't_auth_token': self._access_token,
                     'hardware_id': self.hardware_id,
                     'reseller_id': self._server_settings['partner_id'],
                   }
                 )
+        self._log_request(host_response, params)
 
         book = host_response.json()
-        if not host_response.ok:
-            raise PytolinoException(f'metadata upload failed {host_response}')
 
         for key, value in new_metadata.items():
             book['metadata'][key] = value
