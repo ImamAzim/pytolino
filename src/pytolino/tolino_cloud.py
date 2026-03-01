@@ -288,10 +288,7 @@ class Client(object):
         self._refresh_expiration_time = refresh_expiration_time
 
     def _renew_access_token(self):
-        """look at the store token, and get a new access and refresh tokens.
-
-        :account_name: TODO
-        :returns: TODO
+        """get a new access and refresh tokens.
 
         """
 
@@ -333,15 +330,7 @@ class Client(object):
         now = time.time()
         self._access_expiration_time = now + self._expires_in
         self._refresh_expiration_time = now + self._refresh_expires_in
-        if account_name is not None:
-            Client.store_token(
-                    account_name,
-                    self.refresh_token,
-                    self._expires_in,
-                    self._refresh_expires_in,
-                    self.hardware_id,
-                    access_token=self._access_token,
-                    )
+        self._store_current_token()
         logging.info('got a new access token!')
         logging.info(
                 f'access will expire in {self._expires_in}s')
@@ -520,7 +509,7 @@ class Client(object):
 
         if get_a_new_token:
             try:
-                self.get_new_token()
+                self._renew_access_token()
             except PytolinoException as e:
                 logging.warning('previous access token could not be renewed')
             else:
