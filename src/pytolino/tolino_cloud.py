@@ -629,10 +629,11 @@ class Client(object):
             payload = {
                     UPLOAD_METADATA: book['metadata']
                     }
+            data = json.dumps(payload)
 
             host_response = self._session.put(
                     url,
-                    data=json.dumps(payload),
+                    data=data,
                     headers={
                         'content-type': 'application/json',
                         't_auth_token': self._access_token,
@@ -640,9 +641,7 @@ class Client(object):
                         'reseller_id': self._server_settings['partner_id'],
                         }
                     )
-
-            if not host_response.ok:
-                raise PytolinoException(f'metadata upload failed {host_response}')
+        self._log_request(host_response, data)
 
     def upload(
             self,
