@@ -180,13 +180,18 @@ class Client(object):
         """value of access token"""
         return self._access_token
 
-    def __init__(self, server_name='orellfuessli'):
+    def __init__(
+            self,
+            username: str,
+            server_name='orellfuessli',
+            ):
 
         if server_name not in servers_settings:
             raise PytolinoException(
                     f'the partner {server_name} was not found.'
                     f'please choose one of the list: {PARTNERS}')
 
+        self._username = username
         self._server_name = server_name
         self._access_token = None
         self._refresh_token = None
