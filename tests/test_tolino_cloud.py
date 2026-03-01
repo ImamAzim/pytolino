@@ -207,7 +207,7 @@ if __name__ == '__main__':
     upload_test()
     add_cover_test()
     metadata_test()
-    # collection_test()
+    collection_test()
     # inventory_test()
     delete_test()
     # inventory_test()

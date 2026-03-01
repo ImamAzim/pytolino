@@ -227,6 +227,7 @@ class Client(object):
         self._delete_url = self._server_settings['delete_url']
         self._cover_url = self._server_settings['cover_url']
         self._meta_url = self._server_settings['meta_url']
+        self._sync_data_url = self._server_settings['sync_data_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -586,8 +587,9 @@ class Client(object):
                     }]
                 }
 
+        url = self._sync_data_url
         host_response = self._session.patch(
-                self._server_settings['sync_data_url'],
+                url,
                 data=json.dumps(payload),
                 headers={
                     'content-type': 'application/json',
