@@ -1,2 +1,18 @@
 
-KEY1 = 'key1'
+SHADOW_HOST_ID = 'shadow_host_id'
+# self._username_field_id = self._server_settings['username_field_id']
+# self._username_field_id = self._server_settings['username_field_id']
+# self._cookie_deny_css = self._server_settings['cookie_deny_all_css']
+# self._username_field_id = self._server_settings['username_field_id']
+# self._password_field_id = self._server_settings['password_field_id']
+# self._submit_css = self._server_settings['submit_button_css']
+# self._login_url = self._server_settings['login_url']
+# self._auth_url = self._server_settings['auth_url']
+# self._token_url = self._server_settings['token_url']
+# self._partner_id = self._server_settings['partner_id']
+# self._upload_url = self._server_settings['upload_url']
+# self._delete_url = self._server_settings['delete_url']
+# self._cover_url = self._server_settings['cover_url']
+# self._meta_url = self._server_settings['meta_url']
+# self._sync_data_url = self._server_settings['sync_data_url']
+# self._inventory_url = self._server_settings['inventory_url']
