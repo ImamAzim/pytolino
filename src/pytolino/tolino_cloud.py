@@ -537,15 +537,13 @@ class Client(object):
 
         url = self._inventory_url
         headers = self._get_auth_headers()
+        params={'strip': 'true'}
         host_response = self._session.get(
                 url,
-                params={'strip': 'true'},
+                params=params,
                 headers=headers,
                 )
-
-        if not host_response.ok:
-            raise PytolinoException(
-                    f'inventory request failed {host_response}')
+        self._log_request(host_response, params)
 
         try:
             j = host_response.json()
