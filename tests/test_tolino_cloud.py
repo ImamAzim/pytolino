@@ -9,6 +9,7 @@ import unittest
 import logging
 import time
 from pathlib import Path
+import datetime
 
 
 from varboxes import VarBox
@@ -105,8 +106,8 @@ def delete_test():
 def inventory_test():
 
     print('get inventory')
-    client = Client()
-    client.retrieve_token(ACCOUNT_NAME)
+    username, password = get_test_credentials()
+    client = Client(username)
     inventory = client.get_inventory()
     if inventory:
         for item in inventory:
@@ -157,25 +158,18 @@ def add_cover_test():
     client.add_cover(ebook_id, cover_fp)
 
 
-def save_new_token(autologin=True):
-    client = Client()
-    if autologin:
-        username, password = get_test_credentials()
-        client.login(username, password, True)
-        refresh_token = client.refresh_token
-        expires_in = client.refresh_expires_in
-        refresh_expires_in = client.refresh_expires_in
-        hardware_id = client.hardware_id
-    else:
-        print('login on your browser and get the token.')
-        refresh_token = input('refresh token:\n')
-        expires_in = int(input('expires_in:\n'))
-        refresh_expires_in = int(input('refresh_expires_in:\n'))
-        hardware_id = input('hardware id:\n')
-    Client.store_token(
-                ACCOUNT_NAME, refresh_token, expires_in,
-                refresh_expires_in, hardware_id)
-    client.get_new_token(ACCOUNT_NAME)
+def login_test():
+    username, password = get_test_credentials()
+    client = Client(username=username)
+    expiration = client.access_token_expiration_time
+    print('access token expiration time:')
+    print(datetime.datetime.fromtimestamp(expiration))
+    print('login...')
+    client.login(password)
+    client = Client(username=username)
+    expiration = client.access_token_expiration_time
+    print('access token new expiration time:')
+    print(datetime.datetime.fromtimestamp(expiration))
 
 
 def get_test_credentials():
@@ -188,27 +182,13 @@ def get_test_credentials():
     return vb.username, vb.password
 
 
-def login_test():
-    username, password = get_test_credentials()
-    client = Client()
-    try:
-        client.login(username, password, force_new_token=True)
-    except PytolinoException as e:
-        print(e)
-        print('failed to login')
-    else:
-        print('sucess, refresh with login method')
-        client.login(username, password)
-
-
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    # save_new_token()
-    upload_test()
-    add_cover_test()
-    metadata_test()
-    collection_test()
-    inventory_test()
-    delete_test()
-    inventory_test()
-    # login_test()
+    login_test()
+    # upload_test()
+    # add_cover_test()
+    # metadata_test()
+    # collection_test()
+    # inventory_test()
+    # delete_test()
+    # inventory_test()
