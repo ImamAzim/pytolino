@@ -126,14 +126,15 @@ class Client(object):
         vb.access_expiration_time = self._access_expiration_time
         vb.refresh_expiration_time = self._refresh_expiration_time
 
-    def _retrieve_last_token(self, username):
+    def _retrieve_last_token(self):
         """retrieve token that was stored with this username
 
         """
+        username = self._username
         vb = VarBox(app_name=f'{self._server_name}.{username}')
         if not hasattr(vb, 'refresh_token'):
             raise PytolinoException(
-                    'there was no refresh token stored for that name')
+                    'there was no token stored for that name')
         self._refresh_token = vb.refresh_token
         self._access_token = vb.access_token
         self._hardware_id = vb.hardware_id
@@ -246,6 +247,11 @@ class Client(object):
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
         self._server_name = server_name
+
+        try:
+            self._retrieve_last_token()
+        except PytolinoException as e:
+            print(e)
 
     def _get_auth_headers(self):
         headers={
@@ -496,30 +502,25 @@ class Client(object):
         hardware_id = my_dev[DEVICE_ID]
         self._hardware_id = hardware_id
 
-    def login(self, username, password, force_new_token=False):
+    def login(self, password):
         """login to the partner and get access token.
 
         """
-        if not force_new_token:
+        username = self._username
+        logged_in = False
+        try:
+            self.raise_for_access_expiration()
+        except ExpirationError:
             try:
-                self._retrieve_last_token(username)
-                try:
-                    self.raise_for_access_expiration()
-                except ExpirationError:
-                    try:
-                        self.raise_for_refresh_expiration()
-                    except ExpirationError:
-                        logged_in = False
-                    else:
-                        self.get_new_token()
-                        logged_in = True
-                else:
-                    self.get_new_token()
-                    logged_in = True
-            except PytolinoException:
+                self.raise_for_refresh_expiration()
+            except ExpirationError:
                 logged_in = False
+            else:
+                self.get_new_token()
+                logged_in = True
         else:
-            logged_in = False
+            self.get_new_token()
+            logged_in = True
 
         if not logged_in:
             self._get_login_cookies(username, password)
