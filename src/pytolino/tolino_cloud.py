@@ -588,6 +588,7 @@ class Client(object):
                     "path": f"/publications/{book_id}/tags"
                     }]
                 }
+        data = json.dumps(payload)
 
         url = self._sync_data_url
         headers = self._get_auth_headers()
@@ -595,13 +596,11 @@ class Client(object):
         headers[CLIENT_TYPE] = client_type
         host_response = self._session.patch(
                 url,
-                data=json.dumps(payload),
+                data=data,
                 headers=headers,
                 )
+        self._log_request(host_response, data)
 
-        if not host_response.ok:
-            raise PytolinoException(
-                    f'collection add failed {host_response}')
 
     def upload_metadata(self, book_id, **new_metadata):
         """upload some metadata to a specific book on the cloud
