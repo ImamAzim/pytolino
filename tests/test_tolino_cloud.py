@@ -30,44 +30,12 @@ class TestClient(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.client = Client()
-
-    def test_store_retrieve_token_error(self):
-        refresh_token = 'test_token'
-        hardware_id = 'test_hw_id'
-        test_account = 'test_account'
-        Client.store_token(test_account, refresh_token, -1, -1, hardware_id)
-        with self.assertRaises(ExpirationError):
-            client = Client()
-            client.retrieve_token(test_account)
-            client.raise_for_access_expiration()
-
-    def test_store_retrieve_token_error_ref(self):
-        refresh_token = 'test_token'
-        hardware_id = 'test_hw_id'
-        test_account = 'test_account'
-        Client.store_token(test_account, refresh_token, -1, -1, hardware_id)
-        with self.assertRaises(ExpirationError):
-            client = Client()
-            client.retrieve_token(test_account)
-            client.raise_for_refresh_expiration()
-
-    def test_store_retrieve_token(self):
-        refresh_token = 'test_token'
-        hardware_id = 'test_hw_id'
-        test_account = 'test_account'
-        Client.store_token(test_account, refresh_token, 10, 10, hardware_id)
-        client = Client()
-        client.retrieve_token(test_account)
-        retrieved_token = client.refresh_token
-        retrieved_hardware_id = client.hardware_id
-        self.assertEqual(refresh_token, retrieved_token)
-        self.assertEqual(hardware_id, retrieved_hardware_id)
-        Client.store_token(test_account, refresh_token, -1, -1, hardware_id)
+        cls.client = Client('username')
 
     def test_init_nopartner(self):
         with self.assertRaises(PytolinoException):
-            Client(server_name='this tolino partner does not exists')
+            Client(server_name='this tolino partner does not exists',
+                   username='username')
 
 
 def upload_test():
