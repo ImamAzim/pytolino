@@ -509,6 +509,7 @@ class Client(object):
 
         if get_a_new_token:
             try:
+                logging.info('ask for new access token...')
                 self._renew_access_token()
             except PytolinoException as e:
                 logging.warning('previous access token could not be renewed')
