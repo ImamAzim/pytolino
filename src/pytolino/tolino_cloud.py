@@ -614,11 +614,7 @@ class Client(object):
         host_response = self._session.get(
                 url,
                 params=params,
-                headers={
-                    't_auth_token': self._access_token,
-                    'hardware_id': self.hardware_id,
-                    'reseller_id': self._server_settings['partner_id'],
-                  }
+                headers=headers,
                 )
         self._log_request(host_response, params)
 
