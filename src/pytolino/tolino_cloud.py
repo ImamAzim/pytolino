@@ -115,10 +115,11 @@ class Client(object):
         vb.timestamp = time.time()
         vb.access_token = access_token
 
-    def _store_current_token(self, username: str):
+    def _store_current_token(self):
         """store the token with attribute of self
 
         """
+        username = self._username
         vb = VarBox(app_name=f'{self._server_name}.{username}')
         vb.refresh_token = self._refresh_token
         vb.access_token = self._access_token
@@ -527,7 +528,7 @@ class Client(object):
             auth_code = self._get_auth_code()
             self._get_token(auth_code)
             self._get_hardware_id()
-        self._store_current_token(username)
+        self._store_current_token()
 
     def logout(self):
         """logout from tolino partner host
