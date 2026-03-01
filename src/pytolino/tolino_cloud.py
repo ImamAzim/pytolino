@@ -224,6 +224,7 @@ class Client(object):
         self._upload_url = self._server_settings['upload_url']
         self._delete_url = self._server_settings['delete_url']
         self._cover_url = self._server_settings['cover_url']
+        self._meta_url = self._server_settings['meta_url']
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -607,8 +608,9 @@ class Client(object):
 
         """
 
-        url = self._server_settings['meta_url']
+        url = self._meta_url
         params = {DELIVERABLE_ID: book_id}
+        headers = self._get_auth_headers()
         host_response = self._session.get(
                 url,
                 params=params,
