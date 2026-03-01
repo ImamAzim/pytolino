@@ -515,20 +515,26 @@ class Client(object):
             try:
                 self.raise_for_refresh_expiration()
             except ExpirationError:
-                logged_in = False
+                get_a_new_token = False
             else:
-                self.get_new_token()
-                logged_in = True
+                get_a_new_token = True
         else:
-            self.get_new_token()
-            logged_in = True
+            get_a_new_token = True
+
+        if get_a_new_token:
+            try:
+                self.get_new_token()
+            except PytolinoException as e:
+                logging.warning('previous access token could not be renewed')
+            else:
+                logged_in = True
 
         if not logged_in:
             self._get_login_cookies(username, password)
             auth_code = self._get_auth_code()
             self._get_token(auth_code)
             self._get_hardware_id()
-        self._store_current_token()
+            self._store_current_token()
 
     def logout(self):
         """logout from tolino partner host
