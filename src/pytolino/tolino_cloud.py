@@ -22,6 +22,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 from pytolino import server_settings_keys
+from pytolino.requests_keys import *
 
 
 class PytolinoException(Exception):
@@ -49,26 +50,6 @@ devices_url = common_settings['devices_url']
 devices_list_headers = common_settings['headers']['devices_list']
 token_headers = common_settings['headers']['token']
 client_type = common_settings['client_type']
-
-USERAGENT = 'User-Agent'
-ACCESS_TOKEN = 'access_token'
-REFRESH_TOKEN = 'refresh_token'
-EXPIRES_IN = 'expires_in'
-REFRESH_EXPIRES_IN = 'refresh_expires_in'
-AUTH_TOKEN = 'auth_token'
-RESELLER_ID = 'reseller_id'
-DEVICE_LIST_REQUEST = 'deviceListRequest'
-ACCOUNTS = 'accounts'
-T_AUTH_TOKEN = 't_auth_token'
-DEVICE_LIST_RESPONSE = 'deviceListResponse'
-DEVICES = 'devices'
-DEVICE_LAST_USAGE = 'deviceLastUsage'
-DEVICE_ID = 'deviceId'
-HARDWARE_ID = 'hardware_id'
-DELIVERABLE_ID = 'deliverableId'
-UPLOAD_METADATA = 'uploadMetaData'
-CONTENT_TYPE = 'content-type'
-CLIENT_TYPE = 'client_type'
 
 
 def main():
