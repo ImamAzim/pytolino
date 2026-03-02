@@ -145,6 +145,16 @@ def login_test():
     print('access token new expiration time:')
     print(datetime.datetime.fromtimestamp(expiration))
 
+def import_login_test():
+    username, password = get_test_credentials()
+    client = Client(username=username)
+    print('please login manually and use inspector tool to find refresh token'
+          ' in a token request')
+    refresh_token = input('refresh login: ')
+    print('find the hardware id in the request header of a patch request for example')
+    hardware_id = input('hardware id: ')
+    client.import_token(refresh_token, hardware_id)
+
 
 def get_test_credentials():
     vb = VarBox('pytolino', 'test_credentials')
@@ -158,11 +168,12 @@ def get_test_credentials():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    login_test()
-    upload_test()
-    add_cover_test()
-    metadata_test()
-    collection_test()
-    inventory_test()
-    delete_test()
-    inventory_test()
+    # login_test()
+    # upload_test()
+    # add_cover_test()
+    # metadata_test()
+    # collection_test()
+    # inventory_test()
+    # delete_test()
+    # inventory_test()
+    import_login_test()
