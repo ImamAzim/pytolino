@@ -488,7 +488,8 @@ class Client(object):
             self._get_token(auth_code)
             self._get_hardware_id()
             self._store_current_token()
-        else:
+            logged_in = True
+        if not logged_in:
             raise PytolinoException('could not login')
 
     def logout(self):
