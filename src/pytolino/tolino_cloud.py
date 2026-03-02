@@ -629,7 +629,7 @@ class Client(object):
         url = self._upload_url
         headers = self._get_auth_headers()
         with open(file_path, 'rb') as ebook_file:
-            files = [('file', (name, open(file_path, 'rb'), mime))]
+            files = [('file', (name, ebook_file, mime))]
             host_response = self._session.post(
                     url,
                     files=files,
@@ -695,7 +695,7 @@ class Client(object):
         data = {DELIVERABLE_ID: book_id}
         headers = self._get_auth_headers()
         with open(filepath, 'rb') as cover_file:
-            files=[('file', (FILENAME, cover_file, mime))]
+            files = [('file', (FILENAME, cover_file, mime))]
             host_response = self._session.post(
                     url,
                     files=files,
