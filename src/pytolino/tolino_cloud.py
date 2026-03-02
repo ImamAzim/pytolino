@@ -228,6 +228,16 @@ class Client(object):
         except PytolinoException as e:
             print(e)
 
+    def import_token(self, refresh_token: str, hardware_id: str):
+        """add manually a refresh token to GUI login
+
+        :refresh_token: obtained from tolino(?) or during a manual
+        login and inspector tool
+        :hardware_id:
+
+        """
+        pass
+
     def _get_auth_headers(self):
         headers={
             T_AUTH_TOKEN: self.access_token,
