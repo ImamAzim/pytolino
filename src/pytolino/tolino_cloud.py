@@ -259,21 +259,22 @@ class Client(object):
         """
 
         headers = token_headers
-        payload = dict(
+        data = dict(
                 client_id=client_id,
                 grant_type=REFRESH_TOKEN,
                 refresh_token=self.refresh_token,
                 scope=scope,
                 )
+        url = self._token_url
         host_response = self._session_cffi.post(
-                self._server_settings['token_url'],
-                data=payload,
+                url,
+                data=data,
                 verify=True,
                 allow_redirects=True,
                 headers=headers,
                 impersonate=self._IMPERSONATE,
                 )
-        self._log_request(host_response, data=payload)
+        self._log_request(host_response, data)
         j = host_response.json()
         self._access_token = j['access_token']
         self._refresh_token = j['refresh_token']
