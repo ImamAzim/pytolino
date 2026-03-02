@@ -15,7 +15,7 @@ import datetime
 from varboxes import VarBox
 
 
-from pytolino.tolino_cloud import Client, PytolinoException, ExpirationError
+from pytolino.tolino_cloud import Client, PytolinoException
 
 
 TEST_EPUB = 'basic-v3plus2.epub'
@@ -149,13 +149,15 @@ def login_test():
         print('access token new expiration time:')
         print(datetime.datetime.fromtimestamp(expiration))
 
+
 def import_login_test():
     username, password = get_test_credentials()
     client = Client(username=username)
     print('please login manually and use inspector tool to find refresh token'
           ' in a token request')
     refresh_token = input('refresh login: ')
-    print('find the hardware id in the request header of a patch request for example')
+    print('find the hardware id in the request header '
+          'of a patch request for example')
     hardware_id = input('hardware id: ')
     client.import_token(refresh_token, hardware_id)
 
