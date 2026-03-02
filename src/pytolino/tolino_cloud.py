@@ -275,14 +275,8 @@ class Client(object):
                 impersonate=self._IMPERSONATE,
                 )
         self._log_request(host_response, data)
-        j = host_response.json()
-        self._access_token = j['access_token']
-        self._refresh_token = j['refresh_token']
-        self._expires_in = int(j['expires_in'])
-        self._refresh_expires_in = int(j['refresh_expires_in'])
-        now = time.time()
-        self._access_expiration_time = now + self._expires_in
-        self._refresh_expiration_time = now + self._refresh_expires_in
+
+        self._read_and_store_token_response(host_response)
         self._store_current_token()
         logging.info('got a new access token!')
         logging.info(
@@ -402,6 +396,9 @@ class Client(object):
                 impersonate=self._IMPERSONATE,
                 )
         self._log_request(host_response, data)
+        self._read_and_store_token_response(host_response)
+
+    def _read_and_store_token_response(self, host_response):
         data_rsp = host_response.json()
         self._access_token = data_rsp[ACCESS_TOKEN]
         self._refresh_token = data_rsp[REFRESH_TOKEN]
