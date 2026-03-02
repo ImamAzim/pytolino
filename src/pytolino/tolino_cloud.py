@@ -15,8 +15,6 @@ import curl_cffi
 from varboxes import VarBox
 from seleniumbase import Driver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.alert import Alert
-from selenium.webdriver.common.options import BaseOptions
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -45,7 +43,7 @@ client_id = common_settings['client_id']
 scope = common_settings['scope']
 redirect_uri = common_settings['redirect_uri']
 additional_request_parameters = common_settings[
-'additional_request_parameters']
+    'additional_request_parameters']
 devices_url = common_settings['devices_url']
 devices_list_headers = common_settings['headers']['devices_list']
 token_headers = common_settings['headers']['token']
@@ -242,7 +240,7 @@ class Client(object):
                           ' this refresh token')
 
     def _get_auth_headers(self):
-        headers={
+        headers = {
             T_AUTH_TOKEN: self.access_token,
             HARDWARE_ID: self.hardware_id,
             RESELLER_ID: self._partner_id,
@@ -364,7 +362,7 @@ class Client(object):
             auth_code = location_parameters[CODE][0]
         return auth_code
 
-    def _add_user_agent(self, headers: dict)->dict:
+    def _add_user_agent(self, headers: dict) -> dict:
         if self._user_agent:
             user_agent = self._user_agent
             headers[USERAGENT] = user_agent
@@ -437,8 +435,8 @@ class Client(object):
                 )
         self._log_request(host_response, data)
         j = host_response.json()
-        devices =  j[DEVICE_LIST_RESPONSE][DEVICES]
-        devices.sort(key=lambda el:el[DEVICE_LAST_USAGE])
+        devices = j[DEVICE_LIST_RESPONSE][DEVICES]
+        devices.sort(key=lambda el: el[DEVICE_LAST_USAGE])
         my_dev = devices[-1]
         hardware_id = my_dev[DEVICE_ID]
         self._hardware_id = hardware_id
@@ -466,6 +464,7 @@ class Client(object):
                 logging.info('ask for new access token...')
                 self._renew_access_token()
             except PytolinoException as e:
+                logging.warning(e)
                 logging.warning('previous access token could not be renewed')
             else:
                 logged_in = True
@@ -500,7 +499,7 @@ class Client(object):
 
         url = self._inventory_url
         headers = self._get_auth_headers()
-        params={'strip': 'true'}
+        params = {'strip': 'true'}
         host_response = self._session.get(
                 url,
                 params=params,
@@ -560,7 +559,6 @@ class Client(object):
                 headers=headers,
                 )
         self._log_request(host_response, data)
-
 
     def upload_metadata(self, book_id, **new_metadata):
         """upload some metadata to a specific book on the cloud
