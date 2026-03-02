@@ -236,7 +236,14 @@ class Client(object):
         :hardware_id:
 
         """
-        pass
+        self._refresh_token = refresh_token
+        self._hardware_id = hardware_id
+        try:
+            self._renew_access_token()
+        except PytolinoException as e:
+            logging.error(e)
+            logging.error('could not get a new access token with'
+                          ' this refresh token')
 
     def _get_auth_headers(self):
         headers={
