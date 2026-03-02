@@ -125,10 +125,6 @@ class Client(object):
         """verify if refresh token is expired"""
         now = time.time()
         if self._refresh_expiration_time < now:
-            # msg = f'refresh expiration is at {self._refresh_expiration_time}'
-            # logging.error(msg)
-            # msg = f'now is {now}'
-            # logging.error(msg)
             raise ExpirationError('refresh token is expired')
 
     @property
