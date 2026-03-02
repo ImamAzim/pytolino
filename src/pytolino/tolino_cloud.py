@@ -399,14 +399,24 @@ class Client(object):
         self._read_and_store_token_response(host_response)
 
     def _read_and_store_token_response(self, host_response):
-        data_rsp = host_response.json()
-        self._access_token = data_rsp[ACCESS_TOKEN]
-        self._refresh_token = data_rsp[REFRESH_TOKEN]
-        self._expires_in = data_rsp[EXPIRES_IN]
-        self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
-        now = time.time()
-        self._access_expiration_time = now + self._expires_in
-        self._refresh_expiration_time = now + self._refresh_expires_in
+        try:
+            data_rsp = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException('could not read token response'
+                                    ' because of json error')
+        else:
+            try:
+                self._access_token = data_rsp[ACCESS_TOKEN]
+                self._refresh_token = data_rsp[REFRESH_TOKEN]
+                self._expires_in = data_rsp[EXPIRES_IN]
+                self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
+            except KeyError:
+                raise PytolinoException('could not read token response'
+                                        ' because of key error')
+            else:
+                now = time.time()
+                self._access_expiration_time = now + self._expires_in
+                self._refresh_expiration_time = now + self._refresh_expires_in
 
     def _get_hardware_id(self):
         url = devices_url
