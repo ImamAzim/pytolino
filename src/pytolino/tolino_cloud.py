@@ -382,8 +382,6 @@ class Client(object):
 
     def _get_token(self, auth_code: str):
 
-        AUTHORIZATION_CODE = 'authorization_code'
-
         data = dict(
                 client_id=client_id,
                 grant_type=AUTHORIZATION_CODE,
