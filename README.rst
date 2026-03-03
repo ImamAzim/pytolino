@@ -24,10 +24,12 @@ First, one need to login.
 if chromium browser is installed and there is a monitor, it can be done automaticaly:
 
 .. code-block:: python
+
     from pytolino.tolino_cloud import Client
     partner = 'orellfuessli'
     client = Client(partner=partner,username='USERNAME)
     client.login('PASSWORD')
+
 if this is the first login on the device, it will use selenium and store an access token on the device.
 
 On a headless device, one can instead import a refresh token:
@@ -36,6 +38,7 @@ First, login manually with another device, and use an inspector tool in the brow
 You can then import the token:
 
 .. code-block:: python
+
     client = Client(username='USERNAME')
     print('please login manually and use inspector tool to find refresh token'
           ' in a token request')
@@ -50,6 +53,7 @@ You can then import the token:
 After this, the login will method will only refresh the access token for on hour, and you can work with the libraty:
 
 .. code-block:: python
+
     try:
         client.login(password)
     except PytolinoException as e:
