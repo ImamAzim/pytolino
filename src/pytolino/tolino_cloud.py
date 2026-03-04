@@ -282,11 +282,26 @@ class Client(object):
 
     def _get_login_cookies_with_SB(self, password):
 
-        reconnect_time = 5
+        timeout = 2
 
         with SB(uc=True) as sb:
+            driver = sb.driver
+
+            driver.implicitly_wait(timeout)
             url = self._login_url
-            sb.uc_open_with_reconnect(url, reconnect_time)
+            driver.get(url)
+
+            # deny cookies
+            shadow_host_id = self._shadow_host_id
+            shadow_host = driver.find_element(By.ID, shadow_host_id)
+            shadow_root = shadow_host.shadow_root
+            css = self._cookie_deny_css
+            wait = WebDriverWait(shadow_root, timeout)
+            deny_button = wait.until(
+                    expected_conditions.element_to_be_clickable(
+                        (By.CSS_SELECTOR, css)))
+            deny_button.click()
+
         raise PytolinoException('method under writing...')
 
     def _get_login_cookies(self, username, password):
