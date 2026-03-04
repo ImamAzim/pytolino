@@ -280,13 +280,12 @@ class Client(object):
         logging.info(
                 f'refresh will expire in {self._refresh_expires_in}s')
 
-    def _get_login_cookies_with_SB(self, password):
+    def _get_login_cookies(self, username, password):
 
         timeout = 2
 
         with SB(uc=True) as sb:
             driver = sb.driver
-
             driver.implicitly_wait(timeout)
             url = self._login_url
             driver.get(url)
@@ -302,53 +301,32 @@ class Client(object):
                         (By.CSS_SELECTOR, css)))
             deny_button.click()
 
-        raise PytolinoException('method under writing...')
+            # fill credentials and submit
+            username_field_id = self._username_field_id
+            username_field = driver.find_element(
+                    By.ID, username_field_id,
+                    )
+            password_field_id = self._password_field_id
+            password_field = driver.find_element(
+                    By.ID, password_field_id,
+                    )
+            css = self._submit_css
+            submit_button = driver.find_element(
+                    By.CSS_SELECTOR, css,
+                    )
+            username_field.send_keys(username)
+            password_field.send_keys(password)
+            wait = WebDriverWait(driver, timeout=2)
+            wait.until(
+                    expected_conditions.element_to_be_clickable(
+                        submit_button))
+            submit_button.click()
 
-    def _get_login_cookies(self, username, password):
+            # get cookies
+            cookies = driver.get_cookies()
+            user_agent = driver.get_user_agent()
+            self._user_agent = user_agent
 
-        timeout = 2
-        driver = Driver(uc=True, headless=False)
-        driver.implicitly_wait(timeout)
-        url = self._login_url
-        driver.get(url)
-
-        # deny cookies
-        shadow_host_id = self._shadow_host_id
-        shadow_host = driver.find_element(By.ID, shadow_host_id)
-        shadow_root = shadow_host.shadow_root
-        css = self._cookie_deny_css
-        wait = WebDriverWait(shadow_root, timeout)
-        deny_button = wait.until(
-                expected_conditions.element_to_be_clickable(
-                    (By.CSS_SELECTOR, css)))
-        deny_button.click()
-
-        # fill credentials and submit
-        username_field_id = self._username_field_id
-        username_field = driver.find_element(
-                By.ID, username_field_id,
-                )
-        password_field_id = self._password_field_id
-        password_field = driver.find_element(
-                By.ID, password_field_id,
-                )
-        css = self._submit_css
-        submit_button = driver.find_element(
-                By.CSS_SELECTOR, css,
-                )
-        username_field.send_keys(username)
-        password_field.send_keys(password)
-        wait = WebDriverWait(driver, timeout=2)
-        wait.until(
-                expected_conditions.element_to_be_clickable(
-                    submit_button))
-        submit_button.click()
-
-        # get cookies
-        cookies = driver.get_cookies()
-        user_agent = driver.get_user_agent()
-        self._user_agent = user_agent
-        driver.quit()
         for cookie in cookies:
             self._session_cffi.cookies.set(cookie['name'], cookie['value'])
             self._session.cookies.set(cookie['name'], cookie['value'])
@@ -496,7 +474,7 @@ class Client(object):
                 logged_in = True
 
         if not logged_in and allow_GUI_autologin:
-            self._get_login_cookies_with_SB(password)
+            self._get_login_cookies(username, password)
             auth_code = self._get_auth_code()
             self._get_token(auth_code)
             self._get_hardware_id()
