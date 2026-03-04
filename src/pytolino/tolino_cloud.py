@@ -280,7 +280,7 @@ class Client(object):
         logging.info(
                 f'refresh will expire in {self._refresh_expires_in}s')
 
-    def _get_login_cookies(self, username, password):
+    def _get_login_cookies(self, password):
 
         timeout = 2
 
@@ -314,7 +314,7 @@ class Client(object):
             submit_button = driver.find_element(
                     By.CSS_SELECTOR, css,
                     )
-            username_field.send_keys(username)
+            username_field.send_keys(self._username)
             password_field.send_keys(password)
             wait = WebDriverWait(driver, timeout=2)
             wait.until(
@@ -474,7 +474,7 @@ class Client(object):
                 logged_in = True
 
         if not logged_in and allow_GUI_autologin:
-            self._get_login_cookies(username, password)
+            self._get_login_cookies(password)
             auth_code = self._get_auth_code()
             self._get_token(auth_code)
             self._get_hardware_id()
