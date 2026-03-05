@@ -1,7 +1,7 @@
 UPDATE
 ===========
 
-because of heavy anti-bot protection, it is no longer possible to make a fully automatic login on a headless device. If one is not on a headless device, it will login using seleniubbase, but you might have to install chromium browser. On a headless device, one can import manually a refresh token. It can be used to get a new access token, (for example regulary witha cronjob), but it will eventually expire after 10 hours.
+because of heavy anti-bot protection, it is more difficult to make a fully automatic login on a headless device. If one is not on a headless device, it will login using seleniubbase, but you might have to install chromium browser. On a headless device, one needs to install xvfb to simulate a non-headless device. Alternatively, on can import manually a refresh token. It can be used to get a new access token, (for example regulary witha cronjob), but it will eventually expire after 10 hours.
 
 
 pytolino
@@ -32,7 +32,9 @@ if chromium browser is installed and there is a monitor, it can be done automati
 
 if this is the first login on the device, it will use selenium and store an access token on the device.
 
-On a headless device, one can instead import a refresh token:
+On a headless device, this will work only if xvfb is installed.
+
+Alternatively, one can instead import a refresh token:
 First, login manually with another device, and use an inspector tool in the browser to inspect the requests. After connecting to the digital libray of tolino, there is POST request (named token). From the request response, copy the value of the refresh token. Then, in a PATCH request, in the request header, find the device_id number.
 
 You can then import the token:
