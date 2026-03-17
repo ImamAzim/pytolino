@@ -282,7 +282,7 @@ class Client(object):
 
     def _get_login_cookies(self, password):
 
-        timeout = 2
+        timeout = 5
 
         with SB(uc=True) as sb:
             driver = sb.driver
@@ -316,7 +316,7 @@ class Client(object):
                     )
             username_field.send_keys(self._username)
             password_field.send_keys(password)
-            wait = WebDriverWait(driver, timeout=2)
+            wait = WebDriverWait(driver, timeout=timeout)
             wait.until(
                     expected_conditions.element_to_be_clickable(
                         submit_button))
