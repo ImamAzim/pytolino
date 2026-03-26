@@ -17,6 +17,7 @@ from seleniumbase import Driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 from seleniumbase import SB
 
 
@@ -284,52 +285,56 @@ class Client(object):
 
         timeout = 2
 
-        with SB(uc=True) as sb:
-            driver = sb.driver
-            driver.implicitly_wait(timeout)
-            url = self._login_url
-            driver.get(url)
+        try:
 
-            # deny cookies
-            shadow_host_id = self._shadow_host_id
-            shadow_host = driver.find_element(By.ID, shadow_host_id)
-            shadow_root = shadow_host.shadow_root
-            css = self._cookie_deny_css
-            wait = WebDriverWait(shadow_root, timeout)
-            deny_button = wait.until(
-                    expected_conditions.element_to_be_clickable(
-                        (By.CSS_SELECTOR, css)))
-            deny_button.click()
+            with SB(uc=True) as sb:
+                driver = sb.driver
+                driver.implicitly_wait(timeout)
+                url = self._login_url
+                driver.get(url)
 
-            # fill credentials and submit
-            username_field_id = self._username_field_id
-            username_field = driver.find_element(
-                    By.ID, username_field_id,
-                    )
-            password_field_id = self._password_field_id
-            password_field = driver.find_element(
-                    By.ID, password_field_id,
-                    )
-            css = self._submit_css
-            submit_button = driver.find_element(
-                    By.CSS_SELECTOR, css,
-                    )
-            username_field.send_keys(self._username)
-            password_field.send_keys(password)
-            wait = WebDriverWait(driver, timeout=2)
-            wait.until(
-                    expected_conditions.element_to_be_clickable(
-                        submit_button))
-            submit_button.click()
+                # deny cookies
+                shadow_host_id = self._shadow_host_id
+                shadow_host = driver.find_element(By.ID, shadow_host_id)
+                shadow_root = shadow_host.shadow_root
+                css = self._cookie_deny_css
+                wait = WebDriverWait(shadow_root, timeout)
+                deny_button = wait.until(
+                        expected_conditions.element_to_be_clickable(
+                            (By.CSS_SELECTOR, css)))
+                deny_button.click()
 
-            # get cookies
-            cookies = driver.get_cookies()
-            user_agent = driver.get_user_agent()
-            self._user_agent = user_agent
+                # fill credentials and submit
+                username_field_id = self._username_field_id
+                username_field = driver.find_element(
+                        By.ID, username_field_id,
+                        )
+                password_field_id = self._password_field_id
+                password_field = driver.find_element(
+                        By.ID, password_field_id,
+                        )
+                css = self._submit_css
+                submit_button = driver.find_element(
+                        By.CSS_SELECTOR, css,
+                        )
+                username_field.send_keys(self._username)
+                password_field.send_keys(password)
+                wait = WebDriverWait(driver, timeout=2)
+                wait.until(
+                        expected_conditions.element_to_be_clickable(
+                            submit_button))
+                submit_button.click()
 
-        for cookie in cookies:
-            self._session_cffi.cookies.set(cookie['name'], cookie['value'])
-            self._session.cookies.set(cookie['name'], cookie['value'])
+                # get cookies
+                cookies = driver.get_cookies()
+                user_agent = driver.get_user_agent()
+                self._user_agent = user_agent
+        except TimeoutException:
+            raise PytolinoException('timeout error during login')
+        else:
+            for cookie in cookies:
+                self._session_cffi.cookies.set(cookie['name'], cookie['value'])
+                self._session.cookies.set(cookie['name'], cookie['value'])
 
     def _get_auth_code(self):
 
