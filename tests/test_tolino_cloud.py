@@ -61,6 +61,16 @@ def collection_test():
     client.login(password)
     client.add_to_collection(ebook_id, 'test_coll')
 
+def rm_collection_test():
+    print('rm test book from test_coll collection...')
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
+
+    username, password = get_test_credentials()
+    client = Client(username)
+    client.login(password)
+    client.rm_book_from_collection(ebook_id, 'test_coll')
+
 
 def delete_test():
 
@@ -174,11 +184,12 @@ def get_test_credentials():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    login_test()
+    # login_test()
     # upload_test()
     # add_cover_test()
     # metadata_test()
     # collection_test()
+    rm_collection_test()
     # inventory_test()
     # delete_test()
     # inventory_test()
