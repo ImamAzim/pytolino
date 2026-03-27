@@ -68,10 +68,14 @@ def collection_test():
         except PytolinoException as e:
             print(e)
         else:
-            patches = rsp['patches']
-            for patch in patches:
-                if patch['value']['name'] == 'test_coll':
-                    print(patch)
+            data = client._sync_request()
+            patch = client._get_patch_from_last_added_collection_to_book(
+                    data,
+                    ebook_id,
+                    'test_coll',
+                    )
+            print(patch)
+            print('done')
 
 def sync_test():
     print('sync test to get revision')
@@ -230,9 +234,9 @@ if __name__ == '__main__':
     # upload_test()
     # add_cover_test()
     # metadata_test()
-    sync_test()
+    # sync_test()
     # collection_test()
-    # rm_collection_test()
+    rm_collection_test()
     # inventory_test()
     # delete_test()
     # inventory_test()

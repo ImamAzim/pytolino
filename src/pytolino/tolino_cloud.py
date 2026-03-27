@@ -642,12 +642,21 @@ class Client(object):
         :collection_name: str name
 
         """
+        data = self._sync_request()
+        patch = self._get_patch_from_last_added_collection_to_book(
+                data,
+                book_id,
+                collection_name,
+                )
+        if patch is None:
+            msg = ('could not get last patch from server.'
+                   'the book is probably not part from this collection'
+                   'any more')
+            raise PytolinoException(msg)
 
-        rsp = self.add_to_collection(book_id, collection_name)
-        return
-
-
-        revision_value = rsp['patches']['value']['revision']
+        revision_value = patch['value']['revision']
+        revision = data['revision']
+        path = patch['path']
 
         payload = {
                 "revision": revision,
@@ -659,7 +668,8 @@ class Client(object):
                         "category": "collection",
                         'revision': revision_value,
                     },
-                    "path": f"/publications/{book_id}/tags"
+                    'path': path,
+                    # "path": f"/publications/{book_id}/tags",
                     }]
                 }
         data = json.dumps(payload)
