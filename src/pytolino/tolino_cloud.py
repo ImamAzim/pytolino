@@ -579,6 +579,13 @@ class Client(object):
                 headers=headers,
                 )
         self._log_request(host_response, data)
+        try:
+            json_rsp = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException(
+                    'could not get info from request. answer not json')
+        else:
+            return json_rsp
 
     def _sync_request(self):
         payload = {
@@ -609,6 +616,11 @@ class Client(object):
             else:
                 return revision
 
+    def _get_last_added_collection_to_book(
+            self, data, book_id, collection_name):
+        pass
+
+
     def rm_book_from_collection(self, book_id, collection_name):
         """remove a book from a collection (book is not deleted)
 
@@ -616,7 +628,12 @@ class Client(object):
         :collection_name: str name
 
         """
-        revision = self._sync_request()
+
+        rsp = self.add_to_collection(book_id, collection_name)
+        return
+
+
+        revision_value = rsp['patches']['value']['revision']
 
         payload = {
                 "revision": revision,
@@ -626,7 +643,7 @@ class Client(object):
                         "modified": round(time.time() * 1000),
                         "name": collection_name,
                         "category": "collection",
-                        'revision': revision,
+                        'revision': revision_value,
                     },
                     "path": f"/publications/{book_id}/tags"
                     }]

@@ -63,7 +63,15 @@ def collection_test():
     except PytolinoException as e:
         print(e)
     else:
-        client.add_to_collection(ebook_id, 'test_coll')
+        try:
+            rsp = client.add_to_collection(ebook_id, 'test_coll')
+        except PytolinoException as e:
+            print(e)
+        else:
+            patches = rsp['patches']
+            for patch in patches:
+                if patch['value']['name'] == 'test_coll':
+                    print(patch)
 
 def sync_test():
     print('sync test to get revision')
@@ -97,9 +105,10 @@ def rm_collection_test():
     else:
         try:
             client.rm_book_from_collection(ebook_id, 'test_coll')
-            revision = client._sync_request()
         except PytolinoException as e:
             print(e)
+        else:
+            print('done')
 
 
 def delete_test():
@@ -219,8 +228,8 @@ if __name__ == '__main__':
     # add_cover_test()
     # metadata_test()
     # sync_test()
-    # collection_test()
-    rm_collection_test()
+    collection_test()
+    # rm_collection_test()
     # inventory_test()
     # delete_test()
     # inventory_test()
