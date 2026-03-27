@@ -75,6 +75,8 @@ def collection_test():
 
 def sync_test():
     print('sync test to get revision')
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
     client = Client(username)
@@ -84,11 +86,12 @@ def sync_test():
         print(e)
     else:
         try:
-            revision = client._sync_request()
+            data = client._sync_request()
         except PytolinoException as e:
             print(e)
         else:
-            print(revision)
+            patch = client._get_patch_from_last_added_collection_to_book(data, ebook_id, 'test_coll')
+            print(patch)
 
 def rm_collection_test():
     print('rm test book from test_coll collection...')
@@ -227,8 +230,8 @@ if __name__ == '__main__':
     # upload_test()
     # add_cover_test()
     # metadata_test()
-    # sync_test()
-    collection_test()
+    sync_test()
+    # collection_test()
     # rm_collection_test()
     # inventory_test()
     # delete_test()

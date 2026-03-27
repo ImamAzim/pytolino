@@ -609,16 +609,30 @@ class Client(object):
         except requests.JSONDecodeError:
             raise PytolinoException('sync request failed. answer not json')
         else:
-            try:
-                revision = json_rsp['revision']
-            except KeyError:
-                raise PytolinoException('no revision key in rsp')
-            else:
-                return revision
+            return json_rsp
+            # try:
+                # print(json_rsp)
+                # revision = json_rsp['revision']
+            # except KeyError:
+                # raise PytolinoException('no revision key in rsp')
+            # else:
+                # return revision
 
-    def _get_last_added_collection_to_book(
-            self, data, book_id, collection_name):
-        pass
+    def _get_patch_from_last_added_collection_to_book(
+            self, data, ebook_id, collection_name):
+        patches = data['patches']
+        book_patches = [
+                patch for patch in patches if ebook_id in patch['path']]
+        if not book_patches:
+            return None
+        book_collection_patches = [
+                patch for patch in patches if patch['value']['category'] == 'collection'
+                ]
+        if not book_collection_patches:
+            return None
+        book_collection_patches.sort(key=lambda el: el['value']['modified'])
+        last_patch = book_collection_patches[-1]
+        return last_patch
 
 
     def rm_book_from_collection(self, book_id, collection_name):
