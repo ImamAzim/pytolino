@@ -13,7 +13,6 @@ import warnings
 import requests
 import curl_cffi
 from varboxes import VarBox
-from seleniumbase import Driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -53,12 +52,7 @@ client_type = common_settings['client_type']
 
 
 def main():
-    test()
-    # print(additional_request_parameters)
-    # for partner in PARTNERS:
-        # print(partner)
-        # for key, val in servers_settings[partner].items():
-            # print(key, val)
+    pass
 
 
 class Client(object):
@@ -86,17 +80,6 @@ class Client(object):
         log('response header:')
         log(rsp.headers)
         log('===================')
-
-        # try:
-            # rep = rsp.json()
-        # except (requests.JSONDecodeError, json.JSONDecodeError):
-            # log('response not a json')
-        # else:
-            # try:
-                # revision = rep['revision']
-                # logging.info(revision)
-            # except KeyError:
-                # log('no revision no in response')
 
         if not rsp.ok:
             raise PytolinoException('host response not ok')
@@ -465,7 +448,6 @@ class Client(object):
         """login to the partner and get access token.
 
         """
-        username = self._username
         logged_in = False
         try:
             self.raise_for_access_expiration()
@@ -610,13 +592,6 @@ class Client(object):
             raise PytolinoException('sync request failed. answer not json')
         else:
             return json_rsp
-            # try:
-                # print(json_rsp)
-                # revision = json_rsp['revision']
-            # except KeyError:
-                # raise PytolinoException('no revision key in rsp')
-            # else:
-                # return revision
 
     def _get_patch_from_last_added_collection_to_book(
             self, data, ebook_id, collection_name):
@@ -626,14 +601,14 @@ class Client(object):
         if not book_patches:
             return None
         book_collection_patches = [
-                patch for patch in patches if patch['value']['category'] == 'collection'
+                patch for patch in patches if patch[
+                    'value']['category'] == 'collection'
                 ]
         if not book_collection_patches:
             return None
         book_collection_patches.sort(key=lambda el: el['value']['modified'])
         last_patch = book_collection_patches[-1]
         return last_patch
-
 
     def rm_book_from_collection(self, book_id, collection_name):
         """remove a book from a collection (book is not deleted)
@@ -828,8 +803,6 @@ class Client(object):
                     headers=headers,
                     )
         self._log_request(host_response, data)
-
-
 
 
 if __name__ == '__main__':
