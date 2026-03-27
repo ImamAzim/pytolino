@@ -644,7 +644,6 @@ class Client(object):
                         'revision': revision_value,
                     },
                     'path': path,
-                    # "path": f"/publications/{book_id}/tags",
                     }]
                 }
         data = json.dumps(payload)
