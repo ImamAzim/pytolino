@@ -58,8 +58,29 @@ def collection_test():
 
     username, password = get_test_credentials()
     client = Client(username)
-    client.login(password)
-    client.add_to_collection(ebook_id, 'test_coll')
+    try:
+        client.login(password)
+    except PytolinoException as e:
+        print(e)
+    else:
+        client.add_to_collection(ebook_id, 'test_coll')
+
+def sync_test():
+    print('sync test to get revision')
+
+    username, password = get_test_credentials()
+    client = Client(username)
+    try:
+        client.login(password)
+    except PytolinoException as e:
+        print(e)
+    else:
+        try:
+            revision = client._sync_request()
+        except PytolinoException as e:
+            print(e)
+        else:
+            print(revision)
 
 def rm_collection_test():
     print('rm test book from test_coll collection...')
@@ -68,8 +89,17 @@ def rm_collection_test():
 
     username, password = get_test_credentials()
     client = Client(username)
-    client.login(password)
-    client.rm_book_from_collection(ebook_id, 'test_coll')
+
+    try:
+        client.login(password)
+    except PytolinoException as e:
+        print(e)
+    else:
+        try:
+            client.rm_book_from_collection(ebook_id, 'test_coll')
+            revision = client._sync_request()
+        except PytolinoException as e:
+            print(e)
 
 
 def delete_test():
@@ -188,6 +218,7 @@ if __name__ == '__main__':
     # upload_test()
     # add_cover_test()
     # metadata_test()
+    # sync_test()
     # collection_test()
     rm_collection_test()
     # inventory_test()

@@ -87,6 +87,17 @@ class Client(object):
         log(rsp.headers)
         log('===================')
 
+        # try:
+            # rep = rsp.json()
+        # except (requests.JSONDecodeError, json.JSONDecodeError):
+            # log('response not a json')
+        # else:
+            # try:
+                # revision = rep['revision']
+                # logging.info(revision)
+            # except KeyError:
+                # log('no revision no in response')
+
         if not rsp.ok:
             raise PytolinoException('host response not ok')
 
@@ -569,6 +580,35 @@ class Client(object):
                 )
         self._log_request(host_response, data)
 
+    def _sync_request(self):
+        payload = {
+                "revision": None,
+                "patches": []
+                }
+        data = json.dumps(payload)
+
+        url = self._sync_data_url
+        headers = self._get_auth_headers()
+        headers[CONTENT_TYPE] = 'application/json'
+        headers[CLIENT_TYPE] = client_type
+        host_response = self._session.patch(
+                url,
+                data=data,
+                headers=headers,
+                )
+        self._log_request(host_response, data)
+        try:
+            json_rsp = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException('sync request failed. answer not json')
+        else:
+            try:
+                revision = json_rsp['revision']
+            except KeyError:
+                raise PytolinoException('no revision key in rsp')
+            else:
+                return revision
+
     def rm_book_from_collection(self, book_id, collection_name):
         """remove a book from a collection (book is not deleted)
 
@@ -576,32 +616,33 @@ class Client(object):
         :collection_name: str name
 
         """
-        pass
+        revision = self._sync_request()
 
-        # payload = {
-                # "revision": None,
-                # "patches": [{
-                    # "op": "add",
-                    # "value": {
-                        # "modified": round(time.time() * 1000),
-                        # "name": collection_name,
-                        # "category": "collection",
-                    # },
-                    # "path": f"/publications/{book_id}/tags"
-                    # }]
-                # }
-        # data = json.dumps(payload)
+        payload = {
+                "revision": revision,
+                "patches": [{
+                    "op": "remove",
+                    "value": {
+                        "modified": round(time.time() * 1000),
+                        "name": collection_name,
+                        "category": "collection",
+                        'revision': revision,
+                    },
+                    "path": f"/publications/{book_id}/tags"
+                    }]
+                }
+        data = json.dumps(payload)
 
-        # url = self._sync_data_url
-        # headers = self._get_auth_headers()
-        # headers[CONTENT_TYPE] = 'application/json'
-        # headers[CLIENT_TYPE] = client_type
-        # host_response = self._session.patch(
-                # url,
-                # data=data,
-                # headers=headers,
-                # )
-        # self._log_request(host_response, data)
+        url = self._sync_data_url
+        headers = self._get_auth_headers()
+        headers[CONTENT_TYPE] = 'application/json'
+        headers[CLIENT_TYPE] = client_type
+        host_response = self._session.patch(
+                url,
+                data=data,
+                headers=headers,
+                )
+        self._log_request(host_response, data)
 
     def upload_metadata(self, book_id, **new_metadata):
         """upload some metadata to a specific book on the cloud
