@@ -593,6 +593,16 @@ class Client(object):
         else:
             return json_rsp
 
+    def get_sync_data(self):
+        """request sync data to get all patches of tags, etc...
+        :returns: revision, patches
+
+        """
+        json_rsp = self._sync_request()
+        revision = json_rsp['revision']
+        patches = {patch['value']['revision']: patch for patch in json_rsp['patches']}
+        return revision, patches
+
     def _get_patch_from_last_added_collection_to_book(
             self, data, ebook_id, collection_name):
         patches = data['patches']
