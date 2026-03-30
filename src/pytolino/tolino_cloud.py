@@ -605,6 +605,16 @@ class Client(object):
                 in json_rsp['patches']}
         return revision, patches
 
+    def get_book_id_from_patch(self, patch):
+        """parse patch to get book id
+
+        :patch: comes from sync_data
+        :returns: book_id
+
+        """
+        path = patch['path']
+        pass
+
     def _get_patch_from_last_added_collection_to_book(
             self, data, ebook_id, collection_name):
         patches = data['patches']

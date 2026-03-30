@@ -96,6 +96,8 @@ def sync_test():
         else:
             patch = client._get_patch_from_last_added_collection_to_book(data, ebook_id, 'test_coll')
             print(patch)
+            epub_id = client.get_book_id_from_patch(patch)
+            print(epub_id)
 
 def rm_collection_test():
     print('rm test book from test_coll collection...')
@@ -234,9 +236,9 @@ if __name__ == '__main__':
     # upload_test()
     # add_cover_test()
     # metadata_test()
-    # sync_test()
+    sync_test()
     # collection_test()
-    rm_collection_test()
+    # rm_collection_test()
     # inventory_test()
     # delete_test()
     # inventory_test()
