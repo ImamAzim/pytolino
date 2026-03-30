@@ -600,7 +600,9 @@ class Client(object):
         """
         json_rsp = self._sync_request()
         revision = json_rsp['revision']
-        patches = {patch['value']['revision']: patch for patch in json_rsp['patches']}
+        patches = {
+                patch['value']['revision']: patch for patch
+                in json_rsp['patches']}
         return revision, patches
 
     def _get_patch_from_last_added_collection_to_book(
