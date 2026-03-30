@@ -613,7 +613,8 @@ class Client(object):
 
         """
         path = patch['path']
-        pass
+        ebook_id = path.split('/')[2]
+        return ebook_id
 
     def _get_patch_from_last_added_collection_to_book(
             self, data, ebook_id, collection_name):
