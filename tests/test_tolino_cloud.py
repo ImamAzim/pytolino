@@ -64,12 +64,13 @@ def collection_test():
         print(e)
     else:
         try:
-            revision, patch = client.add_to_collection(
+            revision, patch_rev, patch = client.add_to_collection(
                     ebook_id, 'newtest_coll2')
         except PytolinoException as e:
             print(e)
         else:
             print(revision)
+            print(patch_rev)
             print(patch)
 
 def sync_test():

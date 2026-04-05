@@ -567,13 +567,14 @@ class Client(object):
             raise PytolinoException(
                     'could not get info from request. answer not json')
         else:
+            revision = json_rsp['revision']
             patch = self._get_patch_from_last_added_collection_to_book(
                     json_rsp,
                     book_id,
                     collection_name,
                     )
-            revision = patch['value']['revision']
-            return revision, patch
+            patch_rev = patch['value']['revision']
+            return revision, patch_rev, patch
 
     def _sync_request(self):
         payload = {
