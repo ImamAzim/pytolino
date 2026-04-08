@@ -728,6 +728,15 @@ class Client(object):
                     )
         self._log_request(host_response, data)
 
+    def download(self, epub_id: str):->tuple[Path, Path, dict]
+        """download book from cloud
+
+        :epub_id:
+        :returns: ebook path, cover path, metadata
+
+        """
+        pass
+
     def upload(
             self,
             file_path: Path or str,
