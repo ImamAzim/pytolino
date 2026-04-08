@@ -735,10 +735,8 @@ class Client(object):
     def _download_info(self, epub_id: str):
         url = self._download_info_url
         headers = self._get_auth_headers()
-        params = {'strip': 'true'}
         host_response = self._session.get(
                 url,
-                params=params,
                 headers=headers,
                 )
         self._log_request(host_response, params)
