@@ -50,6 +50,7 @@ def upload_test():
     vb = VarBox('pytolino')
     vb.ebook_id = ebook_id
 
+
 def download_test():
 
     print('download epub...')
@@ -89,6 +90,7 @@ def collection_test():
             print(patch_rev)
             print(patch)
 
+
 def sync_test():
     print('sync test to get revision')
     vb = VarBox('pytolino')
@@ -106,10 +108,12 @@ def sync_test():
         except PytolinoException as e:
             print(e)
         else:
-            patch = client._get_patch_from_last_added_collection_to_book(data, ebook_id, 'test_coll')
+            patch = client._get_patch_from_last_added_collection_to_book(
+                    data, ebook_id, 'test_coll')
             print(patch)
             epub_id = client.get_book_id_from_patch(patch)
             print(epub_id)
+
 
 def rm_collection_test():
     print('rm test book from test_coll collection...')
