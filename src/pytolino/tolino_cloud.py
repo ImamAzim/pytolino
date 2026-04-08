@@ -21,7 +21,7 @@ from seleniumbase import SB
 
 
 from pytolino import server_settings_keys
-from pytolino.requests_keys import *
+from pytolino import requests_keys
 
 
 class PytolinoException(Exception):
@@ -238,9 +238,9 @@ class Client(object):
 
     def _get_auth_headers(self):
         headers = {
-            T_AUTH_TOKEN: self.access_token,
-            HARDWARE_ID: self.hardware_id,
-            RESELLER_ID: self._partner_id,
+            requests_keys.T_AUTH_TOKEN: self.access_token,
+            requests_keys.HARDWARE_ID: self.hardware_id,
+            requests_keys.RESELLER_ID: self._partner_id,
             }
         return headers
 
@@ -252,7 +252,7 @@ class Client(object):
         headers = token_headers
         data = dict(
                 client_id=client_id,
-                grant_type=REFRESH_TOKEN,
+                grant_type=requests_keys.REFRESH_TOKEN,
                 refresh_token=self.refresh_token,
                 scope=scope,
                 )
@@ -368,14 +368,14 @@ class Client(object):
     def _add_user_agent(self, headers: dict) -> dict:
         if self._user_agent:
             user_agent = self._user_agent
-            headers[USERAGENT] = user_agent
+            headers[requests_keys.USERAGENT] = user_agent
         return headers
 
     def _get_token(self, auth_code: str):
 
         data = dict(
                 client_id=client_id,
-                grant_type=AUTHORIZATION_CODE,
+                grant_type=requests_keys.AUTHORIZATION_CODE,
                 code=auth_code,
                 scope=scope,
                 redirect_uri=redirect_uri,
@@ -403,10 +403,11 @@ class Client(object):
                                     ' because of json error')
         else:
             try:
-                self._access_token = data_rsp[ACCESS_TOKEN]
-                self._refresh_token = data_rsp[REFRESH_TOKEN]
-                self._expires_in = data_rsp[EXPIRES_IN]
-                self._refresh_expires_in = data_rsp[REFRESH_EXPIRES_IN]
+                self._access_token = data_rsp[requests_keys.ACCESS_TOKEN]
+                self._refresh_token = data_rsp[requests_keys.REFRESH_TOKEN]
+                self._expires_in = data_rsp[requests_keys.EXPIRES_IN]
+                self._refresh_expires_in = data_rsp[
+                        requests_keys.REFRESH_EXPIRES_IN]
             except KeyError:
                 raise PytolinoException('could not read token response'
                                         ' because of key error')
@@ -418,19 +419,19 @@ class Client(object):
     def _get_hardware_id(self):
         url = devices_url
         account = {
-                AUTH_TOKEN: self._access_token,
-                RESELLER_ID: self._partner_id,
+                requests_keys.AUTH_TOKEN: self._access_token,
+                requests_keys.RESELLER_ID: self._partner_id,
                 }
         accounts = [account]
         data_dict = {
-                DEVICE_LIST_REQUEST: {
-                    ACCOUNTS: accounts
+                requests_keys.DEVICE_LIST_REQUEST: {
+                    requests_keys.ACCOUNTS: accounts
                     }
                 }
         data = json.dumps(data_dict)
         headers = devices_list_headers
-        headers[T_AUTH_TOKEN] = self._access_token
-        headers[RESELLER_ID] = self._partner_id
+        headers[requests_keys.T_AUTH_TOKEN] = self._access_token
+        headers[requests_keys.RESELLER_ID] = self._partner_id
         host_response = self._session.post(
                 url,
                 data=data,
@@ -438,10 +439,10 @@ class Client(object):
                 )
         self._log_request(host_response, data)
         j = host_response.json()
-        devices = j[DEVICE_LIST_RESPONSE][DEVICES]
-        devices.sort(key=lambda el: el[DEVICE_LAST_USAGE])
+        devices = j[requests_keys.DEVICE_LIST_RESPONSE][requests_keys.DEVICES]
+        devices.sort(key=lambda el: el[requests_keys.DEVICE_LAST_USAGE])
         my_dev = devices[-1]
-        hardware_id = my_dev[DEVICE_ID]
+        hardware_id = my_dev[requests_keys.DEVICE_ID]
         self._hardware_id = hardware_id
 
     def login(self, password, allow_GUI_autologin=True):
@@ -553,8 +554,8 @@ class Client(object):
 
         url = self._sync_data_url
         headers = self._get_auth_headers()
-        headers[CONTENT_TYPE] = 'application/json'
-        headers[CLIENT_TYPE] = client_type
+        headers[requests_keys.CONTENT_TYPE] = 'application/json'
+        headers[requests_keys.CLIENT_TYPE] = client_type
         host_response = self._session.patch(
                 url,
                 data=data,
@@ -585,8 +586,8 @@ class Client(object):
 
         url = self._sync_data_url
         headers = self._get_auth_headers()
-        headers[CONTENT_TYPE] = 'application/json'
-        headers[CLIENT_TYPE] = client_type
+        headers[requests_keys.CONTENT_TYPE] = 'application/json'
+        headers[requests_keys.CLIENT_TYPE] = client_type
         host_response = self._session.patch(
                 url,
                 data=data,
@@ -680,8 +681,8 @@ class Client(object):
 
         url = self._sync_data_url
         headers = self._get_auth_headers()
-        headers[CONTENT_TYPE] = 'application/json'
-        headers[CLIENT_TYPE] = client_type
+        headers[requests_keys.CONTENT_TYPE] = 'application/json'
+        headers[requests_keys.CLIENT_TYPE] = client_type
         host_response = self._session.patch(
                 url,
                 data=data,
@@ -698,7 +699,7 @@ class Client(object):
         """
 
         url = self._meta_url
-        params = {DELIVERABLE_ID: book_id}
+        params = {requests_keys.DELIVERABLE_ID: book_id}
         headers = self._get_auth_headers()
         host_response = self._session.get(
                 url,
@@ -715,11 +716,11 @@ class Client(object):
             for key, value in new_metadata.items():
                 book['metadata'][key] = value
             payload = {
-                    UPLOAD_METADATA: book['metadata']
+                    requests_keys.UPLOAD_METADATA: book['metadata']
                     }
             data = json.dumps(payload)
             headers = self._get_auth_headers()
-            headers[CONTENT_TYPE] = 'application/json'
+            headers[requests_keys.CONTENT_TYPE] = 'application/json'
 
             host_response = self._session.put(
                     url,
@@ -728,7 +729,7 @@ class Client(object):
                     )
         self._log_request(host_response, data)
 
-    def download(self, epub_id: str):->tuple[Path, Path, dict]
+    def download(self, epub_id: str) -> tuple[Path, Path, dict]:
         """download book from cloud
 
         :epub_id:
@@ -795,7 +796,7 @@ class Client(object):
 
         """
         url = self._delete_url
-        params = {DELIVERABLE_ID: ebook_id}
+        params = {requests_keys.DELIVERABLE_ID: ebook_id}
         headers = self._get_auth_headers()
         host_response = self._session.get(
                 url,
@@ -830,7 +831,7 @@ class Client(object):
                 }.get(ext.lower(), 'application/jpeg')
 
         url = self._cover_url
-        data = {DELIVERABLE_ID: book_id}
+        data = {requests_keys.DELIVERABLE_ID: book_id}
         headers = self._get_auth_headers()
         with open(filepath, 'rb') as cover_file:
             files = [('file', (FILENAME, cover_file, mime))]
