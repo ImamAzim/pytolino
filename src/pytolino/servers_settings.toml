@@ -12,7 +12,7 @@ meta_url = "https://bosh.pageplace.de/bosh/rest/meta"
 cover_url = "https://bosh.pageplace.de/bosh/rest/cover"
 sync_data_url  = "https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks"
 delete_url  = "https://bosh.pageplace.de/bosh/rest/deletecontent"
-downloadinfo_url = "https://bosh.pageplace.de/bosh/rest/cloud/downloadinfo/{}/{}/type/external-download"
+download_info_url = "https://bosh.pageplace.de/bosh/rest/cloud/downloadinfo/{}/{}/type/external-download"
 inventory_url  = "https://bosh.pageplace.de/bosh/rest/inventory/delta"
 shadow_host_id = "usercentrics-root"
 cookie_deny_all_css = '.sc-gsFSXq.xZpYl'
