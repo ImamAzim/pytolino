@@ -209,6 +209,9 @@ class Client(object):
                 server_settings_keys.SYNC_DATA_URL]
         self._inventory_url = self._server_settings[
                 server_settings_keys.INVENTORY_URL]
+        self._download_info_url = self._server_settings[
+                server_settings_keys.DOWNLOAD_INFO_URL
+                ]
 
         self._session = requests.Session()
         self._session_cffi = curl_cffi.Session()
@@ -730,7 +733,7 @@ class Client(object):
         self._log_request(host_response, data)
 
     def _download_info(self, epub_id: str):
-        url = self._inventory_url
+        url = self._download_info_url
         headers = self._get_auth_headers()
         params = {'strip': 'true'}
         host_response = self._session.get(
