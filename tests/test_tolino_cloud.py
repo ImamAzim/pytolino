@@ -50,6 +50,18 @@ def upload_test():
     vb = VarBox('pytolino')
     vb.ebook_id = ebook_id
 
+def download_test():
+
+    print('download epub...')
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
+    username, password = get_test_credentials()
+    client = Client(username)
+    client.login(password)
+    epub_fp, cover_fp, metadata = client.download(ebook_id)
+    print(metadata)
+    print(f'check epub at {epub_fp} and cover at {cover_fp}')
+
 
 def collection_test():
     print('add to a collection last epub')
@@ -230,10 +242,11 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     # login_test()
     # upload_test()
+    download_test()
     # add_cover_test()
     # metadata_test()
     # sync_test()
-    collection_test()
+    # collection_test()
     # rm_collection_test()
     # inventory_test()
     # delete_test()
