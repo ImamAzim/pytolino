@@ -8,6 +8,7 @@ import tomllib
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 import warnings
+import base64
 
 
 import requests
@@ -733,13 +734,14 @@ class Client(object):
         self._log_request(host_response, data)
 
     def _download_info(self, epub_id: str):
-        url = self._download_info_url
+        xxx = base64.b64encode(bytes(epub_id, 'utf-8')).decode('utf-8')
+        url = self._download_info_url.format(xxx, xxx)
         headers = self._get_auth_headers()
         host_response = self._session.get(
                 url,
                 headers=headers,
                 )
-        self._log_request(host_response, params)
+        self._log_request(host_response)
         return host_response
 
     def download(self, epub_id: str) -> tuple[Path, Path, dict]:
