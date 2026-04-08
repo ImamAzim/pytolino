@@ -740,6 +740,7 @@ class Client(object):
                 headers=headers,
                 )
         self._log_request(host_response, params)
+        return host_response
 
     def download(self, epub_id: str) -> tuple[Path, Path, dict]:
         """download book from cloud
