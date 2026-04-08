@@ -59,7 +59,7 @@ def download_test():
     client = Client(username)
     client.login(password)
     try:
-    epub_fp, cover_fp, metadata = client.download(ebook_id)
+        epub_fp, cover_fp, metadata = client.download(ebook_id)
     except NotImplementedError as e:
         print(e):
     else:
