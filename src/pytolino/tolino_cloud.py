@@ -729,6 +729,17 @@ class Client(object):
                     )
         self._log_request(host_response, data)
 
+    def _download_info(self, epub_id: str):
+        url = self._inventory_url
+        headers = self._get_auth_headers()
+        params = {'strip': 'true'}
+        host_response = self._session.get(
+                url,
+                params=params,
+                headers=headers,
+                )
+        self._log_request(host_response, params)
+
     def download(self, epub_id: str) -> tuple[Path, Path, dict]:
         """download book from cloud
 
@@ -736,7 +747,9 @@ class Client(object):
         :returns: ebook path, cover path, metadata
 
         """
-        pass
+        info = self._download_info(epub_id)
+        print(info)
+        raise NotImplementedError
 
     def upload(
             self,

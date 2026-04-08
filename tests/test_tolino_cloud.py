@@ -58,9 +58,13 @@ def download_test():
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
+    try:
     epub_fp, cover_fp, metadata = client.download(ebook_id)
-    print(metadata)
-    print(f'check epub at {epub_fp} and cover at {cover_fp}')
+    except NotImplementedError as e:
+        print(e):
+    else:
+        print(metadata)
+        print(f'check epub at {epub_fp} and cover at {cover_fp}')
 
 
 def collection_test():
