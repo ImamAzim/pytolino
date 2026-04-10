@@ -756,8 +756,7 @@ class Client(object):
             try:
                 download_info = j['DownloadInfo']
                 content_url = download_info['contentUrl']
-                file_size = download_info['fileSize']
-                return content_url, file_size
+                return content_url
             except KeyError:
                 raise PytolinoException(
                         'download info failed.'
@@ -781,7 +780,7 @@ class Client(object):
 
         """
         deliverable_id = self._get_deliverable_id(epub_id)
-        url, file_size = self._download_info(epub_id, deliverable_id)
+        url = self._download_info(epub_id, deliverable_id)
 
         headers = self._get_auth_headers()
         host_response = self._session.get(
