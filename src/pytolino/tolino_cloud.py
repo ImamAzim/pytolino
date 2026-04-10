@@ -806,9 +806,8 @@ class Client(object):
                 language=all_metadata.get('language'),
                 author=authors,
                 publisher=all_metadata.get('publisher'),
-                # issued=time.time(),
+                issued=all_metadata['issued'],
                 )
-        print(metadata.keys())
         return epub_fp, cover_path, metadata
 
     def upload(
