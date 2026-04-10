@@ -29,6 +29,7 @@ from pytolino import cache_folder
 DOWNLOADED_EPUB_FN = 'downloaded_epub.epub'
 DELIVERABLE_ID = 'deliverableId'
 PUBLICATION_ID = 'publicationId'
+EPUB_METADATA = 'epubMetaData'
 
 
 class PytolinoException(Exception):
@@ -796,7 +797,7 @@ class Client(object):
         with open(epub_fp, 'wb') as file:
             file.write(host_response.content)
         cover_path = None
-        metadata = None
+        metadata = book_data[EPUB_METADATA]
         return epub_fp, cover_path, metadata
 
     def upload(
