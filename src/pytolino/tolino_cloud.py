@@ -798,17 +798,17 @@ class Client(object):
             file.write(host_response.content)
         cover_path = None
         all_metadata = book_data[EPUB_METADATA]
-        metadata = dict(
-                )
+        author_list = all_metadata['author']
+        authors = ','.join([author['name'] for author in author_list])
         metadata = dict(
                 title=all_metadata.get('title'),
                 isbn=all_metadata.get('isbn'),
                 language=all_metadata.get('language'),
-                # author=all_metadata['author']['name'],
-                publisher=metadata.get('publisher'),
+                author=authors,
+                publisher=all_metadata.get('publisher'),
                 # issued=time.time(),
                 )
-        print(all_metadata['author'])
+        print(metadata.keys())
         return epub_fp, cover_path, metadata
 
     def upload(
