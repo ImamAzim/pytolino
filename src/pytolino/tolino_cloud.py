@@ -801,13 +801,14 @@ class Client(object):
         metadata = dict(
                 )
         metadata = dict(
-                title=all_metadata['title'],
-                isbn=all_metadata['isbn'],
-                language=all_metadata['language'],
-                author=all_metadata['author']['name'],
-                publisher=metadata['publisher'],
+                title=all_metadata.get('title'),
+                isbn=all_metadata.get('isbn'),
+                language=all_metadata.get('language'),
+                # author=all_metadata['author']['name'],
+                publisher=metadata.get('publisher'),
                 # issued=time.time(),
                 )
+        print(all_metadata['author'])
         return epub_fp, cover_path, metadata
 
     def upload(
