@@ -788,9 +788,13 @@ class Client(object):
                 url,
                 headers=headers,
                 )
-        epub_fp = cache_folder / 
+        epub_fp = cache_folder / DOWNLOADED_EPUB_FN
         self._log_request(host_response)
-        raise NotImplementedError
+        with open(epub_fp, 'wb') as file:
+            file.write(host_response.content)
+        cover_path = None
+        metadata = None
+        return epub_fp, cover_path, metadata
 
     def upload(
             self,
