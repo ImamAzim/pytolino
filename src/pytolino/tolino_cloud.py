@@ -812,8 +812,6 @@ class Client(object):
         if file_resource:
             cover_url = file_resource[0]['resource']
             cover_path = self._download_cover(cover_url)
-        with open(epub_fp, 'wb') as file:
-            file.write(host_response.content)
         else:
             cover_path = None
         return epub_fp, cover_path, metadata
