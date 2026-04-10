@@ -19,6 +19,7 @@ classifiers = [
 ]
 description = "client for tolino cloud"
 dependencies = [
+    'xdg-base-dirs',
     'requests',
     'mechanize',
     'curl_cffi',

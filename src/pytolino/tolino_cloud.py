@@ -778,7 +778,13 @@ class Client(object):
         """
         deliverable_id = self._get_deliverable_id(epub_id)
         url, file_size = self._download_info(epub_id, deliverable_id)
-        print(url, file_size)
+
+        headers = self._get_auth_headers()
+        host_response = self._session.get(
+                url,
+                headers=headers,
+                )
+        self._log_request(host_response)
         raise NotImplementedError
 
     def upload(
