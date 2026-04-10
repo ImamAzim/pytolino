@@ -23,6 +23,10 @@ from seleniumbase import SB
 
 from pytolino import server_settings_keys
 from pytolino import requests_keys
+from pytolino import cache_folder
+
+
+DOWNLOADED_EPUB_FN = 'downloaded_epub.epub'
 
 
 class PytolinoException(Exception):
@@ -784,6 +788,7 @@ class Client(object):
                 url,
                 headers=headers,
                 )
+        epub_fp = cache_folder / 
         self._log_request(host_response)
         raise NotImplementedError
 
