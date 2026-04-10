@@ -27,6 +27,8 @@ from pytolino import cache_folder
 
 
 DOWNLOADED_EPUB_FN = 'downloaded_epub.epub'
+DELIVERABLE_ID = 'deliverableId'
+PUBLICATION_ID = 'publicationId'
 
 
 class PytolinoException(Exception):
@@ -762,12 +764,13 @@ class Client(object):
                         'download info failed.'
                         'no info found in response')
 
-    def _get_deliverable_id(self, epub_id):
+
+    def _get_book_data(self, epub_id):
         inventory = self.get_inventory()
         matched_books = [
-                book['deliverableId']
+                book
                 for book in inventory
-                if book['publicationId']==epub_id]
+                if book[PUBLICATION_ID]==epub_id]
         if not matched_books:
             raise PytolinoException('no book on the cloud with this id')
         return matched_books[0]
@@ -779,7 +782,8 @@ class Client(object):
         :returns: ebook path, cover path, metadata
 
         """
-        deliverable_id = self._get_deliverable_id(epub_id)
+        book_data = self._get_book_data(epub_id)
+        deliverable_id = book_data[DELIVERABLE_ID]
         url = self._download_info(epub_id, deliverable_id)
 
         headers = self._get_auth_headers()
