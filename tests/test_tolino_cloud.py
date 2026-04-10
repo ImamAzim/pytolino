@@ -63,6 +63,8 @@ def download_test():
         epub_fp, cover_fp, metadata = client.download(ebook_id)
     except NotImplementedError as e:
         print(e)
+    except PytolinoException as e:
+        print(e)
     else:
         print(metadata)
         print(f'check epub at {epub_fp} and cover at {cover_fp}')

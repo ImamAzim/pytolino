@@ -735,7 +735,8 @@ class Client(object):
 
     def _download_info(self, epub_id: str):
         xxx = base64.b64encode(bytes(epub_id, 'utf-8')).decode('utf-8')
-        url = self._download_info_url.format(xxx, xxx)
+        yyy = xxx
+        url = self._download_info_url.format(xxx, yyy)
         headers = self._get_auth_headers()
         host_response = self._session.get(
                 url,
