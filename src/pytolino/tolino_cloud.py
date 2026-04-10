@@ -797,7 +797,17 @@ class Client(object):
         with open(epub_fp, 'wb') as file:
             file.write(host_response.content)
         cover_path = None
-        metadata = book_data[EPUB_METADATA]
+        all_metadata = book_data[EPUB_METADATA]
+        metadata = dict(
+                )
+        metadata = dict(
+                title=all_metadata['title'],
+                isbn=all_metadata['isbn'],
+                language=all_metadata['language'],
+                author=all_metadata['author']['name'],
+                publisher=metadata['publisher'],
+                # issued=time.time(),
+                )
         return epub_fp, cover_path, metadata
 
     def upload(

@@ -66,7 +66,7 @@ def download_test():
     except PytolinoException as e:
         print(e)
     else:
-        print(metadata)
+        print(metadata.keys())
         print(f'check epub at {epub_fp} and cover at {cover_fp}')
 
 
