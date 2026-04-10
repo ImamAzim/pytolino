@@ -733,9 +733,9 @@ class Client(object):
                     )
         self._log_request(host_response, data)
 
-    def _download_info(self, epub_id: str):
+    def _download_info(self, epub_id: str, deliverable_id):
         xxx = base64.b64encode(bytes(epub_id, 'utf-8')).decode('utf-8')
-        yyy = xxx
+        yyy = base64.b64encode(bytes(deliverable_id, 'utf-8')).decode('utf-8')
         url = self._download_info_url.format(xxx, yyy)
         headers = self._get_auth_headers()
         host_response = self._session.get(
@@ -762,7 +762,8 @@ class Client(object):
         :returns: ebook path, cover path, metadata
 
         """
-        info = self._download_info(epub_id)
+        deliverable_id = self._get_deliverable_id(epub_id)
+        info = self._download_info(epub_id, deliverable_id)
         print(info)
         raise NotImplementedError
 
