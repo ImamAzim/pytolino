@@ -159,6 +159,9 @@ def inventory_test():
     inventory = client.get_inventory()
     if inventory:
         for item in inventory:
+            print(item.keys())
+            print(item['publicationId'])
+            print(item['deliverableId'])
             metadata = item['epubMetaData']
             print(metadata['title'])
     else:

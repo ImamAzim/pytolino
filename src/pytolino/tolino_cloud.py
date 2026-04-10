@@ -745,6 +745,16 @@ class Client(object):
         self._log_request(host_response)
         return host_response
 
+    def _get_deliverable_id(self, epub_id):
+        inventory = self.get_inventory()
+        matched_books = [
+                book['deliverableId']
+                for book in inventory
+                if book['publicationId']==epub_id]
+        if not matched_books:
+            raise PytolinoException('no book on the cloud with this id')
+        return matched_books[0]
+
     def download(self, epub_id: str) -> tuple[Path, Path, dict]:
         """download book from cloud
 
