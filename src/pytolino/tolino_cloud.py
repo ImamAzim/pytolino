@@ -743,7 +743,21 @@ class Client(object):
                 headers=headers,
                 )
         self._log_request(host_response)
-        return host_response
+
+        try:
+            j = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException('download info failed. answer not json')
+        else:
+            try:
+                download_info = j['DownloadInfo']
+                content_url = download_info['contentUrl']
+                file_size = download_info['fileSize']
+                return content_url, file_size
+            except KeyError:
+                raise PytolinoException(
+                        'download info failed.'
+                        'no info found in response')
 
     def _get_deliverable_id(self, epub_id):
         inventory = self.get_inventory()
@@ -763,8 +777,8 @@ class Client(object):
 
         """
         deliverable_id = self._get_deliverable_id(epub_id)
-        info = self._download_info(epub_id, deliverable_id)
-        print(info)
+        url, file_size = self._download_info(epub_id, deliverable_id)
+        print(url, file_size)
         raise NotImplementedError
 
     def upload(
