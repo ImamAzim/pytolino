@@ -27,6 +27,7 @@ from pytolino import cache_folder
 
 
 DOWNLOADED_EPUB_FN = 'downloaded_epub.epub'
+COVER_FN = 'cover.png'
 DELIVERABLE_ID = 'deliverableId'
 PUBLICATION_ID = 'publicationId'
 EPUB_METADATA = 'epubMetaData'
@@ -796,7 +797,6 @@ class Client(object):
         self._log_request(host_response)
         with open(epub_fp, 'wb') as file:
             file.write(host_response.content)
-        cover_path = None
         all_metadata = book_data[EPUB_METADATA]
         author_list = all_metadata['author']
         authors = ','.join([author['name'] for author in author_list])
@@ -808,7 +808,28 @@ class Client(object):
                 publisher=all_metadata.get('publisher'),
                 issued=all_metadata['issued'],
                 )
+        file_resource = all_metadata['fileResource']
+        if file_resource:
+            cover_url = file_resource[0]['resource']
+            cover_path = self._download_cover(cover_url)
+        with open(epub_fp, 'wb') as file:
+            file.write(host_response.content)
+        else:
+            cover_path = None
         return epub_fp, cover_path, metadata
+
+    def _download_cover(self, cover_url):
+        headers = self._get_auth_headers()
+        url = cover_url
+        host_response = self._session.get(
+                url,
+                headers=headers,
+                )
+        self._log_request(host_response)
+        cover_fp = cache_folder / COVER_FN
+        with open(cover_fp, 'wb') as file:
+            file.write(host_response.content)
+        return cover_fp
 
     def upload(
             self,
