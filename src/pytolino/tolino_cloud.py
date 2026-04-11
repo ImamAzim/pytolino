@@ -804,7 +804,7 @@ class Client(object):
                 title=all_metadata.get('title'),
                 isbn=all_metadata.get('isbn'),
                 language=all_metadata.get('language'),
-                author=authors,
+                authors=authors,
                 publisher=all_metadata.get('publisher'),
                 issued=all_metadata['issued'],
                 )
