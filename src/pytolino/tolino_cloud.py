@@ -803,7 +803,7 @@ class Client(object):
         metadata = dict(
                 title=all_metadata.get('title'),
                 isbn=all_metadata.get('isbn'),
-                language=all_metadata.get('language'),
+                languages=all_metadata.get('language'),
                 authors=authors,
                 publisher=all_metadata.get('publisher'),
                 issued=all_metadata['issued'],
