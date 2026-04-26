@@ -289,7 +289,7 @@ class Client(object):
 
     def _get_login_cookies(self, password):
 
-        timeout = 2
+        timeout = 10
 
         try:
 
