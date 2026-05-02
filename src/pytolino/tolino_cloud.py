@@ -325,7 +325,7 @@ class Client(object):
                         )
                 username_field.send_keys(self._username)
                 password_field.send_keys(password)
-                wait = WebDriverWait(driver, timeout=2)
+                wait = WebDriverWait(driver, timeout=timeout)
                 wait.until(
                         expected_conditions.element_to_be_clickable(
                             submit_button))
