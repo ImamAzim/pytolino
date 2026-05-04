@@ -701,6 +701,16 @@ class Client(object):
                 headers=headers,
                 )
         self._log_request(host_response, data)
+        try:
+            json_rsp = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException(
+                    'could not get info from request. answer not json')
+        else:
+            revision = json_rsp['revision']
+            patch = json_rsp['patches'].pop()
+            patch_rev = patch['value']['revision']
+            return revision, patch_rev, patch
 
     def upload_metadata(self, book_id, **new_metadata):
         """upload some metadata to a specific book on the cloud
