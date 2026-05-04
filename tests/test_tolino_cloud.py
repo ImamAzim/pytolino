@@ -106,15 +106,11 @@ def sync_test():
         print(e)
     else:
         try:
-            data = client._sync_request()
+            revision, patches = client.get_sync_data()
         except PytolinoException as e:
             print(e)
         else:
-            patch = client._get_patch_from_last_added_collection_to_book(
-                    data, ebook_id, 'test_coll')
-            print(patch)
-            epub_id = client.get_book_id_from_patch(patch)
-            print(epub_id)
+            print(revision, patches)
 
 
 def rm_collection_test():
@@ -255,10 +251,10 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     # login_test()
     # upload_test()
-    download_test()
+    # download_test()
     # add_cover_test()
     # metadata_test()
-    # sync_test()
+    sync_test()
     # collection_test()
     # rm_collection_test()
     # inventory_test()
