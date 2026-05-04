@@ -620,9 +620,12 @@ class Client(object):
         """
         json_rsp = self._sync_request()
         revision = json_rsp['revision']
-        patches = {
-                patch['value']['revision']: patch for patch
-                in json_rsp['patches']}
+        if 'patches' in json_rsp:
+            patches = {
+                    patch['value']['revision']: patch for patch
+                    in json_rsp['patches']}
+        else:
+            patches = dict()
         return revision, patches
 
     def get_book_id_from_patch(self, patch):
