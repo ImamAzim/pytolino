@@ -1399,7 +1399,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/ef/c6/2c5999de3bb153352
 
 [[package]]
 name = "pytolino"
-version = "3"
+version = "3.1"
 source = { editable = "." }
 dependencies = [
     { name = "curl-cffi" },
