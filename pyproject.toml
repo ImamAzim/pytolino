@@ -41,3 +41,6 @@ dev = [
 [project.urls]
 "Source Code" = "https://github.com/ImamAzim/pytolino"
 "Documentation" = "https://pytolino.readthedocs.io/en/latest/index.html"
+
+[tool.ruff]
+line-length = 79

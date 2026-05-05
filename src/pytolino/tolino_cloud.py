@@ -52,7 +52,9 @@ common_settings = tomllib.loads(COMMON_SETTINGS_FP.read_text())
 client_id = common_settings["client_id"]
 scope = common_settings["scope"]
 redirect_uri = common_settings["redirect_uri"]
-additional_request_parameters = common_settings["additional_request_parameters"]
+additional_request_parameters = common_settings[
+    "additional_request_parameters"
+]
 devices_url = common_settings["devices_url"]
 devices_list_headers = common_settings["headers"]["devices_list"]
 token_headers = common_settings["headers"]["token"]
@@ -196,17 +198,29 @@ class Client(object):
         self._password_field_id = self._server_settings[
             server_settings_keys.PASSWORD_FIELD_ID
         ]
-        self._submit_css = self._server_settings[server_settings_keys.SUBMIT_CSS]
+        self._submit_css = self._server_settings[
+            server_settings_keys.SUBMIT_CSS
+        ]
         self._login_url = self._server_settings[server_settings_keys.LOGIN_URL]
         self._auth_url = self._server_settings[server_settings_keys.AUTH_URL]
         self._token_url = self._server_settings[server_settings_keys.TOKEN_URL]
-        self._partner_id = self._server_settings[server_settings_keys.PARTNER_ID]
-        self._upload_url = self._server_settings[server_settings_keys.UPLOAD_URL]
-        self._delete_url = self._server_settings[server_settings_keys.DELETE_URL]
+        self._partner_id = self._server_settings[
+            server_settings_keys.PARTNER_ID
+        ]
+        self._upload_url = self._server_settings[
+            server_settings_keys.UPLOAD_URL
+        ]
+        self._delete_url = self._server_settings[
+            server_settings_keys.DELETE_URL
+        ]
         self._cover_url = self._server_settings[server_settings_keys.COVER_URL]
         self._meta_url = self._server_settings[server_settings_keys.META_URL]
-        self._sync_data_url = self._server_settings[server_settings_keys.SYNC_DATA_URL]
-        self._inventory_url = self._server_settings[server_settings_keys.INVENTORY_URL]
+        self._sync_data_url = self._server_settings[
+            server_settings_keys.SYNC_DATA_URL
+        ]
+        self._inventory_url = self._server_settings[
+            server_settings_keys.INVENTORY_URL
+        ]
         self._download_info_url = self._server_settings[
             server_settings_keys.DOWNLOAD_INFO_URL
         ]
@@ -234,7 +248,9 @@ class Client(object):
             self._renew_access_token()
         except PytolinoException as e:
             logging.error(e)
-            logging.error("could not get a new access token with this refresh token")
+            logging.error(
+                "could not get a new access token with this refresh token"
+            )
 
     def _get_auth_headers(self):
         headers = {
@@ -289,7 +305,9 @@ class Client(object):
                 css = self._cookie_deny_css
                 wait = WebDriverWait(shadow_root, timeout)
                 deny_button = wait.until(
-                    expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, css))
+                    expected_conditions.element_to_be_clickable(
+                        (By.CSS_SELECTOR, css)
+                    )
                 )
                 deny_button.click()
 
@@ -312,7 +330,9 @@ class Client(object):
                 username_field.send_keys(self._username)
                 password_field.send_keys(password)
                 wait = WebDriverWait(driver, timeout=timeout)
-                wait.until(expected_conditions.element_to_be_clickable(submit_button))
+                wait.until(
+                    expected_conditions.element_to_be_clickable(submit_button)
+                )
                 submit_button.click()
 
                 # get cookies
@@ -403,7 +423,9 @@ class Client(object):
                 self._access_token = data_rsp[requests_keys.ACCESS_TOKEN]
                 self._refresh_token = data_rsp[requests_keys.REFRESH_TOKEN]
                 self._expires_in = data_rsp[requests_keys.EXPIRES_IN]
-                self._refresh_expires_in = data_rsp[requests_keys.REFRESH_EXPIRES_IN]
+                self._refresh_expires_in = data_rsp[
+                    requests_keys.REFRESH_EXPIRES_IN
+                ]
             except KeyError:
                 raise PytolinoException(
                     "could not read token response because of key error"
@@ -421,7 +443,9 @@ class Client(object):
         }
         accounts = [account]
         data_dict = {
-            requests_keys.DEVICE_LIST_REQUEST: {requests_keys.ACCOUNTS: accounts}
+            requests_keys.DEVICE_LIST_REQUEST: {
+                requests_keys.ACCOUNTS: accounts
+            }
         }
         data = json.dumps(data_dict)
         headers = devices_list_headers
@@ -558,7 +582,9 @@ class Client(object):
         try:
             json_rsp = host_response.json()
         except requests.JSONDecodeError:
-            raise PytolinoException("could not get info from request. answer not json")
+            raise PytolinoException(
+                "could not get info from request. answer not json"
+            )
         else:
             revision = json_rsp["revision"]
             patch = self._get_patch_from_last_added_collection_to_book(
@@ -598,7 +624,8 @@ class Client(object):
         revision = json_rsp["revision"]
         if "patches" in json_rsp:
             patches = {
-                patch["value"]["revision"]: patch for patch in json_rsp["patches"]
+                patch["value"]["revision"]: patch
+                for patch in json_rsp["patches"]
             }
         else:
             patches = dict()
@@ -617,11 +644,15 @@ class Client(object):
 
     def _get_patch_from_last_added_collection_to_book(self, data, ebook_id):
         patches = data["patches"]
-        book_patches = [patch for patch in patches if ebook_id in patch["path"]]
+        book_patches = [
+            patch for patch in patches if ebook_id in patch["path"]
+        ]
         if not book_patches:
             return None
         book_collection_patches = [
-            patch for patch in patches if patch["value"]["category"] == "collection"
+            patch
+            for patch in patches
+            if patch["value"]["category"] == "collection"
         ]
         if not book_collection_patches:
             return None
@@ -629,12 +660,18 @@ class Client(object):
         last_patch = book_collection_patches[-1]
         return last_patch
 
-    def _get_patch_for_book_add_to_collection(self, patches, ebook_id, collection_name):
-        book_patches = [patch for patch in patches if ebook_id in patch["path"]]
+    def _get_patch_for_book_add_to_collection(
+        self, patches, ebook_id, collection_name
+    ):
+        book_patches = [
+            patch for patch in patches if ebook_id in patch["path"]
+        ]
         if not book_patches:
             return None
         book_collection_patches = [
-            patch for patch in patches if patch["value"]["category"] == "collection"
+            patch
+            for patch in patches
+            if patch["value"]["category"] == "collection"
         ]
         if not book_collection_patches:
             return None
@@ -696,7 +733,9 @@ class Client(object):
         try:
             json_rsp = host_response.json()
         except requests.JSONDecodeError:
-            raise PytolinoException("could not get info from request. answer not json")
+            raise PytolinoException(
+                "could not get info from request. answer not json"
+            )
         else:
             revision = json_rsp["revision"]
             patch = json_rsp["patches"].pop()
@@ -767,7 +806,9 @@ class Client(object):
 
     def _get_book_data(self, epub_id):
         inventory = self.get_inventory()
-        matched_books = [book for book in inventory if book[PUBLICATION_ID] == epub_id]
+        matched_books = [
+            book for book in inventory if book[PUBLICATION_ID] == epub_id
+        ]
         if not matched_books:
             raise PytolinoException("no book on the cloud with this id")
         return matched_books[0]
@@ -912,9 +953,11 @@ class Client(object):
 
         ext = filepath.suffix
 
-        mime = {".png": "image/png", ".jpeg": "image/jpeg", ".jpg": "image/jpeg"}.get(
-            ext.lower(), "application/jpeg"
-        )
+        mime = {
+            ".png": "image/png",
+            ".jpeg": "image/jpeg",
+            ".jpg": "image/jpeg",
+        }.get(ext.lower(), "application/jpeg")
 
         url = self._cover_url
         data = {requests_keys.DELIVERABLE_ID: book_id}
