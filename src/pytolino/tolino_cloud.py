@@ -675,9 +675,15 @@ class Client(object):
         ]
         if not book_collection_patches:
             return None
-        book_collection_patches.sort(key=lambda el: el["value"]["modified"])
-        last_patch = book_collection_patches[-1]
-        return last_patch
+        collection_name_patches = [
+            patch
+            for patch in patches
+            if patch["value"]["name"] == collection_name
+        ]
+        if not collection_name_patches:
+            return None
+        else:
+            return collection_name_patches.pop()
 
     def rm_book_from_collection(self, book_id, collection_name):
         """remove a book from a collection (book is not deleted)
