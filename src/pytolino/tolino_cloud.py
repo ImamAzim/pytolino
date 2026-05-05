@@ -655,6 +655,22 @@ class Client(object):
         last_patch = book_collection_patches[-1]
         return last_patch
 
+    def _get_patch_for_book_add_to_collection(
+            self, patches, ebook_id, collection_name):
+        book_patches = [
+                patch for patch in patches if ebook_id in patch['path']]
+        if not book_patches:
+            return None
+        book_collection_patches = [
+                patch for patch in patches if patch[
+                    'value']['category'] == 'collection'
+                ]
+        if not book_collection_patches:
+            return None
+        book_collection_patches.sort(key=lambda el: el['value']['modified'])
+        last_patch = book_collection_patches[-1]
+        return last_patch
+
     def rm_book_from_collection(self, book_id, collection_name):
         """remove a book from a collection (book is not deleted)
 
@@ -663,9 +679,11 @@ class Client(object):
 
         """
         data = self._sync_request()
-        patch = self._get_patch_from_last_added_collection_to_book(
-                data,
+        patches = data['patches']
+        patch = self._get_patch_for_book_add_to_collection(
+                patches,
                 book_id,
+                collection_name
                 )
         if patch is None:
             msg = ('could not get last patch from server.'
