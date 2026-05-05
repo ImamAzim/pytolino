@@ -584,7 +584,6 @@ class Client(object):
             patch = self._get_patch_from_last_added_collection_to_book(
                     json_rsp,
                     book_id,
-                    collection_name,
                     )
             patch_rev = patch['value']['revision']
             return revision, patch_rev, patch
@@ -640,7 +639,7 @@ class Client(object):
         return ebook_id
 
     def _get_patch_from_last_added_collection_to_book(
-            self, data, ebook_id, collection_name):
+            self, data, ebook_id):
         patches = data['patches']
         book_patches = [
                 patch for patch in patches if ebook_id in patch['path']]
@@ -667,7 +666,6 @@ class Client(object):
         patch = self._get_patch_from_last_added_collection_to_book(
                 data,
                 book_id,
-                collection_name,
                 )
         if patch is None:
             msg = ('could not get last patch from server.'
