@@ -117,7 +117,12 @@ def sync_test():
         except PytolinoException as e:
             print(e)
         else:
-            print(revision, patches)
+            # print(revision, patches)
+            for rev, patch in patches.items():
+                print(patch['op'])
+                for key, value in patch["value"].items():
+                    if key!='revision':
+                        print(key, value)
 
 
 def rm_collection_test():
@@ -261,8 +266,8 @@ if __name__ == '__main__':
     # download_test()
     # add_cover_test()
     # metadata_test()
-    # sync_test()
-    collection_test()
+    sync_test()
+    # collection_test()
     # rm_collection_test()
     # inventory_test()
     # delete_test()
