@@ -125,6 +125,27 @@ def mark_finished_test():
             print(patch_rev)
             print(patch)
 
+def mark_not_finished_test():
+    print("mark not finish test")
+    vb = VarBox("pytolino")
+    ebook_id = vb.ebook_id
+
+    username, password = get_test_credentials()
+    client = Client(username)
+    try:
+        client.login(password)
+    except PytolinoException as e:
+        print(e)
+    else:
+        try:
+            revision, patch_rev, patch = client.mark_book_as_not_finished(ebook_id)
+        except PytolinoException as e:
+            print(e)
+        else:
+            print(revision)
+            print(patch_rev)
+            print(patch)
+
 
 def sync_test():
     print("sync test to get revision")
@@ -293,11 +314,13 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     # login_test()
     mark_finished_test()
+    sync_test()
+    mark_not_finished_test()
+    sync_test()
     # upload_test()
     # download_test()
     # add_cover_test()
     # metadata_test()
-    sync_test()
     # collection_test()
     # rm_collection_test()
     # inventory_test()
