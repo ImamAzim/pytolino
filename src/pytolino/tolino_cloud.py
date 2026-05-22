@@ -736,6 +736,15 @@ class Client(object):
         else:
             return collection_name_patches.pop()
 
+    def mark_book_as_not_finished(self, book_id):
+        """remove the finished label on the book
+
+        :book_id: TODO
+        :returns: TODO
+
+        """
+        return None, None, None
+
     def rm_book_from_collection(self, book_id, collection_name):
         """remove a book from a collection (book is not deleted)
 
