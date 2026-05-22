@@ -682,14 +682,14 @@ class Client(object):
             return None
         book_collection_patches = [
             patch
-            for patch in patches
+            for patch in book_patches
             if patch["value"].get("category") == "collection"
         ]
         if not book_collection_patches:
             return None
         collection_name_patches = [
             patch
-            for patch in patches
+            for patch in book_collection_patches
             if patch["value"]["name"] == collection_name
         ]
         if not collection_name_patches:
