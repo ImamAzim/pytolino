@@ -552,10 +552,49 @@ class Client(object):
         :returns: TODO
 
         """
-        revision = None
-        patch_rev = None
-        patch = None
-        return revision, patch_rev, patch
+        payload = {
+            "revision": None,
+            "patches": [
+                {
+                    "op": "add",
+                    "value": {
+                        "modified": round(time.time() * 1000),
+                        "name": "collection_finished_readings_name",
+                        "category": "system",
+                    },
+                    "path": f"/publications/{book_id}/tags",
+                }
+            ],
+        }
+        data = json.dumps(payload)
+
+        url = self._sync_data_url
+        headers = self._get_auth_headers()
+        headers[requests_keys.CONTENT_TYPE] = "application/json"
+        headers[requests_keys.CLIENT_TYPE] = client_type
+        host_response = self._session.patch(
+            url,
+            data=data,
+            headers=headers,
+        )
+        self._log_request(host_response, data)
+        try:
+            json_rsp = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException(
+                "could not get info from request. answer not json"
+            )
+        else:
+            revision = json_rsp["revision"]
+            # patch = self._get_patch_from_last_added_collection_to_book(
+                # json_rsp,
+                # book_id,
+            # )
+            # patch_rev = patch["value"]["revision"]
+            patch_rev = None
+            patch = None
+            print(json_rsp)
+            return revision, patch_rev, patch
 
     def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud
