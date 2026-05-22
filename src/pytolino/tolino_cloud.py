@@ -586,14 +586,9 @@ class Client(object):
             )
         else:
             revision = json_rsp["revision"]
-            # patch = self._get_patch_from_last_added_collection_to_book(
-                # json_rsp,
-                # book_id,
-            # )
-            # patch_rev = patch["value"]["revision"]
-            patch_rev = None
-            patch = None
-            print(json_rsp)
+            patches = json_rsp["patches"]
+            patch = self._get_last_patch(patches)
+            patch_rev = patch["value"]["revision"]
             return revision, patch_rev, patch
 
     def add_to_collection(self, book_id, collection_name):
@@ -709,6 +704,11 @@ class Client(object):
             return None
         book_collection_patches.sort(key=lambda el: el["value"]["modified"])
         last_patch = book_collection_patches[-1]
+        return last_patch
+
+    def _get_last_patch(self, patches):
+        patches.sort(key=lambda el: el["value"]["modified"])
+        last_patch = patches[-1]
         return last_patch
 
     def _get_patch_for_book_add_to_collection(
