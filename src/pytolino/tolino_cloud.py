@@ -545,6 +545,18 @@ class Client(object):
                 inventory = uploaded_ebooks + purchased_ebook
                 return inventory
 
+    def mark_book_as_finished(self, book_id):
+        """TODO: Docstring for mark_book_as_finished.
+
+        :book_id: TODO
+        :returns: TODO
+
+        """
+        revision = None
+        patch_rev = None
+        patch = None
+        return revision, patch_rev, patch
+
     def add_to_collection(self, book_id, collection_name):
         """add a book to a collection on the cloud
 

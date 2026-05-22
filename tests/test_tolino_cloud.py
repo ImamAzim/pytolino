@@ -99,6 +99,31 @@ def collection_test():
             # print(patch_rev)
             # print(patch)
 
+def mark_finished_test():
+    print('mark finish test')
+    vb = VarBox('pytolino')
+    ebook_id = vb.ebook_id
+
+    username, password = get_test_credentials()
+    client = Client(username)
+    try:
+        client.login(password)
+    except PytolinoException as e:
+        print(e)
+    else:
+        try:
+            revision, patch_rev, patch = client.mark_(
+                    ebook_id, 'test_coll_2')
+
+        except PytolinoException as e:
+            print(e)
+        else:
+            pass
+            # print(revision)
+            # print(patch_rev)
+            # print(patch)
+
+
 
 def sync_test():
     print('sync test to get revision')
@@ -262,12 +287,12 @@ def get_test_credentials():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     # login_test()
-    # upload_test()
+    upload_test()
     # download_test()
     # add_cover_test()
     # metadata_test()
-    sync_test()
-    # collection_test()
+    # sync_test()
+    collection_test()
     # rm_collection_test()
     # inventory_test()
     # delete_test()
