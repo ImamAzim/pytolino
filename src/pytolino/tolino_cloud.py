@@ -736,8 +736,7 @@ class Client(object):
         else:
             return collection_name_patches.pop()
 
-    def _get_patch_book_marked_as_finished(
-        self, patches, ebook_id):
+    def _get_patch_book_marked_as_finished(self, patches, ebook_id):
         book_patches = [
             patch for patch in patches if ebook_id in patch["path"]
         ]
@@ -769,14 +768,11 @@ class Client(object):
         """
         data = self._sync_request()
         patches = data["patches"]
-        patch = self._get_patch_for_book_add_to_collection(
-            patches, book_id, collection_name
-        )
+        patch = self._get_patch_book_marked_as_finished(patches, book_id)
         if patch is None:
             msg = (
                 "could not get last patch from server."
-                "the book is probably not part from this collection"
-                "any more"
+                "book is either not present or was not marked as finished"
             )
             raise PytolinoException(msg)
 
@@ -791,8 +787,8 @@ class Client(object):
                     "op": "remove",
                     "value": {
                         "modified": round(time.time() * 1000),
-                        "name": collection_name,
-                        "category": "collection",
+                        "name": "collection_finished_readings_name",
+                        "category": "system",
                         "revision": revision_value,
                     },
                     "path": path,
