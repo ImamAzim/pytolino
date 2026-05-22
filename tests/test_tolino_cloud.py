@@ -112,16 +112,13 @@ def mark_finished_test():
         print(e)
     else:
         try:
-            revision, patch_rev, patch = client.mark_(
-                    ebook_id, 'test_coll_2')
-
+            revision, patch_rev, patch = client.mark_book_as_finished, ebook_id)
         except PytolinoException as e:
             print(e)
         else:
-            pass
-            # print(revision)
-            # print(patch_rev)
-            # print(patch)
+            print(revision)
+            print(patch_rev)
+            print(patch)
 
 
 
@@ -294,7 +291,7 @@ if __name__ == '__main__':
     # sync_test()
     collection_test()
     # rm_collection_test()
-    # inventory_test()
+    inventory_test()
     # delete_test()
     # inventory_test()
     # import_login_test()
