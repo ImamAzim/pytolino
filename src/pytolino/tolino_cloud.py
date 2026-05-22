@@ -818,7 +818,6 @@ class Client(object):
             patch = json_rsp["patches"].pop()
             patch_rev = patch["value"]["revision"]
             return revision, patch_rev, patch
-        return None, None, None
 
     def rm_book_from_collection(self, book_id, collection_name):
         """remove a book from a collection (book is not deleted)
