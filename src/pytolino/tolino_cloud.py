@@ -736,6 +736,30 @@ class Client(object):
         else:
             return collection_name_patches.pop()
 
+    def _get_patch_book_marked_as_finished(
+        self, patches, ebook_id):
+        book_patches = [
+            patch for patch in patches if ebook_id in patch["path"]
+        ]
+        if not book_patches:
+            return None
+        book_system_patches = [
+            patch
+            for patch in book_patches
+            if patch["value"].get("category") == "system"
+        ]
+        if not book_system_patches:
+            return None
+        finish_patches = [
+            patch
+            for patch in book_system_patches
+            if patch["value"]["name"] == "collection_finished_readings_name"
+        ]
+        if not finish_patches:
+            return None
+        else:
+            return finish_patches.pop()
+
     def mark_book_as_not_finished(self, book_id):
         """remove the finished label on the book
 
@@ -743,6 +767,61 @@ class Client(object):
         :returns: TODO
 
         """
+        data = self._sync_request()
+        patches = data["patches"]
+        patch = self._get_patch_for_book_add_to_collection(
+            patches, book_id, collection_name
+        )
+        if patch is None:
+            msg = (
+                "could not get last patch from server."
+                "the book is probably not part from this collection"
+                "any more"
+            )
+            raise PytolinoException(msg)
+
+        revision_value = patch["value"]["revision"]
+        revision = data["revision"]
+        path = patch["path"]
+
+        payload = {
+            "revision": revision,
+            "patches": [
+                {
+                    "op": "remove",
+                    "value": {
+                        "modified": round(time.time() * 1000),
+                        "name": collection_name,
+                        "category": "collection",
+                        "revision": revision_value,
+                    },
+                    "path": path,
+                }
+            ],
+        }
+        data = json.dumps(payload)
+
+        url = self._sync_data_url
+        headers = self._get_auth_headers()
+        headers[requests_keys.CONTENT_TYPE] = "application/json"
+        headers[requests_keys.CLIENT_TYPE] = client_type
+        host_response = self._session.patch(
+            url,
+            data=data,
+            headers=headers,
+        )
+        self._log_request(host_response, data)
+        try:
+            json_rsp = host_response.json()
+        except requests.JSONDecodeError:
+            raise PytolinoException(
+                "could not get info from request. answer not json"
+            )
+        else:
+            revision = json_rsp["revision"]
+            patch = json_rsp["patches"].pop()
+            patch_rev = patch["value"]["revision"]
+            return revision, patch_rev, patch
         return None, None, None
 
     def rm_book_from_collection(self, book_id, collection_name):
