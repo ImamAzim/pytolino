@@ -18,43 +18,44 @@ from varboxes import VarBox
 from pytolino.tolino_cloud import Client, PytolinoException
 
 
-TEST_EPUB = 'basic-v3plus2.epub'
+TEST_EPUB = "basic-v3plus2.epub"
 # ACCOUNT_NAME = 'real_test_token'
-ACCOUNT_NAME = 'test_token'
-TEST_COVER = 'test_cover.png'
+ACCOUNT_NAME = "test_token"
+TEST_COVER = "test_cover.png"
 
 
 class TestClient(unittest.TestCase):
-
-    """all test concerning the Client class. """
+    """all test concerning the Client class."""
 
     @classmethod
     def setUpClass(cls):
-        cls.client = Client('username')
+        cls.client = Client("username")
 
     def test_init_nopartner(self):
         with self.assertRaises(PytolinoException):
-            Client(server_name='this tolino partner does not exists',
-                   username='username')
+            Client(
+                server_name="this tolino partner does not exists",
+                username="username",
+            )
 
 
 def upload_test():
 
-    print('upload epub...')
+    print("upload epub...")
     epub_fp = Path(__file__).parent / TEST_EPUB
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
     ebook_id = client.upload(epub_fp)
     print(ebook_id)
-    vb = VarBox('pytolino')
+    vb = VarBox("pytolino")
     vb.ebook_id = ebook_id
 
 
 def download_test():
 
-    print('download epub...')
-    vb = VarBox('pytolino')
+    print("download epub...")
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
     username, password = get_test_credentials()
     client = Client(username)
@@ -67,12 +68,12 @@ def download_test():
         print(e)
     else:
         print(metadata)
-        print(f'check epub at {epub_fp} and cover at {cover_fp}')
+        print(f"check epub at {epub_fp} and cover at {cover_fp}")
 
 
 def collection_test():
-    print('add to a collection last epub')
-    vb = VarBox('pytolino')
+    print("add to a collection last epub")
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
@@ -83,13 +84,16 @@ def collection_test():
         print(e)
     else:
         try:
-            print('add test_coll_2...')
+            print("add test_coll_2...")
             revision, patch_rev, patch = client.add_to_collection(
-                    ebook_id, 'test_coll_2')
-            print('rsp: ', patch['op'], patch['value']['name'])
-            print('rm test_coll_1')
-            revision, patch_rev, patch = client.rm_book_from_collection(ebook_id, 'test_coll_1')
-            print('rsp: ', patch['op'], patch['value']['name'])
+                ebook_id, "test_coll_2"
+            )
+            print("rsp: ", patch["op"], patch["value"]["name"])
+            print("rm test_coll_1")
+            revision, patch_rev, patch = client.rm_book_from_collection(
+                ebook_id, "test_coll_1"
+            )
+            print("rsp: ", patch["op"], patch["value"]["name"])
 
         except PytolinoException as e:
             print(e)
@@ -99,9 +103,10 @@ def collection_test():
             # print(patch_rev)
             # print(patch)
 
+
 def mark_finished_test():
-    print('mark finish test')
-    vb = VarBox('pytolino')
+    print("mark finish test")
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
@@ -112,7 +117,7 @@ def mark_finished_test():
         print(e)
     else:
         try:
-            revision, patch_rev, patch = client.mark_book_as_finished, ebook_id)
+            revision, patch_rev, patch = client.mark_book_as_finished(ebook_id)
         except PytolinoException as e:
             print(e)
         else:
@@ -121,10 +126,9 @@ def mark_finished_test():
             print(patch)
 
 
-
 def sync_test():
-    print('sync test to get revision')
-    vb = VarBox('pytolino')
+    print("sync test to get revision")
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
@@ -141,15 +145,15 @@ def sync_test():
         else:
             # print(revision, patches)
             for rev, patch in patches.items():
-                print(patch['op'])
+                print(patch["op"])
                 for key, value in patch["value"].items():
-                    if key!='revision':
+                    if key != "revision":
                         print(key, value)
 
 
 def rm_collection_test():
-    print('rm test book from test_coll collection...')
-    vb = VarBox('pytolino')
+    print("rm test book from test_coll collection...")
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
@@ -161,17 +165,17 @@ def rm_collection_test():
         print(e)
     else:
         try:
-            client.rm_book_from_collection(ebook_id, 'test_coll')
+            client.rm_book_from_collection(ebook_id, "test_coll")
         except PytolinoException as e:
             print(e)
         else:
-            print('done')
+            print("done")
 
 
 def delete_test():
 
-    print('delete last epub')
-    vb = VarBox('pytolino')
+    print("delete last epub")
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
@@ -182,7 +186,7 @@ def delete_test():
 
 def inventory_test():
 
-    print('get inventory')
+    print("get inventory")
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
@@ -190,26 +194,26 @@ def inventory_test():
     if inventory:
         for item in inventory:
             print(item.keys())
-            print(item['publicationId'])
-            print(item['deliverableId'])
-            metadata = item['epubMetaData']
-            print(metadata['title'])
+            print(item["publicationId"])
+            print(item["deliverableId"])
+            metadata = item["epubMetaData"]
+            print(metadata["title"])
     else:
-        print('empty')
+        print("empty")
 
 
 def metadata_test():
 
-    print('update metadata')
+    print("update metadata")
     metadata = dict(
-            title='mytitle',
-            isbn='myisbn',
-            language='mylanguage',
-            author='myauthor',
-            publisher='mypublisher',
-            issued=time.time(),
-            )
-    vb = VarBox('pytolino')
+        title="mytitle",
+        isbn="myisbn",
+        language="mylanguage",
+        author="myauthor",
+        publisher="mypublisher",
+        issued=time.time(),
+    )
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
     username, password = get_test_credentials()
     client = Client(username)
@@ -219,20 +223,20 @@ def metadata_test():
 
     inventory = client.get_inventory()
     book = [
-            el for el in inventory if el[
-                'epubMetaData']['identifier'] == ebook_id][0]
-    online_metadata = book['epubMetaData']
+        el for el in inventory if el["epubMetaData"]["identifier"] == ebook_id
+    ][0]
+    online_metadata = book["epubMetaData"]
     for key in metadata:
         print(key, online_metadata[key])
 
 
 def add_cover_test():
 
-    print('add cover')
+    print("add cover")
 
     cover_fp = Path(__file__).parent / TEST_COVER
 
-    vb = VarBox('pytolino')
+    vb = VarBox("pytolino")
     ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
@@ -245,9 +249,9 @@ def login_test():
     username, password = get_test_credentials()
     client = Client(username=username)
     expiration = client.access_expiration_time
-    print('access token expiration time:')
+    print("access token expiration time:")
     print(datetime.datetime.fromtimestamp(expiration))
-    print('login...')
+    print("login...")
     try:
         client.login(password)
     except PytolinoException as e:
@@ -255,43 +259,47 @@ def login_test():
     else:
         client = Client(username=username)
         expiration = client.access_expiration_time
-        print('access token new expiration time:')
+        print("access token new expiration time:")
         print(datetime.datetime.fromtimestamp(expiration))
 
 
 def import_login_test():
     username, password = get_test_credentials()
     client = Client(username=username)
-    print('please login manually and use inspector tool to find refresh token'
-          ' in a token request')
-    refresh_token = input('refresh login: ')
-    print('find the hardware id in the request header '
-          'of a patch request for example')
-    hardware_id = input('hardware id: ')
+    print(
+        "please login manually and use inspector tool to find refresh token"
+        " in a token request"
+    )
+    refresh_token = input("refresh login: ")
+    print(
+        "find the hardware id in the request header "
+        "of a patch request for example"
+    )
+    hardware_id = input("hardware id: ")
     client.import_token(refresh_token, hardware_id)
 
 
 def get_test_credentials():
-    vb = VarBox('pytolino', 'test_credentials')
-    if not hasattr(vb, 'username'):
-        username = input('username:\n')
-        password = input('password:\n')
+    vb = VarBox("pytolino", "test_credentials")
+    if not hasattr(vb, "username"):
+        username = input("username:\n")
+        password = input("password:\n")
         vb.username = username
         vb.password = password
     return vb.username, vb.password
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     # login_test()
-    upload_test()
+    # upload_test()
     # download_test()
     # add_cover_test()
     # metadata_test()
-    # sync_test()
-    collection_test()
+    sync_test()
+    # collection_test()
     # rm_collection_test()
-    inventory_test()
+    # inventory_test()
     # delete_test()
     # inventory_test()
     # import_login_test()
