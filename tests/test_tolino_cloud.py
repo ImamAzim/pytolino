@@ -214,11 +214,13 @@ def inventory_test():
     inventory = client.get_inventory()
     if inventory:
         for item in inventory:
+            metadata = item["epubMetaData"]
+            print(metadata["title"])
             print(item.keys())
             print(item["publicationId"])
             print(item["deliverableId"])
-            metadata = item["epubMetaData"]
-            print(metadata["title"])
+            print(item["resellerId"])
+            print(metadata)
     else:
         print("empty")
 
@@ -313,17 +315,17 @@ def get_test_credentials():
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     # login_test()
-    mark_finished_test()
-    sync_test()
-    mark_not_finished_test()
-    sync_test()
+    # mark_finished_test()
+    # sync_test()
+    # mark_not_finished_test()
+    # sync_test()
     # upload_test()
     # download_test()
     # add_cover_test()
     # metadata_test()
     # collection_test()
     # rm_collection_test()
-    # inventory_test()
+    inventory_test()
     # delete_test()
     # inventory_test()
     # import_login_test()
