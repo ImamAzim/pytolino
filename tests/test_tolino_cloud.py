@@ -225,7 +225,7 @@ def inventory_test():
                 identifier = metadata["identifier"]
                 print(identifier)
                 vb = VarBox("pytolino")
-                vb.identifer = identifier
+                vb.identifier = identifier
     else:
         print("empty")
 
