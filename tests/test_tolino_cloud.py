@@ -57,19 +57,20 @@ def download_test():
     print("download epub...")
     vb = VarBox("pytolino")
     # ebook_id = vb.ebook_id
-    ebook_id = vb.identifier
+    # ebook_id = vb.identifier
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
-    try:
-        epub_fp, cover_fp, metadata = client.download(ebook_id)
-    except NotImplementedError as e:
-        print(e)
-    except PytolinoException as e:
-        print(e)
-    else:
-        print(metadata)
-        print(f"check epub at {epub_fp} and cover at {cover_fp}")
+    for ebook_id in [vb.deliverable_id,m vb.identifier]:
+        try:
+            epub_fp, cover_fp, metadata = client.download(ebook_id)
+        except NotImplementedError as e:
+            print(e)
+        except PytolinoException as e:
+            print(e)
+        else:
+            print(metadata)
+            print(f"check epub at {epub_fp} and cover at {cover_fp}")
 
 
 def collection_test():
