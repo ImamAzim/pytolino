@@ -947,10 +947,9 @@ class Client(object):
     def _get_book_data(self, identifier):
         inventory = self.get_inventory()
         matched_books = [
-            book for book in inventory if book[PUBLICATION_ID] == epub_id
-        ]
-        matched_books = [
-            book for book in inventory if book[EPUB_METADATA]["identifier"] == identifier
+            book
+            for book in inventory
+            if book[EPUB_METADATA]["identifier"] == identifier
         ]
         if not matched_books:
             raise PytolinoException("no book on the cloud with this id")
