@@ -980,10 +980,7 @@ class Client(object):
             file.write(host_response.content)
         all_metadata = book_data[EPUB_METADATA]
         author_list = all_metadata["author"]
-        if author_list:
-            authors = ",".join([author["name"] for author in author_list])
-        else:
-            authors = ""
+        authors = ",".join([str(author["name"]) for author in author_list])
         metadata = dict(
             title=all_metadata.get("title"),
             isbn=all_metadata.get("isbn"),
