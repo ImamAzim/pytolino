@@ -956,7 +956,7 @@ class Client(object):
             raise PytolinoException("no book on the cloud with this id")
         return matched_books[0]
 
-    def download(self, epub_id: str) -> tuple[Path, Path, dict]:
+    def download(self, identifier: str) -> tuple[Path, Path, dict]:
         """download book from cloud
 
         :epub_id:
