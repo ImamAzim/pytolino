@@ -216,11 +216,15 @@ def inventory_test():
         for item in inventory:
             metadata = item["epubMetaData"]
             print(metadata["title"])
-            print(item.keys())
-            print(item["publicationId"])
-            print(item["deliverableId"])
-            print(item["resellerId"])
-            print(metadata)
+            # print(item.keys())
+            # print(item["publicationId"])
+            # print(item["deliverableId"])
+            # print(metadata["identifier"])
+            if item["publicationId"] is None:
+                identifier = metadata["identifier"]
+                print(identifier)
+                vb = VarBox("pytolino")
+                vb.identifer = identifier
     else:
         print("empty")
 
