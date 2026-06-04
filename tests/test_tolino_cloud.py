@@ -209,6 +209,7 @@ def delete_test():
 def inventory_test():
 
     print("get inventory")
+    vb = VarBox("pytolino")
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
@@ -224,8 +225,10 @@ def inventory_test():
             if item["publicationId"] is None:
                 identifier = metadata["identifier"]
                 print(identifier)
-                vb = VarBox("pytolino")
                 vb.identifier = identifier
+            else:
+                deliverable_id = item["deliverableId"]
+                vb.deliverable_id = deliverable_id
     else:
         print("empty")
 
@@ -325,12 +328,12 @@ if __name__ == "__main__":
     # mark_not_finished_test()
     # sync_test()
     # upload_test()
-    download_test()
+    # download_test()
     # add_cover_test()
     # metadata_test()
     # collection_test()
     # rm_collection_test()
-    # inventory_test()
+    inventory_test()
     # delete_test()
     # inventory_test()
     # import_login_test()
