@@ -965,7 +965,9 @@ class Client(object):
         book_data = self._get_book_data(identifier)
         deliverable_id = book_data[DELIVERABLE_ID]
         publication_id = book_data[PUBLICATION_ID]
-        url = self._download_info(publication_id, deliverable_id)
+        # url = self._download_info(publication_id, deliverable_id)
+        url = self._download_info(identifier, identifier)
+        print(url)
 
         headers = self._get_auth_headers()
         host_response = self._session.get(
@@ -978,7 +980,10 @@ class Client(object):
             file.write(host_response.content)
         all_metadata = book_data[EPUB_METADATA]
         author_list = all_metadata["author"]
-        authors = ",".join([author["name"] for author in author_list])
+        if author_list:
+            authors = ",".join([author["name"] for author in author_list])
+        else:
+            authors = ""
         metadata = dict(
             title=all_metadata.get("title"),
             isbn=all_metadata.get("isbn"),
