@@ -919,8 +919,8 @@ class Client(object):
             )
         self._log_request(host_response, data)
 
-    def _download_info(self, epub_id: str, deliverable_id):
-        xxx = base64.b64encode(bytes(epub_id, "utf-8")).decode("utf-8")
+    def _download_info(self, publication_id: str, deliverable_id):
+        xxx = base64.b64encode(bytes(publication_id, "utf-8")).decode("utf-8")
         yyy = base64.b64encode(bytes(deliverable_id, "utf-8")).decode("utf-8")
         url = self._download_info_url.format(xxx, yyy)
         headers = self._get_auth_headers()
@@ -944,10 +944,13 @@ class Client(object):
                     "download info failed.no info found in response"
                 )
 
-    def _get_book_data(self, epub_id):
+    def _get_book_data(self, identifier):
         inventory = self.get_inventory()
         matched_books = [
             book for book in inventory if book[PUBLICATION_ID] == epub_id
+        ]
+        matched_books = [
+            book for book in inventory if book[EPUB_METADATA]["identifier"] == identifier
         ]
         if not matched_books:
             raise PytolinoException("no book on the cloud with this id")
@@ -960,9 +963,10 @@ class Client(object):
         :returns: ebook path, cover path, metadata
 
         """
-        book_data = self._get_book_data(epub_id)
+        book_data = self._get_book_data(identifier)
         deliverable_id = book_data[DELIVERABLE_ID]
-        url = self._download_info(epub_id, deliverable_id)
+        publication_id = book_data[PUBLICATION_ID]
+        url = self._download_info(publication_id, deliverable_id)
 
         headers = self._get_auth_headers()
         host_response = self._session.get(
