@@ -56,7 +56,8 @@ def download_test():
 
     print("download epub...")
     vb = VarBox("pytolino")
-    ebook_id = vb.ebook_id
+    # ebook_id = vb.ebook_id
+    ebook_id = vb.identifier
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
@@ -324,12 +325,12 @@ if __name__ == "__main__":
     # mark_not_finished_test()
     # sync_test()
     # upload_test()
-    # download_test()
+    download_test()
     # add_cover_test()
     # metadata_test()
     # collection_test()
     # rm_collection_test()
-    inventory_test()
+    # inventory_test()
     # delete_test()
     # inventory_test()
     # import_login_test()
