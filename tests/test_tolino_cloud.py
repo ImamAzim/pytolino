@@ -61,7 +61,7 @@ def download_test():
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
-    for ebook_id in [vb.deliverable_id,m vb.identifier]:
+    for ebook_id in [vb.deliverable_id, vb.identifier]:
         try:
             epub_fp, cover_fp, metadata = client.download(ebook_id)
         except NotImplementedError as e:
