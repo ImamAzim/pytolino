@@ -269,12 +269,12 @@ def add_cover_test():
     cover_fp = Path(__file__).parent / TEST_COVER
 
     vb = VarBox("pytolino")
-    ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
-    client.add_cover(ebook_id, cover_fp)
+    for ebook_id in [vb.deliverable_id, vb.identifier]:
+        client.add_cover(ebook_id, cover_fp)
 
 
 def login_test():
@@ -325,12 +325,11 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     # login_test()
     # mark_finished_test()
-    mark_not_finished_test()
-    # sync_test()
+    # mark_not_finished_test()
     # sync_test()
     # upload_test()
     # download_test()
-    # add_cover_test()
+    add_cover_test()
     # metadata_test()
     # collection_test()
     # rm_collection_test()
