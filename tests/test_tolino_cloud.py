@@ -223,13 +223,14 @@ def inventory_test():
             # print(item["publicationId"])
             # print(item["deliverableId"])
             # print(metadata["identifier"])
-            if item["publicationId"] is None:
-                identifier = metadata["identifier"]
-                print(identifier)
-                vb.identifier = identifier
-            else:
-                deliverable_id = item["deliverableId"]
-                vb.deliverable_id = deliverable_id
+            print(metadata)
+            # if item["publicationId"] is None:
+                # identifier = metadata["identifier"]
+                # print(identifier)
+                # vb.identifier = identifier
+            # else:
+                # deliverable_id = item["deliverableId"]
+                # vb.deliverable_id = deliverable_id
     else:
         print("empty")
 
@@ -246,20 +247,20 @@ def metadata_test():
         issued=time.time(),
     )
     vb = VarBox("pytolino")
-    ebook_id = vb.ebook_id
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
 
-    client.upload_metadata(ebook_id, **metadata)
+    for ebook_id in [vb.deliverable_id, vb.identifier]:
+        client.upload_metadata(ebook_id, **metadata)
 
-    inventory = client.get_inventory()
-    book = [
-        el for el in inventory if el["epubMetaData"]["identifier"] == ebook_id
-    ][0]
-    online_metadata = book["epubMetaData"]
-    for key in metadata:
-        print(key, online_metadata[key])
+        inventory = client.get_inventory()
+        book = [
+            el for el in inventory if el["epubMetaData"]["identifier"] == ebook_id
+        ][0]
+        online_metadata = book["epubMetaData"]
+        for key in metadata:
+            print(key, online_metadata[key])
 
 
 def add_cover_test():
@@ -329,8 +330,8 @@ if __name__ == "__main__":
     # sync_test()
     # upload_test()
     # download_test()
-    add_cover_test()
-    # metadata_test()
+    # add_cover_test()
+    metadata_test()
     # collection_test()
     # rm_collection_test()
     # inventory_test()
