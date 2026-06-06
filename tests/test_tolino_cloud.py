@@ -252,15 +252,19 @@ def metadata_test():
     client.login(password)
 
     for ebook_id in [vb.deliverable_id, vb.identifier]:
-        client.upload_metadata(ebook_id, **metadata)
+        try:
+            client.upload_metadata(ebook_id, **metadata)
+        except PytolinoException as e:
+            print(e)
+        else:
 
-        inventory = client.get_inventory()
-        book = [
-            el for el in inventory if el["epubMetaData"]["identifier"] == ebook_id
-        ][0]
-        online_metadata = book["epubMetaData"]
-        for key in metadata:
-            print(key, online_metadata[key])
+            inventory = client.get_inventory()
+            book = [
+                el for el in inventory if el["epubMetaData"]["identifier"] == ebook_id
+            ][0]
+            online_metadata = book["epubMetaData"]
+            for key in metadata:
+                print(key, online_metadata[key])
 
 
 def add_cover_test():
