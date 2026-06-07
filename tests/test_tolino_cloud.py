@@ -76,7 +76,6 @@ def download_test():
 def collection_test():
     print("add to a collection last epub")
     vb = VarBox("pytolino")
-    ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
     client = Client(username)
@@ -85,25 +84,26 @@ def collection_test():
     except PytolinoException as e:
         print(e)
     else:
-        try:
-            print("add test_coll_2...")
-            revision, patch_rev, patch = client.add_to_collection(
-                ebook_id, "test_coll_2"
-            )
-            print("rsp: ", patch["op"], patch["value"]["name"])
-            print("rm test_coll_1")
-            revision, patch_rev, patch = client.rm_book_from_collection(
-                ebook_id, "test_coll_1"
-            )
-            print("rsp: ", patch["op"], patch["value"]["name"])
+        for ebook_id in [vb.deliverable_id, vb.identifier]:
+            try:
+                print("add test_coll_2...")
+                revision, patch_rev, patch = client.add_to_collection(
+                    ebook_id, "test_coll_2"
+                )
+                print("rsp: ", patch["op"], patch["value"]["name"])
+                print("rm test_coll_2")
+                revision, patch_rev, patch = client.rm_book_from_collection(
+                    ebook_id, "test_coll_2"
+                )
+                print("rsp: ", patch["op"], patch["value"]["name"])
 
-        except PytolinoException as e:
-            print(e)
-        else:
-            pass
-            # print(revision)
-            # print(patch_rev)
-            # print(patch)
+            except PytolinoException as e:
+                print(e)
+            else:
+                pass
+                # print(revision)
+                # print(patch_rev)
+                # print(patch)
 
 
 def mark_finished_test():
@@ -335,8 +335,8 @@ if __name__ == "__main__":
     # upload_test()
     # download_test()
     # add_cover_test()
-    metadata_test()
-    # collection_test()
+    # metadata_test()
+    collection_test()
     # rm_collection_test()
     # inventory_test()
     # delete_test()
