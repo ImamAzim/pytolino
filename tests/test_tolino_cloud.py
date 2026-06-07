@@ -328,7 +328,7 @@ def get_test_credentials():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    # login_test()
+    login_test()
     # mark_finished_test()
     # mark_not_finished_test()
     # sync_test()
@@ -339,5 +339,5 @@ if __name__ == "__main__":
     # collection_test()
     # rm_collection_test()
     # inventory_test()
-    delete_test()
+    # delete_test()
     # import_login_test()
