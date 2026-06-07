@@ -199,12 +199,12 @@ def delete_test():
 
     print("delete last epub")
     vb = VarBox("pytolino")
-    ebook_id = vb.ebook_id
 
     username, password = get_test_credentials()
     client = Client(username)
     client.login(password)
-    client.delete_ebook(ebook_id)
+    for ebook_id in [vb.deliverable_id, vb.identifier]:
+        client.delete_ebook(ebook_id)
 
 
 def inventory_test():
@@ -336,9 +336,8 @@ if __name__ == "__main__":
     # download_test()
     # add_cover_test()
     # metadata_test()
-    collection_test()
+    # collection_test()
     # rm_collection_test()
     # inventory_test()
-    # delete_test()
-    # inventory_test()
+    delete_test()
     # import_login_test()
