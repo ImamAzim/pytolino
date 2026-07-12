@@ -15,7 +15,7 @@ import datetime
 from varboxes import VarBox
 
 
-from pytolino.tolino_cloud import Client, PytolinoException
+from pytolino.tolino_cloud import Client, PytolinoException, PARTNERS
 
 
 TEST_EPUB = "basic-v3plus2.epub"
@@ -37,6 +37,12 @@ class TestClient(unittest.TestCase):
                 server_name="this tolino partner does not exists",
                 username="username",
             )
+
+    def test_thalia_partners_supported(self):
+        self.assertIn("thalia", PARTNERS)
+        self.assertIn("thalia_at", PARTNERS)
+        Client(username="username", server_name="thalia")
+        Client(username="username", server_name="thalia_at")
 
 
 def upload_test():
