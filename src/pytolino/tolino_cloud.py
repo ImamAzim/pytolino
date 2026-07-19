@@ -15,9 +15,10 @@ import requests
 import curl_cffi
 from varboxes import VarBox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from seleniumbase import SB
 
 
@@ -92,6 +93,17 @@ class Client(object):
 
         if not rsp.ok:
             raise PytolinoException("host response not ok")
+
+    def _find_first_element(self, driver, locators: list[tuple[By, str]]):
+        last_error = None
+        for by, value in locators:
+            try:
+                return driver.find_element(by, value)
+            except NoSuchElementException as exc:
+                last_error = exc
+        if last_error is not None:
+            raise last_error
+        raise NoSuchElementException("no locator candidates provided")
 
     def _store_current_token(self):
         """store the token with attribute of self"""
@@ -186,14 +198,8 @@ class Client(object):
         self._username_field_id = self._server_settings[
             server_settings_keys.USERNAME_FIELD_ID
         ]
-        self._username_field_id = self._server_settings[
-            server_settings_keys.USERNAME_FIELD_ID
-        ]
         self._cookie_deny_css = self._server_settings[
             server_settings_keys.COOKIE_DENY_CSS
-        ]
-        self._username_field_id = self._server_settings[
-            server_settings_keys.USERNAME_FIELD_ID
         ]
         self._password_field_id = self._server_settings[
             server_settings_keys.PASSWORD_FIELD_ID
@@ -300,40 +306,56 @@ class Client(object):
 
                 # deny cookies
                 shadow_host_id = self._shadow_host_id
-                shadow_host = driver.find_element(By.ID, shadow_host_id)
-                shadow_root = shadow_host.shadow_root
-                css = self._cookie_deny_css
-                wait = WebDriverWait(shadow_root, timeout)
-                deny_button = wait.until(
-                    expected_conditions.element_to_be_clickable(
-                        (By.CSS_SELECTOR, css)
+                try:
+                    shadow_host = driver.find_element(By.ID, shadow_host_id)
+                except NoSuchElementException:
+                    shadow_host = None
+                if shadow_host is not None:
+                    shadow_root = shadow_host.shadow_root
+                    css = self._cookie_deny_css
+                    wait = WebDriverWait(shadow_root, timeout)
+                    deny_button = wait.until(
+                        expected_conditions.element_to_be_clickable(
+                            (By.CSS_SELECTOR, css)
+                        )
                     )
-                )
-                deny_button.click()
+                    deny_button.click()
 
                 # fill credentials and submit
                 username_field_id = self._username_field_id
-                username_field = driver.find_element(
-                    By.ID,
-                    username_field_id,
+                username_field = self._find_first_element(
+                    driver,
+                    [
+                        (By.ID, username_field_id),
+                        (By.NAME, username_field_id),
+                    ],
                 )
                 password_field_id = self._password_field_id
-                password_field = driver.find_element(
-                    By.ID,
-                    password_field_id,
+                password_field = self._find_first_element(
+                    driver,
+                    [
+                        (By.ID, password_field_id),
+                        (By.NAME, password_field_id),
+                    ],
                 )
                 css = self._submit_css
-                submit_button = driver.find_element(
-                    By.CSS_SELECTOR,
-                    css,
-                )
                 username_field.send_keys(self._username)
                 password_field.send_keys(password)
-                wait = WebDriverWait(driver, timeout=timeout)
-                wait.until(
-                    expected_conditions.element_to_be_clickable(submit_button)
-                )
-                submit_button.click()
+                try:
+                    submit_button = driver.find_element(
+                        By.CSS_SELECTOR,
+                        css,
+                    )
+                except NoSuchElementException:
+                    password_field.send_keys(Keys.RETURN)
+                else:
+                    wait = WebDriverWait(driver, timeout=timeout)
+                    wait.until(
+                        expected_conditions.element_to_be_clickable(
+                            submit_button
+                        )
+                    )
+                    submit_button.click()
 
                 # get cookies
                 cookies = driver.get_cookies()

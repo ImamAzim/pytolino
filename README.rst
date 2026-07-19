@@ -26,8 +26,8 @@ if chromium browser is installed and there is a monitor, it can be done automati
 .. code-block:: python
 
     from pytolino.tolino_cloud import Client
-    partner = 'orellfuessli'
-    client = Client(partner=partner,username='USERNAME)
+    partner = 'orellfuessli'  # or 'thalia' / 'thalia_at'
+    client = Client(username='USERNAME', server_name=partner)
     client.login('PASSWORD')
 
 if this is the first login on the device, it will use selenium and store an access token on the device.
@@ -76,7 +76,9 @@ To get a list of the supported partners:
    from pytolino.tolino_cloud import PARTNERS
    print(PARTNERS)
 
-for now, only orelfuessli is supported, but it should be easy to include the others (but always need of a manual login)
+Supported partners currently include ``orellfuessli``, ``thalia`` and ``thalia_at``.
+Thalia uses the same Tolino backend endpoints as Orell Füssli, but the login flow
+is partner-specific.
 
 
 Features

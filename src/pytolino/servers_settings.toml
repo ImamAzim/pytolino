@@ -19,3 +19,43 @@ cookie_deny_all_css = '.sc-gsFSXq.xZpYl'
 username_field_id = 'email-input'
 password_field_id = 'password-input'
 submit_button_css = '.element-button-primary.button-submit'
+
+[thalia]
+partner_id = "2"
+client_id = "webshop01"
+scope = "SCOPE_BOSH"
+auth_url = "https://www.thalia.de/de.thalia.ecp.authservice.application/oauth2/authorize"
+token_url = "https://www.thalia.de/auth/oauth2/token"
+login_url = "https://www.thalia.de/de.thalia.ecp.authservice.application/login.do"
+upload_url = "https://bosh.pageplace.de/bosh/rest/upload"
+meta_url = "https://bosh.pageplace.de/bosh/rest/meta"
+cover_url = "https://bosh.pageplace.de/bosh/rest/cover"
+sync_data_url = "https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks"
+delete_url = "https://bosh.pageplace.de/bosh/rest/deletecontent"
+download_info_url = "https://bosh.pageplace.de/bosh/rest/cloud/downloadinfo/{}/{}/type/external-download"
+inventory_url = "https://bosh.pageplace.de/bosh/rest/inventory/delta"
+shadow_host_id = "usercentrics-root"
+cookie_deny_all_css = '.sc-gsFSXq.xZpYl'
+username_field_id = 'j_username'
+password_field_id = 'j_password'
+submit_button_css = "button[type='submit'], input[type='submit'], .element-button-primary.button-submit"
+
+[thalia_at]
+partner_id = "4"
+client_id = "webshop01"
+scope = "SCOPE_BOSH SCOPE_BUCHDE"
+auth_url = "https://www.thalia.at/de.thalia.ecp.authservice.application/oauth2/authorize"
+token_url = "https://www.thalia.at/de.buch.appservices/api/4004/oauth2/token"
+login_url = "https://www.thalia.at/de.thalia.ecp.authservice.application/login.do"
+upload_url = "https://bosh.pageplace.de/bosh/rest/upload"
+meta_url = "https://bosh.pageplace.de/bosh/rest/meta"
+cover_url = "https://bosh.pageplace.de/bosh/rest/cover"
+sync_data_url = "https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks"
+delete_url = "https://bosh.pageplace.de/bosh/rest/deletecontent"
+download_info_url = "https://bosh.pageplace.de/bosh/rest/cloud/downloadinfo/{}/{}/type/external-download"
+inventory_url = "https://bosh.pageplace.de/bosh/rest/inventory/delta"
+shadow_host_id = "usercentrics-root"
+cookie_deny_all_css = '.sc-gsFSXq.xZpYl'
+username_field_id = 'j_username'
+password_field_id = 'j_password'
+submit_button_css = "button[type='submit'], input[type='submit'], .element-button-primary.button-submit"
